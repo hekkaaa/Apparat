@@ -1,8 +1,11 @@
-﻿using System;
+﻿using NetObserver.PingUtility;
+using NetObserver.TracerouteUtility;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
+using System.Net.NetworkInformation;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,19 +17,6 @@ namespace WinObserver.Service
     {
         private ObservableCollection<TracertModel> _innerTracertValue;
         public readonly ReadOnlyObservableCollection<TracertModel> _tracertValue;
-        
-        //private string _ip;
-
-        //public string Ip
-        //{
-        //    get { return _ip; }
-        //    set
-        //    {
-        //        _ip = value;
-        //        OnPropertyChanged("Ip");
-
-        //    }
-        //}
 
         public TracertService()
         {
@@ -35,48 +25,34 @@ namespace WinObserver.Service
         }
 
         public void StartTraceroute()
-        {
-            NetObserver.PingUtility.IcmpRequestSender utility = new NetObserver.PingUtility.IcmpRequestSender();
-            
-            var item1 = utility.RequestIcmp("ya.ru");
-            var item2 = utility.RequestIcmp("google.com");
+        {   
 
-            int ping1 = Convert.ToInt32(item1.RoundtripTime.ToString());
-            int ping2 = Convert.ToInt32(item2.RoundtripTime.ToString());
+            Traceroute getTracertIp = new Traceroute();
+            var objectTracertResult = getTracertIp.GetIpTraceRoute("ya.ru");
 
-            _innerTracertValue.Add(new TracertModel() { Ip = item1.Address.ToString(), Delay = ping1, Status = item1.Status.ToString() });
-            _innerTracertValue.Add(new TracertModel() { Ip = item2.Address.ToString(), Delay = ping2, Status = item2.Status.ToString() });
+            foreach (string addr in objectTracertResult)
+            {
+                _innerTracertValue.Add(new TracertModel { Ip = addr });
+            }
 
+            IcmpRequestSender testRequest = new IcmpRequestSender();
 
             Task.Factory.StartNew(() =>
             {
                 while (true)
                 {
                     Task.Delay(2000).Wait();
-                    item1 = utility.RequestIcmp("ya.ru");
-                    item2 = utility.RequestIcmp("google.com");
 
-                    ping1 = Convert.ToInt32(item1.RoundtripTime.ToString());
-                    ping2 = Convert.ToInt32(item2.RoundtripTime.ToString());
+                    foreach(TracertModel itemModel in _innerTracertValue)
+                    {   
 
-                    _innerTracertValue[0].Delay = ping1;
-                    _innerTracertValue[1].Delay = ping2;
+                        PingReply tmpResult = testRequest.RequestIcmp(itemModel.Ip);
+                        itemModel.Delay = (int)tmpResult.RoundtripTime;
+                    }
+
+                    OnPropertyChanged();
                 }
             });
-
-            //while (true)
-            //{
-            //    item1 = utility.RequestIcmp("ya.ru");
-            //    item2 = utility.RequestIcmp("google.com");
-
-            //    ping1 = Convert.ToInt32(item1.RoundtripTime.ToString());
-            //    ping2 = Convert.ToInt32(item2.RoundtripTime.ToString());
-
-            //    _innerTracertValue[0].Delay = ping1;
-            //    _innerTracertValue[1].Delay = ping2;
-
-            //};
-
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

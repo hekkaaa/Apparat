@@ -9,11 +9,46 @@ using System.Threading.Tasks;
 
 namespace WinObserver.Model
 {
-    public class TracertModel
+    public class TracertModel : INotifyPropertyChanged
     {
-        public string? Ip { get; set; }
-        public int? Delay { get; set; }
-        public string? Status { get; set; }
+        private string _ip;
+        private int _delay;
+        private string _status;
+
+        public string? Ip
+        {
+            get { return _ip; }
+            set
+            {
+                _ip = value;
+                OnPropertyChanged("Ip");
+            }
+        }
+        public int Delay
+        {
+            get { return _delay; }
+            set
+            {
+                _delay = value;
+                OnPropertyChanged("Delay");
+            }
+        }
+        public string? Status
+        {
+            get { return _status; }
+            set
+            {
+                _status = value;
+                OnPropertyChanged("Status");
+            }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        public void OnPropertyChanged([CallerMemberName] string prop = "")
+        {
+            if (PropertyChanged != null)
+                PropertyChanged(this, new PropertyChangedEventArgs(prop));
+        }
     }
 }
 

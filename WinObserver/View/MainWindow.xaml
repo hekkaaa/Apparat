@@ -12,11 +12,21 @@
                 <TextBlock Text="{Binding Click}" HorizontalAlignment="Center"/>
                 <TextBox x:Name="GetIp" TextWrapping="Wrap" Width="120"/>
                 <Button x:Name="GeneralButton" Background="#FFBCBCE3" Content="Start"  Width="60" IsCancel="True" Command="{Binding StartTracert}"/>
+                <Button Content="Перезагрузить" Width="60" Click="Button_Click"/>
+                <TextBlock Text="{Binding Click}"/>
             </StackPanel>
             <TabControl DockPanel.Dock="Right">
                 <TabItem Header="TabItem">
                     <Grid Background="Azure">
-                        <DataGrid x:Name="DG1" ItemsSource="{Binding TracertObject}" >
+                        <DataGrid x:Name="DG1" ItemsSource="{Binding TracertObject, UpdateSourceTrigger=PropertyChanged}"  AutoGenerateColumns="False">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="First1" Binding="{Binding Ip}"/>
+                                <DataGridTextColumn Header="First3" Binding="{Binding Delay}"/>
+                                <DataGridTextColumn Header="First2" Binding="{Binding Status}"/>
+                            </DataGrid.Columns>
+                            
+                           
+
                             <!--SelectedItem="{Binding SelectedIp}"-->
                             <!--d:ItemsSource="{d:SampleData ItemCount=1}"-->
                         </DataGrid>

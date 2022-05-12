@@ -14,11 +14,11 @@ namespace WinObserver.ViewModel
 {
     public class ApplicationViewModel : INotifyPropertyChanged
     {
-        private ItemPing selectIp;
         private int _click;
 
         private readonly TracertService _tracerService;
         public ReadOnlyObservableCollection<TracertModel> TracertObject { get; set; }
+
 
         public int Click
         {
@@ -30,18 +30,7 @@ namespace WinObserver.ViewModel
             }
         }
 
-       
-        private DelegateCommand startTracert;
-        public DelegateCommand ClickAdd
-        {
-            get
-            {
-                return startTracert ?? new DelegateCommand((obj) =>
-                {
-                    Click = Click + 10;
-                });
-            }
-        }
+        private DelegateCommand startTracert { get; }
 
         public DelegateCommand StartTracert
         {
@@ -59,14 +48,23 @@ namespace WinObserver.ViewModel
         {
             _tracerService = new TracertService();
             TracertObject = _tracerService._tracertValue;
-
+            //TracertObject = new ObservableCollection<TracertModel>
+            //{
+            //    new TracertModel(){ Ip = "ya.ru", Delay = 44, Status = "Access"}
+            //};
 
             //Task.Factory.StartNew(() =>
             //{
             //    while (true)
             //    {
             //        Task.Delay(2000).Wait();
-            //        Click++;
+            //        //TracertObject = _tracerService._tracertValue;
+            //        if (TracertObject.Count != 0)
+            //        {
+            //            //TracertObject[0].Delay += 20;
+            //            Click = (int)TracertObject[0].Delay;
+            //        }
+
             //    }
             //});
 
