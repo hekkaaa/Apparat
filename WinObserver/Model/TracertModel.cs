@@ -11,36 +11,106 @@ namespace WinObserver.Model
 {
     public class TracertModel : INotifyPropertyChanged
     {
-        private string _ip;
-        private int _delay;
-        private string _status;
+        private string? _hostname;
+        private int? _delay;
 
-        public string? Ip
+        private int _minPing = 0;
+        private int _middlePing = 0;
+        private int _maxPing = 0;
+
+        private double _percentLossPacket = 0;
+        private int _counterPacket = 0;
+        private int _counterLossPacket = 0;
+
+        private List<int>? _arhivePingList = new List<int>();
+
+        public string? Hostname
         {
-            get { return _ip; }
+            get { return _hostname; }
             set
             {
-                _ip = value;
-                OnPropertyChanged("Ip");
+                _hostname = value;
+                OnPropertyChanged("Hostname");
             }
         }
-        public int Delay
+        public int? LastDelay
         {
             get { return _delay; }
             set
             {
                 _delay = value;
-                OnPropertyChanged("Delay");
+                OnPropertyChanged("LastDelay");
             }
         }
-        public string? Status
+
+        public int MinPing
         {
-            get { return _status; }
+            get { return _minPing; }
             set
             {
-                _status = value;
-                OnPropertyChanged("Status");
+                _minPing = value;
+                OnPropertyChanged("MinPing");
             }
+        }
+
+        public int MiddlePing
+        {
+            get { return _middlePing; }
+            set
+            {
+                _middlePing = value;
+                OnPropertyChanged("MiddlePing");
+            }
+        }
+
+        public int MaxPing
+        {
+            get { return _maxPing; }
+            set
+            {
+                _maxPing = value;
+                OnPropertyChanged("MaxPing");
+            }
+        }
+
+        public double PercentLossPacket
+        {
+            get { return _percentLossPacket; }
+            set
+            {
+                _percentLossPacket = value;
+                OnPropertyChanged("PercentLossPacket");
+            }
+        }
+
+        public int CounterPacket
+        {
+            get { return _counterPacket; }
+            set
+            {
+                _counterPacket = value;
+                OnPropertyChanged("CounterPacket");
+            }
+        }
+
+        public int CounterLossPacket
+        {
+            get { return _counterLossPacket; }
+            set
+            {
+                _counterLossPacket = value;
+                OnPropertyChanged("CounterLossPacket");
+            }
+        }
+
+        public List<int>? ArhivePingList
+        {
+            get { return _arhivePingList; }
+            //set 
+            //{ 
+            //    _arhivePingList = value;
+            //    OnPropertyChanged("ArhivePingList");
+            //}
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

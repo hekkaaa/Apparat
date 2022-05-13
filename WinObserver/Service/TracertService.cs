@@ -9,6 +9,7 @@ using System.Net.NetworkInformation;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using WinObserver.Algorithms;
 using WinObserver.Model;
 
 namespace WinObserver.Service
@@ -32,10 +33,11 @@ namespace WinObserver.Service
 
             foreach (string addr in objectTracertResult)
             {
-                _innerTracertValue.Add(new TracertModel { Ip = addr });
+                App.Current.Dispatcher.BeginInvoke((System.Action)delegate
+                {
+                    _innerTracertValue.Add(new TracertModel { Hostname = addr });
+                });
             }
-
-            IcmpRequestSender testRequest = new IcmpRequestSender();
 
             Task.Factory.StartNew(() =>
             {
@@ -43,14 +45,9 @@ namespace WinObserver.Service
                 {
                     Task.Delay(2000).Wait();
 
-                    foreach(TracertModel itemModel in _innerTracertValue)
-                    {   
+                    UpdateStatistic();
 
-                        PingReply tmpResult = testRequest.RequestIcmp(itemModel.Ip);
-                        itemModel.Delay = (int)tmpResult.RoundtripTime;
-                    }
-
-                    OnPropertyChanged();
+                    //OnPropertyChanged();
                 }
             });
         }
@@ -60,6 +57,35 @@ namespace WinObserver.Service
         {
             if (PropertyChanged != null)
                 PropertyChanged(this, new PropertyChangedEventArgs(prop));
+        }
+
+
+        private void UpdateStatistic()
+        {
+            IcmpRequestSender icmpUtilite = new IcmpRequestSender();
+
+            foreach (TracertModel objectCollection in _innerTracertValue)
+            {   
+                PingReply tmpResult = icmpUtilite.RequestIcmp(objectCollection.Hostname);
+                TracertModel tempValue = objectCollection;
+
+                if (tmpResult.Status == IPStatus.Success)
+                {
+                    tempValue.LastDelay = (int)tmpResult.RoundtripTime;
+                    tempValue.ArhivePingList!.Add((int)tmpResult.RoundtripTime);
+                    DataGridStatisticAlgorithm.UpdateMinMaxPing(ref tempValue, (int)tmpResult.RoundtripTime);
+                    DataGridStatisticAlgorithm.MiddlePing(ref tempValue);
+                    tempValue.CounterPacket++;
+                }
+                else
+                {
+                    tempValue.LastDelay = 0;
+                    tempValue.CounterPacket++;
+                    tempValue.CounterLossPacket++;
+                }
+
+                tempValue.PercentLossPacket = DataGridStatisticAlgorithm.RateLosses(tempValue.CounterPacket, tempValue.CounterLossPacket);
+            }
         }
     }
 }

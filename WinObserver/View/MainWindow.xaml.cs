@@ -34,25 +34,5 @@ namespace WinObserver
             DataContext = new ApplicationViewModel();
 
         }
-
-        private void DG1_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
-        {
-            //if (Visibility == Visibility.Visible)
-            //{
-            //    DG1.Items.Refresh();
-            //    //CollectionViewSource.GetDefaultView(DG1.ItemsSource).Refresh();
-
-            //}
-            //else
-            //{
-            //    DG1.Items.Refresh();
-            //}
-        }
-
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            //DG1.Items.Refresh();
-            //CollectionViewSource.GetDefaultView(DG1.ItemsSource).Refresh();
-        }
     }
 }

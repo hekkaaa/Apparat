@@ -37,9 +37,17 @@ namespace WinObserver.ViewModel
             get
             {
                 return startTracert ?? new DelegateCommand((obj) =>
-                {   
+                {
+
+                    Task.Factory.StartNew(() =>
+                    {
+                        
                     _tracerService.StartTraceroute();
                     OnPropertyChanged();
+                        
+                    });
+
+                    
                 });
             }
         }
