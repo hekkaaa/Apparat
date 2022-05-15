@@ -25,11 +25,10 @@ namespace WinObserver.Service
             _tracertValue = new ReadOnlyObservableCollection<TracertModel>(_innerTracertValue);
         }
 
-        public void StartTraceroute()
+        public void StartTraceroute(string hostname)
         {   
-
             Traceroute getTracertIp = new Traceroute();
-            var objectTracertResult = getTracertIp.GetIpTraceRoute("ya.ru");
+            var objectTracertResult = getTracertIp.GetIpTraceRoute(hostname);
 
             foreach (string addr in objectTracertResult)
             {
@@ -44,10 +43,7 @@ namespace WinObserver.Service
                 while (true)
                 {
                     Task.Delay(2000).Wait();
-
                     UpdateStatistic();
-
-                    //OnPropertyChanged();
                 }
             });
         }

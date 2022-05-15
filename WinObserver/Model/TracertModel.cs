@@ -1,18 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace WinObserver.Model
 {
     public class TracertModel : INotifyPropertyChanged
     {
+        //private string? _generalHostname;
         private string? _hostname;
-        private int? _delay;
+        private int? _lastDelay;
 
         private int _minPing = 0;
         private int _middlePing = 0;
@@ -23,6 +19,16 @@ namespace WinObserver.Model
         private int _counterLossPacket = 0;
 
         private List<int>? _arhivePingList = new List<int>();
+
+        //public string? GeneralHostname
+        //{
+        //    get { return _generalHostname; }
+        //    set
+        //    {
+        //        _generalHostname = value;
+        //        OnPropertyChanged("GeneralHostname");
+        //    }
+        //}
 
         public string? Hostname
         {
@@ -35,10 +41,10 @@ namespace WinObserver.Model
         }
         public int? LastDelay
         {
-            get { return _delay; }
+            get { return _lastDelay; }
             set
             {
-                _delay = value;
+                _lastDelay = value;
                 OnPropertyChanged("LastDelay");
             }
         }

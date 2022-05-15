@@ -9,10 +9,10 @@ namespace WinObserver.Algorithms
 {
     public static class DataGridStatisticAlgorithm
     {
-        public static double RateLosses(double a, double b)
+        public static double RateLosses(double countPacket, double countLossPacket)
         {
-            double c = b * 100 / a;
-            return c;
+            double result = countLossPacket * 100 / countPacket;
+            return result;
         }
 
         public static void UpdateMinMaxPing(ref TracertModel ip, int ping)

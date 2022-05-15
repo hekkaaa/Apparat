@@ -15,10 +15,21 @@ namespace WinObserver.ViewModel
     public class ApplicationViewModel : INotifyPropertyChanged
     {
         private int _click;
+        private string _hostname;
 
         private readonly TracertService _tracerService;
         public ReadOnlyObservableCollection<TracertModel> TracertObject { get; set; }
 
+
+        public string TexboxHostname
+        {
+            get { return _hostname; }
+            set 
+            { 
+                _hostname = value;
+                OnPropertyChanged();  
+            }
+        }
 
         public int Click
         {
@@ -41,13 +52,10 @@ namespace WinObserver.ViewModel
 
                     Task.Factory.StartNew(() =>
                     {
-                        
-                    _tracerService.StartTraceroute();
-                    OnPropertyChanged();
-                        
+                        _tracerService.StartTraceroute(_hostname);
+                        TexboxHostname = null;
+                        OnPropertyChanged();
                     });
-
-                    
                 });
             }
         }
@@ -56,11 +64,7 @@ namespace WinObserver.ViewModel
         {
             _tracerService = new TracertService();
             TracertObject = _tracerService._tracertValue;
-            //TracertObject = new ObservableCollection<TracertModel>
-            //{
-            //    new TracertModel(){ Ip = "ya.ru", Delay = 44, Status = "Access"}
-            //};
-
+            
             //Task.Factory.StartNew(() =>
             //{
             //    while (true)
