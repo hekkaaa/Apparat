@@ -16,10 +16,44 @@ namespace WinObserver.ViewModel
     {
         private int _click;
         private string _hostname;
+        private string _TableNameDataGrid = "New";
+        private string _btnGeneralName;
+        private bool _statusGeneralBtn = true;
+
 
         private readonly TracertService _tracerService;
         public ReadOnlyObservableCollection<TracertModel> TracertObject { get; set; }
 
+
+        public string BtnName
+        {
+            get { return _btnGeneralName; }
+            set
+            {
+                _btnGeneralName = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public bool StatusGeneralBtn
+        {
+            get { return _statusGeneralBtn; }
+            set
+            {
+                _statusGeneralBtn = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public string TableNameDataGrid
+        {
+            get { return _TableNameDataGrid; }
+            set
+            {
+                _TableNameDataGrid = value;
+                OnPropertyChanged();
+            }
+        }
 
         public string TexboxHostname
         {
@@ -46,10 +80,12 @@ namespace WinObserver.ViewModel
         public DelegateCommand StartTracert
         {
             get
-            {
+            {   
                 return startTracert ?? new DelegateCommand((obj) =>
                 {
-
+                    BtnName = "Stop";
+                    StatusGeneralBtn = false;
+                    TableNameDataGrid = _hostname.ToString();
                     Task.Factory.StartNew(() =>
                     {
                         _tracerService.StartTraceroute(_hostname);
@@ -64,7 +100,9 @@ namespace WinObserver.ViewModel
         {
             _tracerService = new TracertService();
             TracertObject = _tracerService._tracertValue;
-            
+            TexboxHostname = "vk.com";
+            BtnName = "Start";
+
             //Task.Factory.StartNew(() =>
             //{
             //    while (true)

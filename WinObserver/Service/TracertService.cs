@@ -42,7 +42,7 @@ namespace WinObserver.Service
             {
                 while (true)
                 {
-                    Task.Delay(2000).Wait();
+                    Task.Delay(1000).Wait();
                     UpdateStatistic();
                 }
             });

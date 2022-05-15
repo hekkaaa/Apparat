@@ -11,22 +11,21 @@
             <Grid DockPanel.Dock="Top" Background="AliceBlue" Height="120">
                 <TextBox x:Name="GetIp" HorizontalAlignment="Left" Margin="280,0,0,0" VerticalAlignment="Center" Width="120" Text="{Binding TexboxHostname}"/>
                 <!--<ComboBox x:Name="GetIp" HorizontalAlignment="Left" Margin="280,0,0,0" VerticalAlignment="Center" Width="120" Text="hellos" IsEditable="True"/>-->
-                <Button x:Name="GeneralButton" Background="#FFBCBCE3" Content="Start" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="425,0,0,0" Command="{Binding StartTracert}" Width="64"/>
+                <Button x:Name="GeneralButton" Background="#FFBCBCE3" Content="{Binding BtnName}" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="425,0,0,0" Command="{Binding StartTracert}" Width="64" IsEnabled="{Binding StatusGeneralBtn}"/>
             </Grid>
             <TabControl DockPanel.Dock="Right">
-                <TabItem Header="TABLE">
+                <TabItem Header="{Binding TableNameDataGrid}">
                     <Grid Background="Azure">
-                        <DataGrid x:Name="DG1" ItemsSource="{Binding TracertObject, UpdateSourceTrigger=PropertyChanged}"  AutoGenerateColumns="False" RowBackground="BlueViolet" AlternatingRowBackground ="Yellow">
+                        <DataGrid x:Name="DG1" ItemsSource="{Binding TracertObject, UpdateSourceTrigger=PropertyChanged}"  AutoGenerateColumns="False" RowBackground="GhostWhite" AlternatingRowBackground ="LightGray" GridLinesVisibility="None" IsReadOnly="True">
                             <DataGrid.Columns>
-                                <DataGridTextColumn Header="Hostname" Binding="{Binding Hostname}"/>
-                                <DataGridTextColumn Header="Loss %" Binding="{Binding PercentLossPacket}"/>
-                                <DataGridTextColumn Header="Last Delay" Binding="{Binding LastDelay}"/>
-                                <DataGridTextColumn Header="Minimal" Binding="{Binding MinPing}"/>
-                                <DataGridTextColumn Header="Middle" Binding="{Binding MiddlePing}"/>
-                                <DataGridTextColumn Header="Maximum" Binding="{Binding MaxPing}"/>
-                                <DataGridTextColumn Header="All Packet" Binding="{Binding CounterPacket}"/>
-                                <DataGridTextColumn Header="Loss Packet" Binding="{Binding CounterLossPacket}"/>
-                                <DataGridTextColumn Header="Test" Binding="{Binding GeneralHostname}"/>
+                                <DataGridTextColumn Header="Hostname" Binding="{Binding Hostname}" Width="*"/>
+                                <DataGridTextColumn Header="Loss %" Binding="{Binding PercentLossPacket, StringFormat=N1}" Width="*"/>
+                                <DataGridTextColumn Header="Last Delay" Binding="{Binding LastDelay}" Width="*"/>
+                                <DataGridTextColumn Header="Minimal" Binding="{Binding MinPing}" Width="*"/>
+                                <DataGridTextColumn Header="Middle" Binding="{Binding MiddlePing}" Width="*"/>
+                                <DataGridTextColumn Header="Maximum" Binding="{Binding MaxPing}" Width="*"/>
+                                <DataGridTextColumn Header="All Packet" Binding="{Binding CounterPacket}" Width="*"/>
+                                <DataGridTextColumn Header="Loss Packet" Binding="{Binding CounterLossPacket}" Width="*"/>
                             </DataGrid.Columns>
                         </DataGrid>
                     </Grid>
