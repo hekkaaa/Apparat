@@ -9,12 +9,13 @@
     <Grid>
         <DockPanel LastChildFill="True">
             <Grid DockPanel.Dock="Top" Background="AliceBlue" Height="120">
-                <TextBox x:Name="GetIp" HorizontalAlignment="Left" Margin="280,0,0,0" VerticalAlignment="Center" Width="120" Text="{Binding TexboxHostname}"/>
+                <TextBox x:Name="GetIp" HorizontalAlignment="Left" Margin="280,0,0,0" VerticalAlignment="Center" Width="120" Text="{Binding TextBoxHostname}"/>
                 <!--<ComboBox x:Name="GetIp" HorizontalAlignment="Left" Margin="280,0,0,0" VerticalAlignment="Center" Width="120" Text="hellos" IsEditable="True"/>-->
-                <Button x:Name="GeneralButton" Background="#FFBCBCE3" Content="{Binding BtnName}" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="425,0,0,0" Command="{Binding ControlTracert}" Width="64"/>
+                <Button x:Name="ControlButton" Background="#FFBCBCE3" Content="{Binding ControlBtnName}" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="425,0,0,0" Command="{Binding ControlTracert}" Width="64"/>
             </Grid>
             <TabControl DockPanel.Dock="Right">
-                <TabItem Header="{Binding TableNameDataGrid}">
+                <TabItem Header="{Binding NameTableDataGrid}">
+                    <!--<TabItem Header="{Binding NameTableDataGrid}">-->
                     <Grid Background="Azure">
                         <DataGrid x:Name="DG1" ItemsSource="{Binding TracertObject, UpdateSourceTrigger=PropertyChanged}"  AutoGenerateColumns="False" RowBackground="GhostWhite" AlternatingRowBackground ="LightGray" GridLinesVisibility="None" IsReadOnly="True">
                             <DataGrid.Columns>

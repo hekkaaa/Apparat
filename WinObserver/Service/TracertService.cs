@@ -20,6 +20,9 @@ namespace WinObserver.Service
         private ObservableCollection<TracertModel> _innerTracertValue;
         public readonly ReadOnlyObservableCollection<TracertModel> _tracertValue;
 
+        public readonly DataGridModel _gridTracert;
+        private readonly Traceroute _tracerouteHelper;
+
         static CancellationTokenSource? _cancellationTokenSource = new CancellationTokenSource();
         CancellationToken token = _cancellationTokenSource!.Token;
 
@@ -27,32 +30,18 @@ namespace WinObserver.Service
         {
             _innerTracertValue = new ObservableCollection<TracertModel>();
             _tracertValue = new ReadOnlyObservableCollection<TracertModel>(_innerTracertValue);
+            _gridTracert = new DataGridModel();
+            _tracerouteHelper = new Traceroute();
         }
 
         public void StartTraceroute(string hostname)
         {
             ThreadPool.QueueUserWorkItem(new WaitCallback(obj =>
             {
-                Traceroute getTracertIp = new Traceroute();
-                var objectTracertResult = getTracertIp.GetIpTraceRoute(hostname);
+                IEnumerable<string> objectTracertResult = _tracerouteHelper.GetIpTraceRoute(hostname);
 
-                App.Current.Dispatcher.BeginInvoke((System.Action)delegate
-                {
-                    _innerTracertValue.Clear();
-                    OnPropertyChanged();
-                });
-                
-                int countHostname = 1;
-
-                foreach (string addr in objectTracertResult)
-                {
-                    App.Current.Dispatcher.BeginInvoke((System.Action)delegate
-                    {
-                        _innerTracertValue.Add(new TracertModel { NumberHostname = countHostname, Hostname = addr });
-                        countHostname++;
-                        OnPropertyChanged();
-                    });
-                }
+                ClearoldTable();
+                FillingNewtable(objectTracertResult);
 
                 while (true)
                 {
@@ -67,7 +56,6 @@ namespace WinObserver.Service
                         break;
                     }
                 }
-
             }), token);
         }
 
@@ -77,7 +65,7 @@ namespace WinObserver.Service
         }
 
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
         public void OnPropertyChanged([CallerMemberName] string prop = "")
         {
             if (PropertyChanged != null)
@@ -89,6 +77,15 @@ namespace WinObserver.Service
         {
             _cancellationTokenSource = new CancellationTokenSource();
             token = _cancellationTokenSource.Token;
+        }
+
+        private void ClearoldTable()
+        {
+            App.Current.Dispatcher.BeginInvoke((System.Action)delegate
+            {
+                _innerTracertValue.Clear();
+                OnPropertyChanged();
+            });
         }
 
         private void UpdateStatistic()
@@ -116,6 +113,21 @@ namespace WinObserver.Service
                 }
 
                 tempValue.PercentLossPacket = DataGridStatisticAlgorithm.RateLosses(tempValue.CounterPacket, tempValue.CounterLossPacket);
+            }
+        }
+
+        private void FillingNewtable(IEnumerable<string> collectionIpAddres)
+        {
+            int countHostname = 1;
+
+            foreach (string addres in collectionIpAddres)
+            {
+                App.Current.Dispatcher.BeginInvoke((System.Action)delegate
+                {
+                    _innerTracertValue.Add(new TracertModel { NumberHostname = countHostname, Hostname = addres });
+                    countHostname++;
+                    OnPropertyChanged();
+                });
             }
         }
     }
