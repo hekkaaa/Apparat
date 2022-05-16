@@ -11,13 +11,14 @@
             <Grid DockPanel.Dock="Top" Background="AliceBlue" Height="120">
                 <TextBox x:Name="GetIp" HorizontalAlignment="Left" Margin="280,0,0,0" VerticalAlignment="Center" Width="120" Text="{Binding TexboxHostname}"/>
                 <!--<ComboBox x:Name="GetIp" HorizontalAlignment="Left" Margin="280,0,0,0" VerticalAlignment="Center" Width="120" Text="hellos" IsEditable="True"/>-->
-                <Button x:Name="GeneralButton" Background="#FFBCBCE3" Content="{Binding BtnName}" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="425,0,0,0" Command="{Binding StartTracert}" Width="64" IsEnabled="{Binding StatusGeneralBtn}"/>
+                <Button x:Name="GeneralButton" Background="#FFBCBCE3" Content="{Binding BtnName}" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="425,0,0,0" Command="{Binding ControlTracert}" Width="64"/>
             </Grid>
             <TabControl DockPanel.Dock="Right">
                 <TabItem Header="{Binding TableNameDataGrid}">
                     <Grid Background="Azure">
                         <DataGrid x:Name="DG1" ItemsSource="{Binding TracertObject, UpdateSourceTrigger=PropertyChanged}"  AutoGenerateColumns="False" RowBackground="GhostWhite" AlternatingRowBackground ="LightGray" GridLinesVisibility="None" IsReadOnly="True">
                             <DataGrid.Columns>
+                                <DataGridTextColumn Header="№" Binding="{Binding NumberHostname}" Width="0.25*"/>
                                 <DataGridTextColumn Header="Hostname" Binding="{Binding Hostname}" Width="*"/>
                                 <DataGridTextColumn Header="Loss %" Binding="{Binding PercentLossPacket, StringFormat=N1}" Width="*"/>
                                 <DataGridTextColumn Header="Last Delay" Binding="{Binding LastDelay}" Width="*"/>
@@ -32,5 +33,7 @@
                 </TabItem>
             </TabControl>
         </DockPanel>
+        <!--<WpfPlot Name="WpfPlot1" />-->
+
     </Grid>
 </Window>

@@ -33,6 +33,12 @@ namespace WinObserver
         {
             DataContext = new ApplicationViewModel();
 
+            //double[] dataX = new double[] { 1, 2, 3, 4, 5 };
+            //double[] dataY = new double[] { 1, 4, 9, 16, 25 };
+            //double[] data2 = new double[] { 12, 24, 29, 46, 25 };
+            //WpfPlot1.Plot.AddScatter(dataX, dataY);
+            //WpfPlot1.Plot.AddScatter(dataX, data2);
+            //WpfPlot1.Refresh();
         }
     }
 }

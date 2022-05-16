@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using WinObserver.Model;
@@ -18,8 +19,7 @@ namespace WinObserver.ViewModel
         private string _hostname;
         private string _TableNameDataGrid = "New";
         private string _btnGeneralName;
-        private bool _statusGeneralBtn = true;
-
+        private bool _statusWorkDataGrid = false;
 
         private readonly TracertService _tracerService;
         public ReadOnlyObservableCollection<TracertModel> TracertObject { get; set; }
@@ -35,15 +35,15 @@ namespace WinObserver.ViewModel
             }
         }
 
-        public bool StatusGeneralBtn
-        {
-            get { return _statusGeneralBtn; }
-            set
-            {
-                _statusGeneralBtn = value;
-                OnPropertyChanged();
-            }
-        }
+        //public bool StatusGeneralBtn
+        //{
+        //    get { return _statusGeneralBtn; }
+        //    set
+        //    {
+        //        _statusGeneralBtn = value;
+        //        OnPropertyChanged();
+        //    }
+        //}
 
         public string TableNameDataGrid
         {
@@ -75,24 +75,54 @@ namespace WinObserver.ViewModel
             }
         }
 
-        private DelegateCommand startTracert { get; }
+        private DelegateCommand controlTracert { get; }
 
-        public DelegateCommand StartTracert
+        public DelegateCommand ControlTracert
         {
             get
             {   
-                return startTracert ?? new DelegateCommand((obj) =>
+                return controlTracert ?? new DelegateCommand((obj) =>
                 {
-                    BtnName = "Stop";
-                    StatusGeneralBtn = false;
-                    TableNameDataGrid = _hostname.ToString();
-                    Task.Factory.StartNew(() =>
+
+                    if (_statusWorkDataGrid)
                     {
+                        _tracerService.StopTraceroute();
+                        _statusWorkDataGrid = false;
+                        BtnName = "Start";
+                    }
+                    else
+                    {
+                        BtnName = "Stop";
+                        TracertObject = null;
+                        TableNameDataGrid = _hostname.ToString();
                         _tracerService.StartTraceroute(_hostname);
                         TexboxHostname = null;
-                        OnPropertyChanged();
-                    });
+                        _statusWorkDataGrid = true;
+                    }
+                    OnPropertyChanged();
+
+                    //ThreadPool.QueueUserWorkItem(new WaitCallback(obj =>
+                    //{
+                    //    _tracerService.StartTraceroute(_hostname);
+                    //    TexboxHostname = null;
+                    //    OnPropertyChanged();
+
+                    //}));
+
                 });
+            }
+        }
+
+
+        private DelegateCommand stopCommand;
+        public DelegateCommand StopCommand
+        {
+            get
+            {
+                return stopCommand ?? (stopCommand = new DelegateCommand(obj =>
+                {
+                    _tracerService.StopTraceroute();
+                }));
             }
         }
 

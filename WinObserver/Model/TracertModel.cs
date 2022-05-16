@@ -6,7 +6,7 @@ namespace WinObserver.Model
 {
     public class TracertModel : INotifyPropertyChanged
     {
-        //private string? _generalHostname;
+        private int? _numberHostname;
         private string? _hostname;
         private int? _lastDelay;
 
@@ -20,15 +20,15 @@ namespace WinObserver.Model
 
         private List<int>? _arhivePingList = new List<int>();
 
-        //public string? GeneralHostname
-        //{
-        //    get { return _generalHostname; }
-        //    set
-        //    {
-        //        _generalHostname = value;
-        //        OnPropertyChanged("GeneralHostname");
-        //    }
-        //}
+        public int? NumberHostname
+        {
+            get { return _numberHostname; }
+            set
+            {
+                _numberHostname = value;
+                OnPropertyChanged("NumberHostname");
+            }
+        }
 
         public string? Hostname
         {
@@ -119,7 +119,7 @@ namespace WinObserver.Model
             //}
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
         public void OnPropertyChanged([CallerMemberName] string prop = "")
         {
             if (PropertyChanged != null)
