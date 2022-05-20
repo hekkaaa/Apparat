@@ -8,8 +8,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="LiveChartsCore.SkiaSharpView.WPF" Version="2.0.0-beta.230" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0" />
     <PackageReference Include="NetObserver.Helper" Version="1.1.1" />
-    <PackageReference Include="ScottPlot.WPF" Version="4.1.45" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Service\Interface\" />
   </ItemGroup>
 
 </Project>

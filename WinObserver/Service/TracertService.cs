@@ -1,4 +1,6 @@
-﻿using NetObserver.PingUtility;
+﻿using LiveChartsCore;
+using LiveChartsCore.SkiaSharpView;
+using NetObserver.PingUtility;
 using NetObserver.TracerouteUtility;
 using System;
 using System.Collections.Generic;
@@ -12,6 +14,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using WinObserver.Algorithms;
 using WinObserver.Model;
+using WinObserver.Repositories;
+using WinObserver.Repositories.Interface;
 
 namespace WinObserver.Service
 {
@@ -22,16 +26,32 @@ namespace WinObserver.Service
 
         public readonly DataGridModel _gridTracert;
         private readonly Traceroute _tracerouteHelper;
+        private readonly IChartRepository _chartRepository;
+        public ObservableCollection<ISeries> _testGR;
 
         static CancellationTokenSource? _cancellationTokenSource = new CancellationTokenSource();
         CancellationToken token = _cancellationTokenSource!.Token;
 
-        public TracertService()
+        public TracertService(IChartRepository chartService)
         {
             _innerTracertValue = new ObservableCollection<TracertModel>();
             _tracertValue = new ReadOnlyObservableCollection<TracertModel>(_innerTracertValue);
             _gridTracert = new DataGridModel();
             _tracerouteHelper = new Traceroute();
+            _chartRepository = chartService;
+
+            //_testGR = new ObservableCollection<ISeries>()
+            //{
+            //    new LineSeries<double>
+            //    {
+            //        Name = "Meow!",
+            //        GeometryStroke = null,
+            //        GeometryFill = null,
+            //        Values = new List<double> { 2, 122, 3, 6 },
+            //    }
+            //};
+            //_chartRepository.AddHops("test");
+            //_chartRepository.AddValueLossCollection(44);
         }
 
         public void StartTraceroute(string hostname)
@@ -42,15 +62,14 @@ namespace WinObserver.Service
 
                 ClearoldTable();
                 FillingNewtable(objectTracertResult);
+                double ctr = 1;
 
                 while (true)
                 {
-                    var test = token;
                     Task.Delay(1000).Wait();
                     UpdateStatistic();
-
                     if (token.IsCancellationRequested)
-                    {   
+                    {
                         _cancellationTokenSource!.Dispose();
                         RestartToken();
                         break;
@@ -91,9 +110,10 @@ namespace WinObserver.Service
         private void UpdateStatistic()
         {
             IcmpRequestSender icmpUtilite = new IcmpRequestSender();
+            var count = 0;
 
             foreach (TracertModel objectCollection in _innerTracertValue)
-            {   
+            {
                 PingReply tmpResult = icmpUtilite.RequestIcmp(objectCollection.Hostname);
                 TracertModel tempValue = objectCollection;
 
@@ -111,8 +131,10 @@ namespace WinObserver.Service
                     tempValue.CounterPacket++;
                     tempValue.CounterLossPacket++;
                 }
-
+                
                 tempValue.PercentLossPacket = DataGridStatisticAlgorithm.RateLosses(tempValue.CounterPacket, tempValue.CounterLossPacket);
+                AddLossGraf(count, tempValue.PercentLossPacket);
+                count++;
             }
         }
 
@@ -122,6 +144,7 @@ namespace WinObserver.Service
 
             foreach (string addres in collectionIpAddres)
             {
+                FillingNameGraf(addres);
                 App.Current.Dispatcher.BeginInvoke((System.Action)delegate
                 {
                     _innerTracertValue.Add(new TracertModel { NumberHostname = countHostname, Hostname = addres });
@@ -129,6 +152,17 @@ namespace WinObserver.Service
                     OnPropertyChanged();
                 });
             }
+        }
+
+
+        private void FillingNameGraf(string name)
+        {
+            _chartRepository.AddHops(name);
+        }
+
+        private void AddLossGraf(int count, double loss)
+        {
+            _chartRepository.AddValueLossCollection(count,loss);
         }
     }
 }
