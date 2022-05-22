@@ -1,0 +1,30 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net6.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWPF>true</UseWPF>
+    <Version>0.0.11</Version>
+    <PackageId>Apparat</PackageId>
+    <Authors>Alexander Pototsky</Authors>
+    <Company>Alexander Pototsky</Company>
+    <Product>Apparat</Product>
+    <Description>Data trace tracking</Description>
+    <PackageProjectUrl>https://github.com/hekkaaa/WinObserver</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/hekkaaa/WinObserver</RepositoryUrl>
+    <PackageTags>Traceroute; Tracert; Icmp; Network;</PackageTags>
+    <PackageReleaseNotes>pre-alpha</PackageReleaseNotes>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="LiveChartsCore.SkiaSharpView.WPF" Version="2.0.0-beta.230" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0" />
+    <PackageReference Include="NetObserver.Helper" Version="1.1.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Service\Interface\" />
+  </ItemGroup>
+
+</Project>
