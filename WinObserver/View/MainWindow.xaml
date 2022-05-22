@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WinObserver" xmlns:viewmodel="clr-namespace:WinObserver.ViewModel" d:DataContext="{d:DesignInstance Type=viewmodel:ApplicationViewModel}"
         mc:Ignorable="d"
-        Title="Apparat" MinHeight="300" MinWidth="400" Height="450" Width="800" Loaded="Window_Loaded"
+        Title="Apparat" MinHeight="300" MinWidth="400" Height="550" Width="800" Loaded="Window_Loaded"
         xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.WPF;assembly=LiveChartsCore.SkiaSharpView.WPF"
         WindowStartupLocation="CenterScreen">
     
@@ -46,7 +46,9 @@
                     Grid.Row="3"
                     Series="{Binding Losses}"
                     XAxes="{Binding XAxes}"
-                    ZoomMode="X" LegendPosition="Bottom">
+                    YAxes="{Binding YAxes}"
+                    ZoomMode="None" 
+                    LegendPosition="Bottom" LegendFontFamily="Console">
             <!--XAxes="{Binding XAxes}"-->
             <!--TooltipPosition="Hidden" 
                     LegendPosition="Bottom"-->

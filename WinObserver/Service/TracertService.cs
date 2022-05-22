@@ -1,20 +1,14 @@
-﻿using LiveChartsCore;
-using LiveChartsCore.SkiaSharpView;
-using NetObserver.PingUtility;
+﻿using NetObserver.PingUtility;
 using NetObserver.TracerouteUtility;
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Linq;
 using System.Net.NetworkInformation;
 using System.Runtime.CompilerServices;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using WinObserver.Algorithms;
 using WinObserver.Model;
-using WinObserver.Repositories;
 using WinObserver.Repositories.Interface;
 
 namespace WinObserver.Service
@@ -48,8 +42,7 @@ namespace WinObserver.Service
 
                 ClearoldTable();
                 FillingNewtable(objectTracertResult);
-
-                //_chartRepository.CreateNewDatetimeValueXAxes(); // +
+                _chartRepository.ClearChart();
 
                 while (true)
                 {
@@ -98,7 +91,8 @@ namespace WinObserver.Service
         {
             IcmpRequestSender icmpUtilite = new IcmpRequestSender();
             int countHop = 0;
-            AddAXesDatatime(); // + 
+            _chartRepository.UpdateTimeXAxes();
+
             foreach (TracertModel objectCollection in _innerTracertValue)
             {
                 PingReply tmpResult = icmpUtilite.RequestIcmp(objectCollection.Hostname);
@@ -118,7 +112,7 @@ namespace WinObserver.Service
                     tempValue.CounterPacket++;
                     tempValue.CounterLossPacket++;
                 }
-                
+
                 tempValue.PercentLossPacket = DataGridStatisticAlgorithm.RateLosses(tempValue.CounterPacket, tempValue.CounterLossPacket);
                 AddLossChart(countHop, tempValue.PercentLossPacket);
                 countHop++;
@@ -134,8 +128,6 @@ namespace WinObserver.Service
                 App.Current.Dispatcher.BeginInvoke((System.Action)delegate
                 {
                     FillingNameChart(addres);
-                    //AddLossChart(countHostname - 1, 0); // fix bug start animation grafic.
-                    //AddAXesDatatime();
                     _innerTracertValue.Add(new TracertModel { NumberHostname = countHostname, Hostname = addres });
                     countHostname++;
                     OnPropertyChanged();
@@ -151,12 +143,7 @@ namespace WinObserver.Service
 
         private void AddLossChart(int count, double loss)
         {
-            _chartRepository.AddValueLossCollection(count,loss);
-        }
-
-        private void AddAXesDatatime()
-        {
-            _chartRepository.AddTimeXAxes();
+            _chartRepository.AddValueLossCollection(count, loss);
         }
     }
 }

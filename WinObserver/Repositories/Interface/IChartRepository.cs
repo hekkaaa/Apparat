@@ -6,7 +6,7 @@ namespace WinObserver.Repositories.Interface
     {
         void AddHops(string hostname);
         void AddValueLossCollection(int numberHop, double newValue);
-        void CreateNewDatetimeValueXAxes();
-        void AddTimeXAxes();
+        void ClearChart();
+        void UpdateTimeXAxes();
     }
 }

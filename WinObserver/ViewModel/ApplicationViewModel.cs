@@ -20,11 +20,12 @@ namespace WinObserver.ViewModel
 
         private GeneralPanelModel? _generalPanelModel;
         private readonly TracertService? _tracerService;
-        public ReadOnlyObservableCollection<TracertModel>? TracertObject { get; set; }
         private readonly ChartRepository _chartRepository;
-        private List<string> _listTime;
-        private List<Axis> _testAXes;
+        private ReadOnlyObservableCollection<Axis> _timeInfoXAxes;
+        private ReadOnlyObservableCollection<Axis> _valueInfoYAxes;
 
+
+        public ReadOnlyObservableCollection<TracertModel>? TracertObject { get; set; }
 
         public string ControlBtnName
         {
@@ -36,9 +37,15 @@ namespace WinObserver.ViewModel
             }
         }
 
-        public List<Axis> XAxes
+        public ReadOnlyObservableCollection<Axis> XAxes
         {
-            get { return _testAXes; }
+            get { return _timeInfoXAxes; }
+            //set { _timeInfoXAxes = value; OnPropertyChanged(); }
+        }
+
+        public ReadOnlyObservableCollection<Axis> YAxes
+        { 
+            get { return _valueInfoYAxes; } 
         }
 
         public ReadOnlyObservableCollection<ISeries> Losses
@@ -125,33 +132,11 @@ namespace WinObserver.ViewModel
             _tracerService = new TracertService(_chartRepository);
             _generalPanelModel = new GeneralPanelModel();
             TracertObject = _tracerService._tracertValue;
-            _testAXes = _chartRepository._ObjectXAxes;
-            TextBoxHostname = "vk.com"; // Потом убрать!
+            _timeInfoXAxes = _chartRepository._ObjectXAxes;
+            _valueInfoYAxes = _chartRepository._ObjectYAxes;
 
-            //XAxes = new List<Axis>
-            //    {
-            //        new Axis
-            //        {
-            //            LabelsRotation = 15,
-            //            Labels = _listTime,
-            //        }
-            //    };
-
-            //Task.Factory.StartNew(() =>
-            //{
-            //    DateTime date1 = DateTime.Now;
-            //    _listTime = new List<string>();
-            //    _listTime.Add(date1.ToString("T"));
-
-            //    while (true)
-            //    {
-            //        Task.Delay(1000).Wait();
-            //        date1 = date1.AddSeconds(4);
-            //        _listTime.Add(date1.ToString("T"));
-            //        XAxes[0].Labels = _listTime;
-            //    }
-
-            //});
+            //TextBoxHostname = "vk.com"; // Потом убрать!
+         
         }
 
 

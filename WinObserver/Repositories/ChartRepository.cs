@@ -15,27 +15,20 @@ namespace WinObserver.Repositories
         private ObservableCollection<ISeries> _innerLoss;
         public readonly ReadOnlyObservableCollection<ISeries> _lossList;
 
-        private List<Axis> _innerObjectXAxes;
-        public readonly List<Axis> _ObjectXAxes;
+        private ObservableCollection<Axis> _innerObjectXAxes;
+        public readonly ReadOnlyObservableCollection<Axis> _ObjectXAxes;
+        private ObservableCollection<Axis> _innerObjectYAxes;
+        public readonly ReadOnlyObservableCollection<Axis> _ObjectYAxes;
         private List<string> _collectionTimeXAxes;
 
         public ChartRepository()
         {
             _innerLoss = new ObservableCollection<ISeries>();
             _lossList = new ReadOnlyObservableCollection<ISeries>(_innerLoss);
+            DefaultValuesForViewChart();
+            _ObjectXAxes = new ReadOnlyObservableCollection<Axis>(_innerObjectXAxes);
+            _ObjectYAxes = new ReadOnlyObservableCollection<Axis>(_innerObjectYAxes);
 
-            _collectionTimeXAxes = new List<string>();
-            _innerObjectXAxes = new List<Axis>
-                {
-                    new Axis
-                    {
-                        LabelsRotation = 15,
-                        Labels = _collectionTimeXAxes,
-                    }
-                };
-            
-            _ObjectXAxes = new List<Axis>(_innerObjectXAxes);
-           
         }
 
         public void AddHops(string hostname)
@@ -57,7 +50,8 @@ namespace WinObserver.Repositories
 
             if (tmpCollectionLoss == null) 
             {
-                tmpCollectionLoss.Add(100);
+                int maxLoss = 100;
+                tmpCollectionLoss.Add(maxLoss);
                 _innerLoss[numberHop].Values = tmpCollectionLoss;
             }
             else
@@ -67,9 +61,23 @@ namespace WinObserver.Repositories
             }
         }
 
-        public void CreateNewDatetimeValueXAxes()
+        public void ClearChart()
         {
-            _innerObjectXAxes = new List<Axis>
+            _innerLoss.Clear();
+            _collectionTimeXAxes.Clear();
+        }
+
+        public void UpdateTimeXAxes()
+        {
+            DateTime date1 = DateTime.Now;
+            _collectionTimeXAxes.Add(date1.ToString("T"));
+            _innerObjectXAxes[0].Labels = _collectionTimeXAxes;
+        }
+
+        private void DefaultValuesForViewChart()
+        {
+            _collectionTimeXAxes = new List<string>() { "00:00" };
+            _innerObjectXAxes = new ObservableCollection<Axis>
                 {
                     new Axis
                     {
@@ -77,13 +85,15 @@ namespace WinObserver.Repositories
                         Labels = _collectionTimeXAxes,
                     }
                 };
-        }
-        public void AddTimeXAxes()
-        {
-            DateTime date1 = DateTime.Now;
-            _collectionTimeXAxes.Add(date1.ToString("T"));
-            _innerObjectXAxes[0].Labels = _collectionTimeXAxes;
-        }
 
+            _innerObjectYAxes = new ObservableCollection<Axis>
+            {
+                 new Axis
+                {
+                    MinLimit = 0,
+                    MaxLimit = 100,
+                }
+            };
+        }
     }
 }
