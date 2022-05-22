@@ -5,11 +5,13 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WinObserver" xmlns:viewmodel="clr-namespace:WinObserver.ViewModel" d:DataContext="{d:DesignInstance Type=viewmodel:ApplicationViewModel}"
         mc:Ignorable="d"
-        Title="WinObserver" Height="450" Width="800" Loaded="Window_Loaded"
-        xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.WPF;assembly=LiveChartsCore.SkiaSharpView.WPF">
+        Title="Apparat" MinHeight="300" MinWidth="400" Height="450" Width="800" Loaded="Window_Loaded"
+        xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.WPF;assembly=LiveChartsCore.SkiaSharpView.WPF"
+        WindowStartupLocation="CenterScreen">
+    
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="*" />
+            <RowDefinition Height="50" />
             <RowDefinition Height="*" />
             <RowDefinition Height="5" />
             <RowDefinition Height="*" />
@@ -18,27 +20,31 @@
             <TextBox x:Name="GetIp" HorizontalAlignment="Left" Margin="280,0,0,0" VerticalAlignment="Center" Width="120" Text="{Binding TextBoxHostname}"/>
             <!--<ComboBox x:Name="GetIp" HorizontalAlignment="Left" Margin="280,0,0,0" VerticalAlignment="Center" Width="120" Text="hellos" IsEditable="True"/>-->
             <Button x:Name="ControlButton" Background="#FFBCBCE3" Content="{Binding ControlBtnName}" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="425,0,0,0" Command="{Binding ControlTracert}" Width="64"/>
-            <TextBlock HorizontalAlignment="Left" Margin="84,84,0,0" TextWrapping="Wrap" Text="{Binding Losses.Count}" VerticalAlignment="Top"/>
         </Grid>
-        <Grid Background="Azure"  Grid.Row="1">
-            <DataGrid x:Name="DG1" ItemsSource="{Binding TracertObject, UpdateSourceTrigger=PropertyChanged}"  AutoGenerateColumns="False" RowBackground="GhostWhite" AlternatingRowBackground ="LightGray" GridLinesVisibility="None" IsReadOnly="True">
-                <DataGrid.Columns>
-                    <DataGridTextColumn Header="№" Binding="{Binding NumberHostname}" Width="0.25*"/>
-                    <DataGridTextColumn Header="Hostname" Binding="{Binding Hostname}" Width="*"/>
-                    <DataGridTextColumn Header="Loss %" Binding="{Binding PercentLossPacket, StringFormat=N1}" Width="*"/>
-                    <DataGridTextColumn Header="Last Delay" Binding="{Binding LastDelay}" Width="*"/>
-                    <DataGridTextColumn Header="Minimal" Binding="{Binding MinPing}" Width="*"/>
-                    <DataGridTextColumn Header="Middle" Binding="{Binding MiddlePing}" Width="*"/>
-                    <DataGridTextColumn Header="Maximum" Binding="{Binding MaxPing}" Width="*"/>
-                    <DataGridTextColumn Header="All Packet" Binding="{Binding CounterPacket}" Width="*"/>
-                    <DataGridTextColumn Header="Loss Packet" Binding="{Binding CounterLossPacket}" Width="*"/>
-                </DataGrid.Columns>
-            </DataGrid>
-        </Grid>
-        <GridSplitter Grid.Row="2" Height="5" HorizontalAlignment="Stretch" />
+        <TabControl DockPanel.Dock="Right" Grid.Row="1">
+            <TabItem Header="{Binding NameTableDataGrid}">
+                <!--<TabItem Header="{Binding NameTableDataGrid}">-->
+                <Grid Background="Azure">
+                    <DataGrid x:Name="DG1" ItemsSource="{Binding TracertObject, UpdateSourceTrigger=PropertyChanged}"  AutoGenerateColumns="False" RowBackground="GhostWhite" AlternatingRowBackground ="LightGray" GridLinesVisibility="None" IsReadOnly="True">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="№" Binding="{Binding NumberHostname}" Width="0.25*"/>
+                            <DataGridTextColumn Header="Hostname" Binding="{Binding Hostname}" Width="*"/>
+                            <DataGridTextColumn Header="Loss %" Binding="{Binding PercentLossPacket, StringFormat=N1}" Width="*"/>
+                            <DataGridTextColumn Header="Last Delay" Binding="{Binding LastDelay}" Width="*"/>
+                            <DataGridTextColumn Header="Minimal" Binding="{Binding MinPing}" Width="*"/>
+                            <DataGridTextColumn Header="Middle" Binding="{Binding MiddlePing}" Width="*"/>
+                            <DataGridTextColumn Header="Maximum" Binding="{Binding MaxPing}" Width="*"/>
+                            <DataGridTextColumn Header="All Packet" Binding="{Binding CounterPacket}" Width="*"/>
+                            <DataGridTextColumn Header="Loss Packet" Binding="{Binding CounterLossPacket}" Width="*"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+            </TabItem>
+        </TabControl>
+        <GridSplitter Grid.Row="2" Height="5" HorizontalAlignment="Stretch"/>
         <lvc:CartesianChart 
                     Grid.Row="3"
-                    Series="{Binding Losses}" 
+                    Series="{Binding Losses}"
                     XAxes="{Binding XAxes}"
                     ZoomMode="X" LegendPosition="Bottom">
             <!--XAxes="{Binding XAxes}"-->

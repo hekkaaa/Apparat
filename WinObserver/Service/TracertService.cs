@@ -27,7 +27,6 @@ namespace WinObserver.Service
         public readonly DataGridModel _gridTracert;
         private readonly Traceroute _tracerouteHelper;
         private readonly IChartRepository _chartRepository;
-        public ObservableCollection<ISeries> _testGR;
 
         static CancellationTokenSource? _cancellationTokenSource = new CancellationTokenSource();
         CancellationToken token = _cancellationTokenSource!.Token;
@@ -39,19 +38,6 @@ namespace WinObserver.Service
             _gridTracert = new DataGridModel();
             _tracerouteHelper = new Traceroute();
             _chartRepository = chartService;
-
-            //_testGR = new ObservableCollection<ISeries>()
-            //{
-            //    new LineSeries<double>
-            //    {
-            //        Name = "Meow!",
-            //        GeometryStroke = null,
-            //        GeometryFill = null,
-            //        Values = new List<double> { 2, 122, 3, 6 },
-            //    }
-            //};
-            //_chartRepository.AddHops("test");
-            //_chartRepository.AddValueLossCollection(44);
         }
 
         public void StartTraceroute(string hostname)
@@ -62,7 +48,8 @@ namespace WinObserver.Service
 
                 ClearoldTable();
                 FillingNewtable(objectTracertResult);
-                double ctr = 1;
+
+                //_chartRepository.CreateNewDatetimeValueXAxes(); // +
 
                 while (true)
                 {
@@ -110,8 +97,8 @@ namespace WinObserver.Service
         private void UpdateStatistic()
         {
             IcmpRequestSender icmpUtilite = new IcmpRequestSender();
-            var count = 0;
-
+            int countHop = 0;
+            AddAXesDatatime(); // + 
             foreach (TracertModel objectCollection in _innerTracertValue)
             {
                 PingReply tmpResult = icmpUtilite.RequestIcmp(objectCollection.Hostname);
@@ -133,8 +120,8 @@ namespace WinObserver.Service
                 }
                 
                 tempValue.PercentLossPacket = DataGridStatisticAlgorithm.RateLosses(tempValue.CounterPacket, tempValue.CounterLossPacket);
-                AddLossGraf(count, tempValue.PercentLossPacket);
-                count++;
+                AddLossChart(countHop, tempValue.PercentLossPacket);
+                countHop++;
             }
         }
 
@@ -144,9 +131,11 @@ namespace WinObserver.Service
 
             foreach (string addres in collectionIpAddres)
             {
-                FillingNameGraf(addres);
                 App.Current.Dispatcher.BeginInvoke((System.Action)delegate
                 {
+                    FillingNameChart(addres);
+                    //AddLossChart(countHostname - 1, 0); // fix bug start animation grafic.
+                    //AddAXesDatatime();
                     _innerTracertValue.Add(new TracertModel { NumberHostname = countHostname, Hostname = addres });
                     countHostname++;
                     OnPropertyChanged();
@@ -155,14 +144,19 @@ namespace WinObserver.Service
         }
 
 
-        private void FillingNameGraf(string name)
+        private void FillingNameChart(string name)
         {
             _chartRepository.AddHops(name);
         }
 
-        private void AddLossGraf(int count, double loss)
+        private void AddLossChart(int count, double loss)
         {
             _chartRepository.AddValueLossCollection(count,loss);
+        }
+
+        private void AddAXesDatatime()
+        {
+            _chartRepository.AddTimeXAxes();
         }
     }
 }

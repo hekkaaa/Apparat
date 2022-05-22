@@ -22,6 +22,9 @@ namespace WinObserver.ViewModel
         private readonly TracertService? _tracerService;
         public ReadOnlyObservableCollection<TracertModel>? TracertObject { get; set; }
         private readonly ChartRepository _chartRepository;
+        private List<string> _listTime;
+        private List<Axis> _testAXes;
+
 
         public string ControlBtnName
         {
@@ -33,19 +36,16 @@ namespace WinObserver.ViewModel
             }
         }
 
+        public List<Axis> XAxes
+        {
+            get { return _testAXes; }
+        }
+
         public ReadOnlyObservableCollection<ISeries> Losses
         {
             get
             {
-                //return _tracerService._testGR;
-                return _chartRepository._loss;
-            }
-
-            set
-            {
-                //_tracerService._testGR = value;
-                _chartRepository._loss = value;
-                OnPropertyChanged();
+                return _chartRepository._lossList;
             }
         }
 
@@ -86,7 +86,6 @@ namespace WinObserver.ViewModel
             {
                 return controlTracert ?? new DelegateCommand((obj) =>
                 {
-
                     if (_statusWorkDataGrid)
                     {
                         _tracerService!.StopTraceroute();
@@ -126,31 +125,33 @@ namespace WinObserver.ViewModel
             _tracerService = new TracertService(_chartRepository);
             _generalPanelModel = new GeneralPanelModel();
             TracertObject = _tracerService._tracertValue;
-
+            _testAXes = _chartRepository._ObjectXAxes;
             TextBoxHostname = "vk.com"; // Потом убрать!
 
+            //XAxes = new List<Axis>
+            //    {
+            //        new Axis
+            //        {
+            //            LabelsRotation = 15,
+            //            Labels = _listTime,
+            //        }
+            //    };
+
             //Task.Factory.StartNew(() =>
-            //{   
-            //    var kkk = new List<double>();
-            //    int cnt = 1;
+            //{
+            //    DateTime date1 = DateTime.Now;
+            //    _listTime = new List<string>();
+            //    _listTime.Add(date1.ToString("T"));
+
             //    while (true)
             //    {
-            //        Task.Delay(3000).Wait();
-            //        kkk.Add(cnt);
-            //        _tracerService._testGR[0].Values = kkk;
-            //        cnt++;
+            //        Task.Delay(1000).Wait();
+            //        date1 = date1.AddSeconds(4);
+            //        _listTime.Add(date1.ToString("T"));
+            //        XAxes[0].Labels = _listTime;
             //    }
-                
+
             //});
-            //Losses = new ObservableCollection<ISeries>()
-            //{
-            //    new LineSeries<double>
-            //    {
-            //        GeometryStroke = null,
-            //        GeometryFill = null,
-            //        Values = new List<double> { 2, 122, 3, 52, 3, 41, 6, 2, 1, 3, 5, 3, 4, 6, 2, 1, 3, 5, 3, 4, 6 },
-            //    }
-            //};
         }
 
 
