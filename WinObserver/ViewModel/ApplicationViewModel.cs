@@ -21,8 +21,8 @@ namespace WinObserver.ViewModel
         private GeneralPanelModel? _generalPanelModel;
         private readonly TracertService? _tracerService;
         private readonly ChartRepository _chartRepository;
-        private ReadOnlyObservableCollection<Axis> _timeInfoXAxes;
-        private ReadOnlyObservableCollection<Axis> _valueInfoYAxes;
+        private List<Axis> _timeInfoXAxes;
+        private List<Axis> _valueInfoYAxes;
 
 
         public ReadOnlyObservableCollection<TracertModel>? TracertObject { get; set; }
@@ -37,13 +37,13 @@ namespace WinObserver.ViewModel
             }
         }
 
-        public ReadOnlyObservableCollection<Axis> XAxes
+        public List<Axis> XAxes
         {
             get { return _timeInfoXAxes; }
             //set { _timeInfoXAxes = value; OnPropertyChanged(); }
         }
 
-        public ReadOnlyObservableCollection<Axis> YAxes
+        public List<Axis> YAxes
         { 
             get { return _valueInfoYAxes; } 
         }

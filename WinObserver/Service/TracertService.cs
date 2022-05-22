@@ -95,7 +95,7 @@ namespace WinObserver.Service
 
             foreach (TracertModel objectCollection in _innerTracertValue)
             {
-                PingReply tmpResult = icmpUtilite.RequestIcmp(objectCollection.Hostname);
+                PingReply tmpResult = icmpUtilite.RequestIcmp(objectCollection.Hostname, 1500);
                 TracertModel tempValue = objectCollection;
 
                 if (tmpResult.Status == IPStatus.Success)

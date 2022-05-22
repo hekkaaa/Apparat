@@ -15,10 +15,10 @@ namespace WinObserver.Repositories
         private ObservableCollection<ISeries> _innerLoss;
         public readonly ReadOnlyObservableCollection<ISeries> _lossList;
 
-        private ObservableCollection<Axis> _innerObjectXAxes;
-        public readonly ReadOnlyObservableCollection<Axis> _ObjectXAxes;
-        private ObservableCollection<Axis> _innerObjectYAxes;
-        public readonly ReadOnlyObservableCollection<Axis> _ObjectYAxes;
+        private List<Axis> _innerObjectXAxes;
+        public readonly List<Axis> _ObjectXAxes;
+        private List<Axis> _innerObjectYAxes;
+        public readonly List<Axis> _ObjectYAxes;
         private List<string> _collectionTimeXAxes;
 
         public ChartRepository()
@@ -26,8 +26,8 @@ namespace WinObserver.Repositories
             _innerLoss = new ObservableCollection<ISeries>();
             _lossList = new ReadOnlyObservableCollection<ISeries>(_innerLoss);
             DefaultValuesForViewChart();
-            _ObjectXAxes = new ReadOnlyObservableCollection<Axis>(_innerObjectXAxes);
-            _ObjectYAxes = new ReadOnlyObservableCollection<Axis>(_innerObjectYAxes);
+            _ObjectXAxes = new List<Axis>(_innerObjectXAxes);
+            _ObjectYAxes = new List<Axis>(_innerObjectYAxes);
 
         }
 
@@ -76,8 +76,8 @@ namespace WinObserver.Repositories
 
         private void DefaultValuesForViewChart()
         {
-            _collectionTimeXAxes = new List<string>() { "00:00" };
-            _innerObjectXAxes = new ObservableCollection<Axis>
+            _collectionTimeXAxes = new List<string>() { "00:00:00" };
+            _innerObjectXAxes = new List<Axis>
                 {
                     new Axis
                     {
@@ -86,7 +86,7 @@ namespace WinObserver.Repositories
                     }
                 };
 
-            _innerObjectYAxes = new ObservableCollection<Axis>
+            _innerObjectYAxes = new List<Axis>
             {
                  new Axis
                 {
