@@ -13,3 +13,6 @@ _At the moment, early versions - the program may unexpectedly freeze and give er
 * WPF/.NET 6 - [.NET 6 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/6.0).
 * [LiveCharts2](https://github.com/beto-rodriguez/LiveCharts2) - LiveChartsCore.SkiaSharpView.WPF v2.0.0-beta.240.
 * [NetObserver.Helper](https://github.com/hekkaaa/NetObserver) - v1.1.2
+
+## Downloads
+**[Download it now](https://github.com/hekkaaa/Apparat/releases/latest)**
