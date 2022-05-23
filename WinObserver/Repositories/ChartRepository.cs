@@ -1,5 +1,7 @@
 ﻿using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
+using LiveChartsCore.SkiaSharpView.Painting;
+using SkiaSharp;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -80,7 +82,7 @@ namespace WinObserver.Repositories
             _innerObjectXAxes = new List<Axis>
                 {
                     new Axis
-                    {
+                    {   
                         LabelsRotation = 15,
                         Labels = _collectionTimeXAxes,
                     }
@@ -92,6 +94,7 @@ namespace WinObserver.Repositories
                 {
                     MinLimit = 0,
                     MaxLimit = 100,
+                    MinStep = 10,
                 }
             };
         }

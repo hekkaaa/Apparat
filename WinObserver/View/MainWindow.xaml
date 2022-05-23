@@ -11,15 +11,27 @@
     
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="50" />
+            <RowDefinition Height="60" />
             <RowDefinition Height="*" />
             <RowDefinition Height="5" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <Grid Grid.Row="0">
-            <TextBox x:Name="GetIp" HorizontalAlignment="Left" Margin="280,0,0,0" VerticalAlignment="Center" Width="120" Text="{Binding TextBoxHostname}"/>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition  Width="10" />
+                <ColumnDefinition  Width="120" />
+                <ColumnDefinition  Width="10" />
+                <ColumnDefinition  Width="70" />
+            </Grid.ColumnDefinitions>
+            <TextBox x:Name="GetIp" Grid.Column="1" Grid.Row="1" Text="{Binding TextBoxHostname}" BorderBrush="{Binding BorderTextBox}"/>
+            <Button x:Name="ControlButton" Grid.Column="3" Grid.Row="1" Content="{Binding ControlBtnName}" Command="{Binding ControlTracert}"/>
+            <TextBlock Text="{Binding TextBlockGeneralError}" Grid.Column="1" Grid.Row="2" Foreground="Red" Grid.ColumnSpan="3" FontSize="14"/>
             <!--<ComboBox x:Name="GetIp" HorizontalAlignment="Left" Margin="280,0,0,0" VerticalAlignment="Center" Width="120" Text="hellos" IsEditable="True"/>-->
-            <Button x:Name="ControlButton" Background="#FFBCBCE3" Content="{Binding ControlBtnName}" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="425,0,0,0" Command="{Binding ControlTracert}" Width="64"/>
         </Grid>
         <TabControl DockPanel.Dock="Right" Grid.Row="1">
             <TabItem Header="{Binding NameTableDataGrid}">
@@ -47,7 +59,9 @@
                     XAxes="{Binding XAxes}"
                     YAxes="{Binding YAxes}"
                     LegendPosition="Bottom" 
-                    LegendFontFamily="Console">
+                    LegendFontFamily="Console" 
+                    TooltipPosition="Left" 
+                    >
             <!--XAxes="{Binding XAxes}"-->
             <!--TooltipPosition="Hidden" 
                     LegendPosition="Bottom"-->

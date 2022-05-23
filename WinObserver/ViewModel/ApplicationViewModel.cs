@@ -17,6 +17,8 @@ namespace WinObserver.ViewModel
         private int _click;
         private string _hostname;
         private bool _statusWorkDataGrid = false;
+        private string _textBlockGeneralError;
+        private string _borderTextBox = "#FFABADB3";
 
         private GeneralPanelModel? _generalPanelModel;
         private readonly TracertService? _tracerService;
@@ -54,6 +56,7 @@ namespace WinObserver.ViewModel
             {
                 return _chartRepository._lossList;
             }
+
         }
 
         public string NameTableDataGrid
@@ -86,6 +89,32 @@ namespace WinObserver.ViewModel
             }
         }
 
+        public string TextBlockGeneralError
+        {
+            get
+            {
+                return _textBlockGeneralError;
+            }
+            set
+            {
+                _textBlockGeneralError = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public string BorderTextBox
+        {
+            get
+            {
+                return _borderTextBox;
+            }
+            set
+            {
+                _borderTextBox = value;
+                OnPropertyChanged();
+            }
+        }
+
         private DelegateCommand? controlTracert { get; }
         public DelegateCommand ControlTracert
         {
@@ -101,12 +130,19 @@ namespace WinObserver.ViewModel
                     }
                     else
                     {
-                        ControlBtnName = ViewStatusStringBtn.Stop.ToString();
-                        RestartInfoInDataGrid();
-                        NameTableDataGrid = _hostname.ToString();
-                        _tracerService!.StartTraceroute(_hostname);
-                        RemoveInfoinTextBoxPanel();
-                        _statusWorkDataGrid = true;
+                        if (String.IsNullOrWhiteSpace(_hostname))
+                        {
+                            ErrorValidationTextAndAnimation();
+                        }
+                        else
+                        {
+                            NameTableDataGrid = _hostname;
+                            ControlBtnName = ViewStatusStringBtn.Stop.ToString();
+                            RestartInfoInDataGrid();
+                            _tracerService!.StartTraceroute(_hostname, this);
+                            RemoveInfoinTextBoxPanel();
+                            _statusWorkDataGrid = true;
+                        }
                     }
                     OnPropertyChanged();
                 });
@@ -134,8 +170,6 @@ namespace WinObserver.ViewModel
             TracertObject = _tracerService._tracertValue;
             _timeInfoXAxes = _chartRepository._ObjectXAxes;
             _valueInfoYAxes = _chartRepository._ObjectYAxes;
-
-            //TextBoxHostname = "vk.com"; // Потом убрать!
          
         }
 
@@ -155,6 +189,25 @@ namespace WinObserver.ViewModel
         private void RemoveInfoinTextBoxPanel()
         {
             TextBoxHostname = null!;
+        }
+
+
+        public void ErrorValidationTextAndAnimation()
+        {
+            Task.Factory.StartNew(() =>
+            {
+                TextBlockGeneralError = "Hostname not valid";
+                BorderTextBox = "Red";
+                _statusWorkDataGrid = false;
+                ControlBtnName = ViewStatusStringBtn.Start.ToString();
+                RemoveInfoinTextBoxPanel();
+                NameTableDataGrid = "New";
+
+                Task.Delay(5000).Wait();
+
+                TextBlockGeneralError = string.Empty;
+                BorderTextBox = "#FFABADB3";
+            });
         }
 
     }
