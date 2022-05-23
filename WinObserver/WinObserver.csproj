@@ -5,7 +5,7 @@
     <TargetFramework>net6.0-windows</TargetFramework>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
-    <Version>0.0.11</Version>
+    <Version>0.0.15</Version>
     <PackageId>Apparat</PackageId>
     <Authors>Alexander Pototsky</Authors>
     <Company>Alexander Pototsky</Company>
@@ -15,12 +15,19 @@
     <RepositoryUrl>https://github.com/hekkaaa/WinObserver</RepositoryUrl>
     <PackageTags>Traceroute; Tracert; Icmp; Network;</PackageTags>
     <PackageReleaseNotes>pre-alpha</PackageReleaseNotes>
+    <PackageIcon>testnew.png</PackageIcon>
+    <AssemblyName>Apparat</AssemblyName>
+    <ApplicationIcon>Resources\AppIcon.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="LiveChartsCore.SkiaSharpView.WPF" Version="2.0.0-beta.230" />
+    <Content Include="Resources\AppIcon.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="LiveChartsCore.SkiaSharpView.WPF" Version="2.0.0-beta.240" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0" />
-    <PackageReference Include="NetObserver.Helper" Version="1.1.1" />
+    <PackageReference Include="NetObserver.Helper" Version="1.1.2" />
   </ItemGroup>
 
   <ItemGroup>

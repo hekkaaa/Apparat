@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using WinObserver.Algorithms;
 using WinObserver.Model;
 using WinObserver.Repositories.Interface;
+using WinObserver.ViewModel;
 
 namespace WinObserver.Service
 {
@@ -34,27 +35,36 @@ namespace WinObserver.Service
             _chartRepository = chartService;
         }
 
-        public void StartTraceroute(string hostname)
+        public void StartTraceroute(string hostname, ApplicationViewModel applicationViewModel)
         {
             ThreadPool.QueueUserWorkItem(new WaitCallback(obj =>
             {
-                IEnumerable<string> objectTracertResult = _tracerouteHelper.GetIpTraceRoute(hostname);
-
-                ClearoldTable();
-                FillingNewtable(objectTracertResult);
-                _chartRepository.ClearChart();
-
-                while (true)
+                try
                 {
-                    Task.Delay(1000).Wait();
-                    UpdateStatistic();
-                    if (token.IsCancellationRequested)
+                    IEnumerable<string> objectTracertResult = _tracerouteHelper.GetIpTraceRoute(hostname);
+
+                    ClearoldTable();
+                    FillingNewtable(objectTracertResult);
+                    _chartRepository.ClearChart();
+
+                    while (true)
                     {
-                        _cancellationTokenSource!.Dispose();
-                        RestartToken();
-                        break;
+                        Task.Delay(1000).Wait();
+                        UpdateStatistic();
+                        if (token.IsCancellationRequested)
+                        {
+                            _cancellationTokenSource!.Dispose();
+                            RestartToken();
+                            break;
+                        }
                     }
                 }
+                catch (PingException)
+                {
+                    _cancellationTokenSource!.Cancel();
+                    applicationViewModel.ErrorValidationTextAndAnimation();
+                }
+
             }), token);
         }
 
@@ -95,7 +105,7 @@ namespace WinObserver.Service
 
             foreach (TracertModel objectCollection in _innerTracertValue)
             {
-                PingReply tmpResult = icmpUtilite.RequestIcmp(objectCollection.Hostname);
+                PingReply tmpResult = icmpUtilite.RequestIcmp(objectCollection.Hostname, 1500);
                 TracertModel tempValue = objectCollection;
 
                 if (tmpResult.Status == IPStatus.Success)
