@@ -115,6 +115,8 @@ namespace WinObserver.ViewModel
             }
         }
 
+        public string VersionProgramm { get; set; }
+
         private DelegateCommand? controlTracert { get; }
         public DelegateCommand ControlTracert
         {
@@ -164,6 +166,7 @@ namespace WinObserver.ViewModel
 
         public ApplicationViewModel()
         {
+            VersionProgramm = "Version: 0.0.14 - alpha";
             _chartRepository = new ChartRepository();
             _tracerService = new TracertService(_chartRepository);
             _generalPanelModel = new GeneralPanelModel();
@@ -198,11 +201,12 @@ namespace WinObserver.ViewModel
             {
                 TextBlockGeneralError = "Hostname not valid";
                 BorderTextBox = "Red";
+                NameTableDataGrid = "New";
+
                 _statusWorkDataGrid = false;
                 ControlBtnName = ViewStatusStringBtn.Start.ToString();
                 RemoveInfoinTextBoxPanel();
-                NameTableDataGrid = "New";
-
+               
                 Task.Delay(5000).Wait();
 
                 TextBlockGeneralError = string.Empty;

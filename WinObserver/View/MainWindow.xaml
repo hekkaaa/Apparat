@@ -5,16 +5,17 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WinObserver" xmlns:viewmodel="clr-namespace:WinObserver.ViewModel" d:DataContext="{d:DesignInstance Type=viewmodel:ApplicationViewModel}"
         mc:Ignorable="d"
-        Title="Apparat" MinHeight="300" MinWidth="400" Height="550" Width="800" Loaded="Window_Loaded"
+        Title="Apparat" MinHeight="300" MinWidth="400" Height="768" Width="1024" Loaded="Window_Loaded"
         xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.WPF;assembly=LiveChartsCore.SkiaSharpView.WPF"
         WindowStartupLocation="CenterScreen">
-    
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="60" />
             <RowDefinition Height="*" />
             <RowDefinition Height="5" />
             <RowDefinition Height="*" />
+            <RowDefinition Height="20" />
         </Grid.RowDefinitions>
         <Grid Grid.Row="0">
             <Grid.RowDefinitions>
@@ -68,5 +69,19 @@
             <!--ZoomMode="X" 
                     LegendFontFamily="Console"-->
         </lvc:CartesianChart>
+        <Border Grid.Row="4" BorderBrush="Black" BorderThickness="0.5">
+        <Grid Background="PowderBlue"  >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="10"/>
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition/>
+                <ColumnDefinition Width="70" />
+            </Grid.ColumnDefinitions>
+            <TextBlock Text="{Binding VersionProgramm}" Margin="0,4,0,0" TextAlignment="Left" Grid.Column="1" FontSize="12"  FontFamily="Console"/>
+            <TextBlock TextAlignment="Center" Grid.Column="3" Margin="0,4,0,0" FontSize="12"  FontFamily="Console">
+                <Hyperlink RequestNavigate="Hyperlink_RequestNavigate" NavigateUri="https://github.com/hekkaaa/Apparat">GitHub</Hyperlink>
+            </TextBlock>
+        </Grid>
+        </Border>
     </Grid>
 </Window>
