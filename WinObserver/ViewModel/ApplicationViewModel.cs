@@ -166,7 +166,7 @@ namespace WinObserver.ViewModel
 
         public ApplicationViewModel()
         {
-            VersionProgramm = "Version: 0.0.14 - alpha";
+            VersionProgramm = "Version: 0.0.15 - alpha";
             _chartRepository = new ChartRepository();
             _tracerService = new TracertService(_chartRepository);
             _generalPanelModel = new GeneralPanelModel();

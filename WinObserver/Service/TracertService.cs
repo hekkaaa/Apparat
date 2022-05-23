@@ -1,6 +1,5 @@
 ﻿using NetObserver.PingUtility;
 using NetObserver.TracerouteUtility;
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -36,8 +35,8 @@ namespace WinObserver.Service
             _chartRepository = chartService;
         }
 
-        public void StartTraceroute(string hostname , ApplicationViewModel applicationViewModel)
-        {   
+        public void StartTraceroute(string hostname, ApplicationViewModel applicationViewModel)
+        {
             ThreadPool.QueueUserWorkItem(new WaitCallback(obj =>
             {
                 try
@@ -65,7 +64,7 @@ namespace WinObserver.Service
                     _cancellationTokenSource!.Cancel();
                     applicationViewModel.ErrorValidationTextAndAnimation();
                 }
-                
+
             }), token);
         }
 
