@@ -1,4 +1,5 @@
-﻿using WinObserver.Model;
+﻿using System.Collections.Generic;
+using WinObserver.Model;
 
 namespace Apparat.Service.Interface
 {
@@ -6,5 +7,7 @@ namespace Apparat.Service.Interface
     {
         void AddHostname(string host);
         void UpdateLoss(TracertModel newValue);
+        void AddTimeXAxes();
+        List<string> GetAllTimeXAxes();
     }
 }

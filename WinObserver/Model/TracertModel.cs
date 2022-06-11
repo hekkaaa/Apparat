@@ -6,8 +6,8 @@ namespace WinObserver.Model
 {
     public class TracertModel : INotifyPropertyChanged
     {
-        private int? _numberHostname;
-        private string? _hostname;
+        private int _numberHostname;
+        private string _hostname;
         private int? _lastDelay;
 
         private int _minPing = 0;
@@ -20,7 +20,7 @@ namespace WinObserver.Model
 
         private List<int>? _arhivePingList = new List<int>();
 
-        public int? NumberHostname
+        public int NumberHostname
         {
             get { return _numberHostname; }
             set

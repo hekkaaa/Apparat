@@ -29,5 +29,10 @@ namespace Data.Repositories
             _context.Losses.Update(newValue);
             _context.SaveChanges();
         }
+
+        public Loss GetHostById(int id)
+        {
+            return _context.Losses.FirstOrDefault(x => x.Id == id);
+        }
     }
 }

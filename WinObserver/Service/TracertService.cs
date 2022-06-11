@@ -109,6 +109,7 @@ namespace WinObserver.Service
             IcmpRequestSender icmpUtilite = new IcmpRequestSender();
             int countHop = 0;
             _chartRepository.UpdateTimeXAxes();
+            _chartLossService.AddTimeXAxes();
 
             foreach (TracertModel objectCollection in _innerTracertValue)
             {
@@ -132,7 +133,7 @@ namespace WinObserver.Service
 
                 tempValue.PercentLossPacket = DataGridStatisticAlgorithm.RateLosses(tempValue.CounterPacket, tempValue.CounterLossPacket);
                 AddLossChart(countHop, tempValue.PercentLossPacket);
-                _chartLossService.UpdateLoss(tempValue);
+                _chartLossService.UpdateLoss(tempValue); 
                 countHop++;
             }
         }
