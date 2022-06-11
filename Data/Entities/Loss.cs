@@ -12,6 +12,6 @@ namespace Data.Entities
     {
         public int Id { get; set; }
         public string Hostname { get; set; }
-
+        public string? ListLoss { get; set; }
     }
 }

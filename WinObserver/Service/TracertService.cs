@@ -1,4 +1,7 @@
-﻿using NetObserver.PingUtility;
+﻿using Apparat.Service;
+using Apparat.Service.Interface;
+using Data.Repositories.Connect;
+using NetObserver.PingUtility;
 using NetObserver.TracerouteUtility;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -22,16 +25,20 @@ namespace WinObserver.Service
         public readonly DataGridModel _gridTracert;
         private readonly Traceroute _tracerouteHelper;
         private readonly IChartRepository _chartRepository;
+        private readonly IChartLossService _chartLossService;
+        private readonly ApplicationContext _applicationContext;
 
         static CancellationTokenSource? _cancellationTokenSource = new CancellationTokenSource();
         CancellationToken token = _cancellationTokenSource!.Token;
 
-        public TracertService(IChartRepository chartService)
+        public TracertService(IChartRepository chartService, ApplicationContext context)
         {
+            _applicationContext = context;
             _innerTracertValue = new ObservableCollection<TracertModel>();
             _tracertValue = new ReadOnlyObservableCollection<TracertModel>(_innerTracertValue);
             _gridTracert = new DataGridModel();
             _tracerouteHelper = new Traceroute();
+            _chartLossService = new ChartLossService(_applicationContext);
             _chartRepository = chartService;
         }
 
@@ -43,7 +50,7 @@ namespace WinObserver.Service
                 {
                     IEnumerable<string> objectTracertResult = _tracerouteHelper.GetIpTraceRoute(hostname);
 
-                    ClearoldTable();
+                    ClearOldTable();
                     FillingNewtable(objectTracertResult);
                     _chartRepository.ClearChart();
 
@@ -88,7 +95,7 @@ namespace WinObserver.Service
             token = _cancellationTokenSource.Token;
         }
 
-        private void ClearoldTable()
+        private void ClearOldTable()
         {
             App.Current.Dispatcher.BeginInvoke((System.Action)delegate
             {
@@ -125,6 +132,7 @@ namespace WinObserver.Service
 
                 tempValue.PercentLossPacket = DataGridStatisticAlgorithm.RateLosses(tempValue.CounterPacket, tempValue.CounterLossPacket);
                 AddLossChart(countHop, tempValue.PercentLossPacket);
+                _chartLossService.UpdateLoss(tempValue);
                 countHop++;
             }
         }
@@ -138,6 +146,7 @@ namespace WinObserver.Service
                 App.Current.Dispatcher.BeginInvoke((System.Action)delegate
                 {
                     FillingNameChart(addres);
+                    _chartLossService.AddHostname(addres); // here!
                     _innerTracertValue.Add(new TracertModel { NumberHostname = countHostname, Hostname = addres });
                     countHostname++;
                     OnPropertyChanged();

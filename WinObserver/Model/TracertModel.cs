@@ -14,7 +14,7 @@ namespace WinObserver.Model
         private int _middlePing = 0;
         private int _maxPing = 0;
 
-        private double _percentLossPacket = 0;
+        private int _percentLossPacket = 0;
         private int _counterPacket = 0;
         private int _counterLossPacket = 0;
 
@@ -79,7 +79,7 @@ namespace WinObserver.Model
             }
         }
 
-        public double PercentLossPacket
+        public int PercentLossPacket
         {
             get { return _percentLossPacket; }
             set

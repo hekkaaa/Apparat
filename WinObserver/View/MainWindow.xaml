@@ -41,7 +41,7 @@
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="№" Binding="{Binding NumberHostname}" Width="0.25*"/>
                             <DataGridTextColumn Header="Hostname" Binding="{Binding Hostname}" Width="*"/>
-                            <DataGridTextColumn Header="Loss %" Binding="{Binding PercentLossPacket, StringFormat=N1}" Width="*"/>
+                            <DataGridTextColumn Header="Loss %" Binding="{Binding PercentLossPacket}" Width="*"/>
                             <DataGridTextColumn Header="Last Delay" Binding="{Binding LastDelay}" Width="*"/>
                             <DataGridTextColumn Header="Minimal" Binding="{Binding MinPing}" Width="*"/>
                             <DataGridTextColumn Header="Middle" Binding="{Binding MiddlePing}" Width="*"/>

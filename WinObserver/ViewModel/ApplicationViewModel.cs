@@ -1,4 +1,5 @@
-﻿using LiveChartsCore;
+﻿using Data.Repositories.Connect;
+using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
 using System;
 using System.Collections.Generic;
@@ -21,6 +22,7 @@ namespace WinObserver.ViewModel
         private string _borderTextBox = "#FFABADB3";
 
         private GeneralPanelModel? _generalPanelModel;
+        private ApplicationContext _context;
         private readonly TracertService? _tracerService;
         private readonly ChartRepository _chartRepository;
         private List<Axis> _timeInfoXAxes;
@@ -166,14 +168,14 @@ namespace WinObserver.ViewModel
 
         public ApplicationViewModel()
         {
+            _context = new ApplicationContext();
             VersionProgramm = "Version: 0.0.15 - alpha";
             _chartRepository = new ChartRepository();
-            _tracerService = new TracertService(_chartRepository);
+            _tracerService = new TracertService(_chartRepository, _context);
             _generalPanelModel = new GeneralPanelModel();
             TracertObject = _tracerService._tracertValue;
             _timeInfoXAxes = _chartRepository._ObjectXAxes;
             _valueInfoYAxes = _chartRepository._ObjectYAxes;
-         
         }
 
 
