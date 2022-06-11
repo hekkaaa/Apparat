@@ -2,6 +2,7 @@
 using Data.Entities;
 using Data.Repositories;
 using Data.Repositories.Connect;
+using LiveChartsCore.SkiaSharpView;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,36 +18,50 @@ namespace Apparat.Service
         private readonly ChartLossRepository _chartLossRepository;
         private readonly ApplicationContext _applicationContext;
 
+        private List<Axis> _innerObjectXAxes;
+        public readonly List<Axis> _ObjectXAxes;
+        private List<string> _collectionTimeXAxes;
+
         public ChartLossService(ApplicationContext context)
         {
             _applicationContext = context;
             _chartLossRepository = new ChartLossRepository(_applicationContext);
             _requestTimeRepository = new RequestTimeRepository(_applicationContext);
+            DefaultValuesForViewChart();
+            _ObjectXAxes = new List<Axis>(_innerObjectXAxes);
         }
 
-        public void AddHostname(string host)
+        public void StartUpdateChart()
         {
-            Loss tmpItem = new Loss() { Hostname = host};
-            _chartLossRepository.AddHostname(tmpItem);
+            Task.Factory.StartNew(() =>
+            {
+                while (true)
+                {
+                    Task.Delay(5000).Wait();
+                    GetAllTimeXAxes();
+                }
+                
+            });
         }
 
-        public void UpdateLoss(TracertModel newValue)
+        public void GetAllTimeXAxes()
         {
-            var modeltest = _chartLossRepository.GetHostById(newValue.NumberHostname);
-            modeltest.ListLoss += newValue.PercentLossPacket.ToString() + ",";
-            _chartLossRepository.UpdateLoss(modeltest);
+            var res = _requestTimeRepository.GetAllTime();
+            _innerObjectXAxes[0].Labels = res;
         }
 
-        public void AddTimeXAxes()
-        {
-            DateTime date = DateTime.Now;
-            RequestTime tmpDate = new RequestTime() { ListTime = date.ToString("T") };
-            _requestTimeRepository.AddTime(tmpDate);
-        }
 
-        public List<string> GetAllTimeXAxes()
+        private void DefaultValuesForViewChart()
         {
-            return new List<string>();
+            _collectionTimeXAxes = new List<string>() { "00:00:00" };
+            _innerObjectXAxes = new List<Axis>
+                {
+                    new Axis
+                    {
+                        LabelsRotation = 15,
+                        Labels = _collectionTimeXAxes,
+                    }
+                };
         }
     }
 }

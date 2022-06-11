@@ -1,8 +1,11 @@
 ﻿using Apparat.Service;
 using Apparat.Service.Interface;
+using Data.Entities;
+using Data.Repositories;
 using Data.Repositories.Connect;
 using NetObserver.PingUtility;
 using NetObserver.TracerouteUtility;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -25,7 +28,9 @@ namespace WinObserver.Service
         public readonly DataGridModel _gridTracert;
         private readonly Traceroute _tracerouteHelper;
         private readonly IChartRepository _chartRepository;
-        private readonly IChartLossService _chartLossService;
+        private readonly ChartLossRepository _chartLossRepository;
+        private readonly RequestTimeRepository _requestTimeRepository;
+        //private readonly IChartLossService _chartLossService;
         private readonly ApplicationContext _applicationContext;
 
         static CancellationTokenSource? _cancellationTokenSource = new CancellationTokenSource();
@@ -38,7 +43,9 @@ namespace WinObserver.Service
             _tracertValue = new ReadOnlyObservableCollection<TracertModel>(_innerTracertValue);
             _gridTracert = new DataGridModel();
             _tracerouteHelper = new Traceroute();
-            _chartLossService = new ChartLossService(_applicationContext);
+            //_chartLossService = new ChartLossService(_applicationContext);
+            _chartLossRepository = new ChartLossRepository(_applicationContext);
+            _requestTimeRepository = new RequestTimeRepository(_applicationContext);
             _chartRepository = chartService;
         }
 
@@ -109,7 +116,7 @@ namespace WinObserver.Service
             IcmpRequestSender icmpUtilite = new IcmpRequestSender();
             int countHop = 0;
             _chartRepository.UpdateTimeXAxes();
-            _chartLossService.AddTimeXAxes();
+            AddTimeXAxes();
 
             foreach (TracertModel objectCollection in _innerTracertValue)
             {
@@ -133,7 +140,7 @@ namespace WinObserver.Service
 
                 tempValue.PercentLossPacket = DataGridStatisticAlgorithm.RateLosses(tempValue.CounterPacket, tempValue.CounterLossPacket);
                 AddLossChart(countHop, tempValue.PercentLossPacket);
-                _chartLossService.UpdateLoss(tempValue); 
+                UpdateLoss(tempValue); 
                 countHop++;
             }
         }
@@ -147,7 +154,7 @@ namespace WinObserver.Service
                 App.Current.Dispatcher.BeginInvoke((System.Action)delegate
                 {
                     FillingNameChart(addres);
-                    _chartLossService.AddHostname(addres); // here!
+                    AddHostname(addres); // here!
                     _innerTracertValue.Add(new TracertModel { NumberHostname = countHostname, Hostname = addres });
                     countHostname++;
                     OnPropertyChanged();
@@ -164,6 +171,26 @@ namespace WinObserver.Service
         private void AddLossChart(int count, double loss)
         {
             _chartRepository.AddValueLossCollection(count, loss);
+        }
+
+        private void AddHostname(string host)
+        {
+            Loss tmpItem = new Loss() { Hostname = host };
+            _chartLossRepository.AddHostname(tmpItem);
+        }
+
+        private void UpdateLoss(TracertModel newValue)
+        {
+            var modeltest = _chartLossRepository.GetHostById(newValue.NumberHostname);
+            modeltest.ListLoss += newValue.PercentLossPacket.ToString() + ",";
+            _chartLossRepository.UpdateLoss(modeltest);
+        }
+
+        private void AddTimeXAxes()
+        {
+            DateTime date = DateTime.Now;
+            RequestTime tmpDate = new RequestTime() { ListTime = date.ToString("T") };
+            _requestTimeRepository.AddTime(tmpDate);
         }
     }
 }

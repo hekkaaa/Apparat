@@ -5,9 +5,6 @@ namespace Apparat.Service.Interface
 {
     public interface IChartLossService
     {
-        void AddHostname(string host);
-        void UpdateLoss(TracertModel newValue);
-        void AddTimeXAxes();
-        List<string> GetAllTimeXAxes();
+        void GetAllTimeXAxes();
     }
 }

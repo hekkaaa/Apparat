@@ -1,4 +1,5 @@
-﻿using Data.Repositories.Connect;
+﻿using Apparat.Service;
+using Data.Repositories.Connect;
 using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
 using System;
@@ -15,6 +16,7 @@ namespace WinObserver.ViewModel
 {
     public class ApplicationViewModel : INotifyPropertyChanged
     {
+        const string VERSION_APP = "Version: 0.0.17";
         private int _click;
         private string _hostname;
         private bool _statusWorkDataGrid = false;
@@ -24,6 +26,7 @@ namespace WinObserver.ViewModel
         private GeneralPanelModel? _generalPanelModel;
         private ApplicationContext _context;
         private readonly TracertService? _tracerService;
+        private readonly ChartLossService _chartService;
         private readonly ChartRepository _chartRepository;
         private List<Axis> _timeInfoXAxes;
         private List<Axis> _valueInfoYAxes;
@@ -117,7 +120,7 @@ namespace WinObserver.ViewModel
             }
         }
 
-        public string VersionProgramm { get; set; }
+        public string VersionProgramm { get { return VERSION_APP; } }
 
         private DelegateCommand? controlTracert { get; }
         public DelegateCommand ControlTracert
@@ -144,6 +147,7 @@ namespace WinObserver.ViewModel
                             ControlBtnName = ViewStatusStringBtn.Stop.ToString();
                             RestartInfoInDataGrid();
                             _tracerService!.StartTraceroute(_hostname, this);
+                            _chartService.StartUpdateChart();
                             RemoveInfoinTextBoxPanel();
                             _statusWorkDataGrid = true;
                         }
@@ -169,12 +173,13 @@ namespace WinObserver.ViewModel
         public ApplicationViewModel()
         {
             _context = new ApplicationContext();
-            VersionProgramm = "Version: 0.0.15 - alpha";
             _chartRepository = new ChartRepository();
             _tracerService = new TracertService(_chartRepository, _context);
+            _chartService = new ChartLossService(_context);
             _generalPanelModel = new GeneralPanelModel();
             TracertObject = _tracerService._tracertValue;
-            _timeInfoXAxes = _chartRepository._ObjectXAxes;
+            _timeInfoXAxes = _chartService._ObjectXAxes;
+            //_timeInfoXAxes = _chartRepository._ObjectXAxes;
             _valueInfoYAxes = _chartRepository._ObjectYAxes;
         }
 

@@ -21,5 +21,10 @@ namespace Data.Repositories
         {
             _context.RequestsTimes.Add(newDate);
         }
+
+        public List<string> GetAllTime()
+        {
+            return _context.RequestsTimes.Select(x => x.ListTime).ToList();
+        }
     }
 }
