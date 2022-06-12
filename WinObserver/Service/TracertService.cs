@@ -162,7 +162,6 @@ namespace WinObserver.Service
             }
         }
 
-
         private void FillingNameChart(string name)
         {
             _chartRepository.AddHops(name);

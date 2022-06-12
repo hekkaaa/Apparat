@@ -21,6 +21,8 @@ namespace Apparat.Service
         private List<Axis> _innerObjectXAxes;
         public readonly List<Axis> _ObjectXAxes;
         private List<string> _collectionTimeXAxes;
+        private List<Axis> _innerObjectYAxes;
+        public readonly List<Axis> _ObjectYAxes;
 
         public ChartLossService(ApplicationContext context)
         {
@@ -29,6 +31,7 @@ namespace Apparat.Service
             _requestTimeRepository = new RequestTimeRepository(_applicationContext);
             DefaultValuesForViewChart();
             _ObjectXAxes = new List<Axis>(_innerObjectXAxes);
+            _ObjectYAxes = new List<Axis>(_innerObjectYAxes);
         }
 
         public void StartUpdateChart()
@@ -62,6 +65,16 @@ namespace Apparat.Service
                         Labels = _collectionTimeXAxes,
                     }
                 };
+
+            _innerObjectYAxes = new List<Axis>
+            {
+                 new Axis
+                {
+                    MinLimit = 0,
+                    MaxLimit = 100,
+                    MinStep = 10,
+                }
+            };
         }
     }
 }

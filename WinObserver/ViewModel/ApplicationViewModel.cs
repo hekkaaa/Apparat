@@ -16,7 +16,7 @@ namespace WinObserver.ViewModel
 {
     public class ApplicationViewModel : INotifyPropertyChanged
     {
-        const string VERSION_APP = "Version: 0.0.17";
+        const string VERSION_APP = "Version: 0.0.18 - alpha";
         private int _click;
         private string _hostname;
         private bool _statusWorkDataGrid = false;
@@ -179,8 +179,9 @@ namespace WinObserver.ViewModel
             _generalPanelModel = new GeneralPanelModel();
             TracertObject = _tracerService._tracertValue;
             _timeInfoXAxes = _chartService._ObjectXAxes;
+            _valueInfoYAxes = _chartService._ObjectYAxes;
             //_timeInfoXAxes = _chartRepository._ObjectXAxes;
-            _valueInfoYAxes = _chartRepository._ObjectYAxes;
+            //_valueInfoYAxes = _chartRepository._ObjectYAxes;
         }
 
 
