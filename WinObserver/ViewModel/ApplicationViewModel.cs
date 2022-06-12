@@ -1,4 +1,5 @@
-﻿using Apparat.Service;
+﻿using Apparat.Helpers;
+using Apparat.Service;
 using Data.Repositories.Connect;
 using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
@@ -22,9 +23,11 @@ namespace WinObserver.ViewModel
         private bool _statusWorkDataGrid = false;
         private string _textBlockGeneralError;
         private string _borderTextBox = "#FFABADB3";
+       
 
         private GeneralPanelModel? _generalPanelModel;
         private ApplicationContext _context;
+        private readonly LockWay _lockWay;
         private readonly TracertService? _tracerService;
         private readonly ChartLossService _chartService;
         private readonly ChartRepository _chartRepository;
@@ -59,7 +62,8 @@ namespace WinObserver.ViewModel
         {
             get
             {
-                return _chartRepository._lossList;
+                return _chartService._lossList;
+                //return _chartRepository._lossList;
             }
 
         }
@@ -131,7 +135,7 @@ namespace WinObserver.ViewModel
                 {
                     if (_statusWorkDataGrid)
                     {
-                        _chartService.GetAllLoss(); // Test
+                        _chartService.UpdateValueCollectionLoss(); // Test
                         _tracerService!.StopTraceroute();
                         _statusWorkDataGrid = false;
                         ControlBtnName = ViewStatusStringBtn.Start.ToString();
@@ -174,9 +178,10 @@ namespace WinObserver.ViewModel
         public ApplicationViewModel()
         {
             _context = new ApplicationContext();
+            _lockWay = new LockWay();
             _chartRepository = new ChartRepository();
-            _tracerService = new TracertService(_chartRepository, _context);
-            _chartService = new ChartLossService(_context);
+            _tracerService = new TracertService(_chartRepository, _context, _lockWay);
+            _chartService = new ChartLossService(_context, _lockWay);
             _generalPanelModel = new GeneralPanelModel();
             TracertObject = _tracerService._tracertValue;
             _timeInfoXAxes = _chartService._ObjectXAxes;

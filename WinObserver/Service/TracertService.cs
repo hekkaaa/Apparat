@@ -1,4 +1,5 @@
-﻿using Apparat.Service;
+﻿using Apparat.Helpers;
+using Apparat.Service;
 using Apparat.Service.Interface;
 using Data.Entities;
 using Data.Repositories;
@@ -32,11 +33,12 @@ namespace WinObserver.Service
         private readonly RequestTimeRepository _requestTimeRepository;
         //private readonly IChartLossService _chartLossService;
         private readonly ApplicationContext _applicationContext;
+        private readonly LockWay _lockWay;
 
         static CancellationTokenSource? _cancellationTokenSource = new CancellationTokenSource();
         CancellationToken token = _cancellationTokenSource!.Token;
 
-        public TracertService(IChartRepository chartService, ApplicationContext context)
+        public TracertService(IChartRepository chartService, ApplicationContext context, LockWay lockWay)
         {
             _applicationContext = context;
             _innerTracertValue = new ObservableCollection<TracertModel>();
@@ -47,6 +49,7 @@ namespace WinObserver.Service
             _chartLossRepository = new ChartLossRepository(_applicationContext);
             _requestTimeRepository = new RequestTimeRepository(_applicationContext);
             _chartRepository = chartService;
+            _lockWay = lockWay;
         }
 
         public void StartTraceroute(string hostname, ApplicationViewModel applicationViewModel)
@@ -160,6 +163,7 @@ namespace WinObserver.Service
                     OnPropertyChanged();
                 });
             }
+            _lockWay.IsFullingCollectionHost = true;
         }
 
         private void FillingNameChart(string name)
@@ -181,7 +185,7 @@ namespace WinObserver.Service
         private void UpdateLoss(TracertModel newValue)
         {
             var modeltest = _chartLossRepository.GetHostById(newValue.NumberHostname);
-            modeltest.ListLoss += newValue.PercentLossPacket.ToString() + ",";
+            modeltest.ListLoss += "," + newValue.PercentLossPacket.ToString();
             _chartLossRepository.UpdateLoss(modeltest);
         }
 
