@@ -23,14 +23,12 @@ namespace WinObserver.ViewModel
         private bool _statusWorkDataGrid = false;
         private string _textBlockGeneralError;
         private string _borderTextBox = "#FFABADB3";
-       
 
         private GeneralPanelModel? _generalPanelModel;
         private ApplicationContext _context;
         private readonly LockWay _lockWay;
         private readonly TracertService? _tracerService;
         private readonly ChartLossService _chartService;
-        private readonly ChartRepository _chartRepository;
         private List<Axis> _timeInfoXAxes;
         private List<Axis> _valueInfoYAxes;
 
@@ -63,7 +61,6 @@ namespace WinObserver.ViewModel
             get
             {
                 return _chartService._lossList;
-                //return _chartRepository._lossList;
             }
 
         }
@@ -134,8 +131,8 @@ namespace WinObserver.ViewModel
                 return controlTracert ?? new DelegateCommand((obj) =>
                 {
                     if (_statusWorkDataGrid)
-                    {
-                        _chartService.UpdateValueCollectionLoss(); // Test
+                    {   
+                        _chartService.StopUpdateChart();
                         _tracerService!.StopTraceroute();
                         _statusWorkDataGrid = false;
                         ControlBtnName = ViewStatusStringBtn.Start.ToString();
@@ -179,15 +176,12 @@ namespace WinObserver.ViewModel
         {
             _context = new ApplicationContext();
             _lockWay = new LockWay();
-            _chartRepository = new ChartRepository();
-            _tracerService = new TracertService(_chartRepository, _context, _lockWay);
+            _tracerService = new TracertService(_context, _lockWay);
             _chartService = new ChartLossService(_context, _lockWay);
             _generalPanelModel = new GeneralPanelModel();
             TracertObject = _tracerService._tracertValue;
             _timeInfoXAxes = _chartService._ObjectXAxes;
             _valueInfoYAxes = _chartService._ObjectYAxes;
-            //_timeInfoXAxes = _chartRepository._ObjectXAxes;
-            //_valueInfoYAxes = _chartRepository._ObjectYAxes;
         }
 
 

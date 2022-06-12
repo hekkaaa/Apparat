@@ -9,7 +9,9 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Net.NetworkInformation;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using WinObserver.Model;
 
@@ -26,9 +28,11 @@ namespace Apparat.Service
         private readonly ApplicationContext _applicationContext;
         private readonly LockWay _lockWay;
 
+        static CancellationTokenSource? _cancellationTokenSource = new CancellationTokenSource();
+        CancellationToken token = _cancellationTokenSource!.Token;
+
         private List<Axis> _innerObjectXAxes;
         public readonly List<Axis> _ObjectXAxes;
-        private List<string> _collectionTimeXAxes;
         private List<Axis> _innerObjectYAxes;
         public readonly List<Axis> _ObjectYAxes;
 
@@ -51,32 +55,56 @@ namespace Apparat.Service
         {
             Task.Factory.StartNew(() =>
             {
-                while (IsEndWhile)
+                try
                 {
-                    Task.Delay(500).Wait();
-                    if (_lockWay.IsFullingCollectionHost)
+                    while (IsEndWhile)
                     {
-                        AddHostnameChart();
-                        IsEndWhile = false;
+                        Task.Delay(500).Wait();
+                        if (_lockWay.IsFullingCollectionHost)
+                        {
+                            AddHostNameChart();
+                            IsEndWhile = false;
+                        }
+                    }
+
+                    while (true)
+                    {   
+                        GetAllTimeXAxes();
+                        UpdateValueCollectionLoss();
+                        Task.Delay(5000).Wait();
+                        if (token.IsCancellationRequested)
+                        {
+                            _cancellationTokenSource!.Dispose();
+                            RestartToken();
+                            break;
+                        }
                     }
                 }
-
-                while (true)
+                catch (PingException)
                 {
-                    GetAllTimeXAxes();
-                    UpdateValueCollectionLoss();
-                    Task.Delay(5000).Wait();
+                    _cancellationTokenSource!.Cancel();
                 }
             });
         }
 
-        public void GetAllTimeXAxes()
+        public void StopUpdateChart()
+        {
+            _cancellationTokenSource!.Cancel();
+        }
+
+        private void RestartToken()
+        {
+            _cancellationTokenSource = new CancellationTokenSource();
+            token = _cancellationTokenSource.Token;
+        }
+
+        private void GetAllTimeXAxes()
         {
             var res = _requestTimeRepository.GetAllTime();
             _innerObjectXAxes[0].Labels = res;
         }
 
-        public void AddHostnameChart()
+        private void AddHostNameChart()
         {
             List<Loss> hostList = _chartLossRepository.GetAllHostInfo();
             foreach(Loss loss in hostList)
@@ -93,10 +121,9 @@ namespace Apparat.Service
             }
         }
 
-        public void UpdateValueCollectionLoss()
+        private void UpdateValueCollectionLoss()
         {
             List<Loss> res = _chartLossRepository.GetAllHostInfo();
-            //_innerLoss.Clear();
             foreach (Loss loss in res)
             {   
                 if(loss.ListLoss is null)
@@ -111,19 +138,17 @@ namespace Apparat.Service
 
                     _innerLoss[loss.Id - 1].Values = myItems;
                 }
-               
             }
         }
 
         private void DefaultValuesForViewChart()
         {
-            _collectionTimeXAxes = new List<string>() { "00:00:00" };
             _innerObjectXAxes = new List<Axis>
                 {
                     new Axis
                     {
                         LabelsRotation = 15,
-                        Labels = _collectionTimeXAxes,
+                        Labels = new List<string>() { "00:00:00" },
                     }
                 };
 

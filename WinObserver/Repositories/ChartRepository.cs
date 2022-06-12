@@ -27,7 +27,7 @@ namespace WinObserver.Repositories
         {
             _innerLoss = new ObservableCollection<ISeries>();
             _lossList = new ReadOnlyObservableCollection<ISeries>(_innerLoss);
-            DefaultValuesForViewChart();
+            //DefaultValuesForViewChart();
             _ObjectXAxes = new List<Axis>(_innerObjectXAxes);
             _ObjectYAxes = new List<Axis>(_innerObjectYAxes);
 
@@ -69,34 +69,34 @@ namespace WinObserver.Repositories
             _collectionTimeXAxes.Clear();
         }
 
-        public void UpdateTimeXAxes()
-        {
-            DateTime date1 = DateTime.Now;
-            _collectionTimeXAxes.Add(date1.ToString("T"));
-            _innerObjectXAxes[0].Labels = _collectionTimeXAxes;
-        }
+        //public void UpdateTimeXAxes()
+        //{
+        //    DateTime date1 = DateTime.Now;
+        //    _collectionTimeXAxes.Add(date1.ToString("T"));
+        //    _innerObjectXAxes[0].Labels = _collectionTimeXAxes;
+        //}
 
-        private void DefaultValuesForViewChart()
-        {
-            _collectionTimeXAxes = new List<string>() { "00:00:00" };
-            _innerObjectXAxes = new List<Axis>
-                {
-                    new Axis
-                    {   
-                        LabelsRotation = 15,
-                        Labels = _collectionTimeXAxes,
-                    }
-                };
+        //private void DefaultValuesForViewChart()
+        //{
+        //    _collectionTimeXAxes = new List<string>() { "00:00:00" };
+        //    _innerObjectXAxes = new List<Axis>
+        //        {
+        //            new Axis
+        //            {   
+        //                LabelsRotation = 15,
+        //                Labels = _collectionTimeXAxes,
+        //            }
+        //        };
 
-            _innerObjectYAxes = new List<Axis>
-            {
-                 new Axis
-                {
-                    MinLimit = 0,
-                    MaxLimit = 100,
-                    MinStep = 10,
-                }
-            };
-        }
+        //    _innerObjectYAxes = new List<Axis>
+        //    {
+        //         new Axis
+        //        {
+        //            MinLimit = 0,
+        //            MaxLimit = 100,
+        //            MinStep = 10,
+        //        }
+        //    };
+        //}
     }
 }
