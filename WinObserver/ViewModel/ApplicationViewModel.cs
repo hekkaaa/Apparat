@@ -131,6 +131,7 @@ namespace WinObserver.ViewModel
                 {
                     if (_statusWorkDataGrid)
                     {
+                        _chartService.GetAllLoss(); // Test
                         _tracerService!.StopTraceroute();
                         _statusWorkDataGrid = false;
                         ControlBtnName = ViewStatusStringBtn.Start.ToString();
@@ -142,7 +143,7 @@ namespace WinObserver.ViewModel
                             ErrorValidationTextAndAnimation();
                         }
                         else
-                        {
+                        {   
                             NameTableDataGrid = _hostname;
                             ControlBtnName = ViewStatusStringBtn.Stop.ToString();
                             RestartInfoInDataGrid();

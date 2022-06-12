@@ -2,9 +2,11 @@
 using Data.Entities;
 using Data.Repositories;
 using Data.Repositories.Connect;
+using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,6 +16,9 @@ namespace Apparat.Service
 {
     public class ChartLossService : IChartLossService
     {
+        private ObservableCollection<ISeries> _innerLoss;
+        public readonly ReadOnlyObservableCollection<ISeries> _lossList;
+
         private readonly RequestTimeRepository _requestTimeRepository;
         private readonly ChartLossRepository _chartLossRepository;
         private readonly ApplicationContext _applicationContext;
@@ -25,11 +30,15 @@ namespace Apparat.Service
         public readonly List<Axis> _ObjectYAxes;
 
         public ChartLossService(ApplicationContext context)
-        {
+        {   
             _applicationContext = context;
             _chartLossRepository = new ChartLossRepository(_applicationContext);
             _requestTimeRepository = new RequestTimeRepository(_applicationContext);
             DefaultValuesForViewChart();
+
+            _innerLoss = new ObservableCollection<ISeries>();
+            _lossList = new ReadOnlyObservableCollection<ISeries>(_innerLoss);
+
             _ObjectXAxes = new List<Axis>(_innerObjectXAxes);
             _ObjectYAxes = new List<Axis>(_innerObjectYAxes);
         }
@@ -53,6 +62,28 @@ namespace Apparat.Service
             _innerObjectXAxes[0].Labels = res;
         }
 
+        public void GetAllLoss()
+        {
+            List<Loss> res = _chartLossRepository.GetAllHostInfo();
+
+            foreach (Loss loss in res)
+            {
+                string[] tokens = loss.ListLoss.Split(',');
+
+                int[] myItems = Array.ConvertAll<string, int>(tokens, int.TryParse);
+
+                var s = "sada";
+                //var newHost = new LineSeries<double>
+                //{
+                //    GeometryStroke = null,
+                //    GeometryFill = null,
+                //    Values = new List<double>() { 0 },
+                //    Name = loss.Hostname
+                //};
+
+                //_innerLoss.Add(newHost);
+            }
+        }
 
         private void DefaultValuesForViewChart()
         {

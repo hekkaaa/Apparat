@@ -6,5 +6,6 @@ namespace Apparat.Service.Interface
     public interface IChartLossService
     {
         void GetAllTimeXAxes();
+        void GetAllLoss();
     }
 }
