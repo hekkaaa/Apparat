@@ -10,7 +10,6 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using WinObserver.Model;
-using WinObserver.Repositories;
 using WinObserver.Service;
 
 namespace WinObserver.ViewModel
