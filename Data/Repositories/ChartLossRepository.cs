@@ -34,5 +34,10 @@ namespace Data.Repositories
         {
             return _context.Losses.FirstOrDefault(x => x.Id == id);
         }
+
+        public List<Loss> GetAllHostInfo()
+        {
+            return _context.Losses.ToList();
+        }
     }
 }
