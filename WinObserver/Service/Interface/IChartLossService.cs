@@ -5,7 +5,7 @@ namespace Apparat.Service.Interface
 {
     public interface IChartLossService
     {
-        void GetAllTimeXAxes();
-        void UpdateValueCollectionLoss();
+        void StartUpdateChart();
+        void StopUpdateChart();
     }
 }

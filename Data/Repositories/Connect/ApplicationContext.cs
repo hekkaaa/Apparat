@@ -9,7 +9,7 @@ namespace Data.Repositories.Connect
         public DbSet<RequestTime> RequestsTimes { get; set; }
 
         public ApplicationContext()
-        {   
+        {
             Database.EnsureDeleted();
             Database.EnsureCreated();
         }
