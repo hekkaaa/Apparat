@@ -38,6 +38,7 @@ namespace Apparat.Service
 
         public ChartLossService(ApplicationContext context, LockWay lockWay)
         {
+            //_applicationContext = new ApplicationContext();
             _applicationContext = context;
             _lockWay = lockWay;
             _chartLossRepository = new ChartLossRepository(_applicationContext);
@@ -124,6 +125,7 @@ namespace Apparat.Service
         private void UpdateValueCollectionLoss()
         {
             List<Loss> res = _chartLossRepository.GetAllHostInfo();
+            
             foreach (Loss loss in res)
             {   
                 if(loss.ListLoss is null)

@@ -35,6 +35,7 @@ namespace WinObserver.Service
 
         public TracertService(ApplicationContext context, LockWay lockWay)
         {
+            //_applicationContext = new ApplicationContext();
             _applicationContext = context;
             _innerTracertValue = new ObservableCollection<TracertModel>();
             _tracertValue = new ReadOnlyObservableCollection<TracertModel>(_innerTracertValue);

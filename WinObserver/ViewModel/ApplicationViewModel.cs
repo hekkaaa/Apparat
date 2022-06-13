@@ -16,7 +16,7 @@ namespace WinObserver.ViewModel
 {
     public class ApplicationViewModel : INotifyPropertyChanged
     {
-        const string VERSION_APP = "Version: 0.0.18 - alpha";
+        const string VERSION_APP = "Version: 0.0.19 - alpha";
         private int _click;
         private string _hostname;
         private bool _statusWorkDataGrid = false;
@@ -27,7 +27,7 @@ namespace WinObserver.ViewModel
         private ApplicationContext _context;
         private readonly LockWay _lockWay;
         private readonly TracertService? _tracerService;
-        private readonly ChartLossService _chartService;
+        private readonly ChartLossService _chartLossService;
         private List<Axis> _timeInfoXAxes;
         private List<Axis> _valueInfoYAxes;
 
@@ -59,9 +59,8 @@ namespace WinObserver.ViewModel
         {
             get
             {
-                return _chartService._lossList;
+                return _chartLossService._lossList;
             }
-
         }
 
         public string NameTableDataGrid
@@ -131,7 +130,7 @@ namespace WinObserver.ViewModel
                 {
                     if (_statusWorkDataGrid)
                     {   
-                        _chartService.StopUpdateChart();
+                        _chartLossService.StopUpdateChart();
                         _tracerService!.StopTraceroute();
                         _statusWorkDataGrid = false;
                         ControlBtnName = ViewStatusStringBtn.Start.ToString();
@@ -148,7 +147,7 @@ namespace WinObserver.ViewModel
                             ControlBtnName = ViewStatusStringBtn.Stop.ToString();
                             RestartInfoInDataGrid();
                             _tracerService!.StartTraceroute(_hostname, this);
-                            _chartService.StartUpdateChart();
+                            _chartLossService.StartUpdateChart();
                             RemoveInfoinTextBoxPanel();
                             _statusWorkDataGrid = true;
                         }
@@ -175,12 +174,14 @@ namespace WinObserver.ViewModel
         {
             _context = new ApplicationContext();
             _lockWay = new LockWay();
+            //_tracerService = new TracertService(_lockWay);
+            //_chartLossService = new ChartLossService(_lockWay);
             _tracerService = new TracertService(_context, _lockWay);
-            _chartService = new ChartLossService(_context, _lockWay);
+            _chartLossService = new ChartLossService(_context, _lockWay);
             _generalPanelModel = new GeneralPanelModel();
             TracertObject = _tracerService._tracertValue;
-            _timeInfoXAxes = _chartService._ObjectXAxes;
-            _valueInfoYAxes = _chartService._ObjectYAxes;
+            _timeInfoXAxes = _chartLossService._ObjectXAxes;
+            _valueInfoYAxes = _chartLossService._ObjectYAxes;
         }
 
 
