@@ -33,16 +33,18 @@ namespace WinObserver.Service
         static CancellationTokenSource? _cancellationTokenSource = new CancellationTokenSource();
         CancellationToken token = _cancellationTokenSource!.Token;
 
-        public TracertService(ApplicationContext context, LockWay lockWay)
+        public TracertService(LockWay lockWay)
         {
             //_applicationContext = new ApplicationContext();
-            _applicationContext = context;
+            //_applicationContext = context;
             _innerTracertValue = new ObservableCollection<TracertModel>();
             _tracertValue = new ReadOnlyObservableCollection<TracertModel>(_innerTracertValue);
             _gridTracert = new DataGridModel();
             _tracerouteHelper = new Traceroute();
-            _chartLossRepository = new ChartLossRepository(_applicationContext);
-            _requestTimeRepository = new RequestTimeRepository(_applicationContext);
+            _chartLossRepository = new ChartLossRepository();
+            _requestTimeRepository = new RequestTimeRepository();
+            //_chartLossRepository = new ChartLossRepository(_applicationContext);
+            //_requestTimeRepository = new RequestTimeRepository(_applicationContext);
             _lockWay = lockWay;
         }
 
@@ -163,7 +165,7 @@ namespace WinObserver.Service
         }
 
         private void UpdateLoss(TracertModel newValue)
-        {
+        {   
             var modeltest = _chartLossRepository.GetHostById(newValue.NumberHostname);
             modeltest.ListLoss += "," + newValue.PercentLossPacket.ToString();
             _chartLossRepository.UpdateLoss(modeltest);

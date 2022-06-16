@@ -11,15 +11,21 @@ namespace Data.Repositories
     public class RequestTimeRepository
     {
         private ApplicationContext _context;
+        private object locker = new();  // объект-заглушка
 
-        public RequestTimeRepository(ApplicationContext context)
+        public RequestTimeRepository()
         {
-            _context = context;
+            _context = new ApplicationContext();
         }
+        //public RequestTimeRepository(ApplicationContext context)
+        //{
+        //    _context = context;
+        //}
 
         public void AddTime(RequestTime newDate)
         {
             _context.RequestsTimes.Add(newDate);
+            _context.SaveChanges();
         }
 
         public List<string> GetAllTime()

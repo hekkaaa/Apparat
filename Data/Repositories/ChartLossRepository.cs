@@ -12,33 +12,52 @@ namespace Data.Repositories
     public class ChartLossRepository
     {
         private ApplicationContext _context;
+        private object locker = new();  // объект-заглушка
 
-        public ChartLossRepository(ApplicationContext context)
+        public ChartLossRepository()
         {
-            _context = context;
+            _context = new ApplicationContext();
+           
         }
+
+        //public ChartLossRepository(ApplicationContext context)
+        //{
+        //    _context = context;
+        //}
 
         public int AddHostname(Loss newHost)
         {
-            _context.Losses.Add(newHost);
-            _context.SaveChanges();
-            return newHost.Id;
+            lock (locker)
+            {
+                _context.Losses.Add(newHost);
+                _context.SaveChanges();
+                return newHost.Id;
+            }
         }
 
         public void UpdateLoss(Loss newValue)
         {
-            _context.Losses.Update(newValue);
-            _context.SaveChanges();
+            lock (locker)
+            {
+                _context.Losses.Update(newValue);
+                _context.SaveChanges();
+            }
         }
 
         public Loss GetHostById(int id)
         {
-            return _context.Losses.FirstOrDefault(x => x.Id == id);
+            lock (locker)
+            {
+                return _context.Losses.FirstOrDefault(x => x.Id == id);
+            }
         }
 
-        public List<Loss> GetAllHostInfo()
-        {
-            return _context.Losses.ToList();
+        public Task<List<Loss>> GetAllHostInfo()
+        {   
+            using(var connectT = new ClearDb())
+            {
+                return connectT.Losses.ToListAsync();
+            }
         }
     }
 }
