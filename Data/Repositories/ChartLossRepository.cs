@@ -12,12 +12,10 @@ namespace Data.Repositories
     public class ChartLossRepository
     {
         private ApplicationContext _context;
-        private object locker = new();  // объект-заглушка
 
         public ChartLossRepository()
         {
             _context = new ApplicationContext();
-           
         }
 
         //public ChartLossRepository(ApplicationContext context)
@@ -27,29 +25,20 @@ namespace Data.Repositories
 
         public int AddHostname(Loss newHost)
         {
-            lock (locker)
-            {
-                _context.Losses.Add(newHost);
-                _context.SaveChanges();
-                return newHost.Id;
-            }
+            _context.Losses.Add(newHost);
+            _context.SaveChanges();
+            return newHost.Id;
         }
 
         public void UpdateLoss(Loss newValue)
         {
-            lock (locker)
-            {
-                _context.Losses.Update(newValue);
-                _context.SaveChanges();
-            }
+            _context.Losses.Update(newValue);
+            _context.SaveChanges();
         }
 
         public Loss GetHostById(int id)
         {
-            lock (locker)
-            {
-                return _context.Losses.FirstOrDefault(x => x.Id == id);
-            }
+            return _context.Losses.FirstOrDefault(x => x.Id == id);
         }
 
         public Task<List<Loss>> GetAllHostInfo()

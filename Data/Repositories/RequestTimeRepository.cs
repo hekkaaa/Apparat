@@ -11,7 +11,6 @@ namespace Data.Repositories
     public class RequestTimeRepository
     {
         private ApplicationContext _context;
-        private object locker = new();  // объект-заглушка
 
         public RequestTimeRepository()
         {
