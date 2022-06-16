@@ -1,5 +1,10 @@
-﻿using NetObserver.PingUtility;
+﻿using Apparat.Helpers;
+using Data.Entities;
+using Data.Repositories;
+using Data.Repositories.Connect;
+using NetObserver.PingUtility;
 using NetObserver.TracerouteUtility;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -9,7 +14,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using WinObserver.Algorithms;
 using WinObserver.Model;
-using WinObserver.Repositories.Interface;
 using WinObserver.ViewModel;
 
 namespace WinObserver.Service
@@ -21,18 +25,27 @@ namespace WinObserver.Service
 
         public readonly DataGridModel _gridTracert;
         private readonly Traceroute _tracerouteHelper;
-        private readonly IChartRepository _chartRepository;
+        private readonly ChartLossRepository _chartLossRepository;
+        private readonly RequestTimeRepository _requestTimeRepository;
+        private readonly ApplicationContext _applicationContext;
+        private readonly LockWay _lockWay;
 
         static CancellationTokenSource? _cancellationTokenSource = new CancellationTokenSource();
         CancellationToken token = _cancellationTokenSource!.Token;
 
-        public TracertService(IChartRepository chartService)
+        public TracertService(LockWay lockWay)
         {
+            //_applicationContext = new ApplicationContext();
+            //_applicationContext = context;
             _innerTracertValue = new ObservableCollection<TracertModel>();
             _tracertValue = new ReadOnlyObservableCollection<TracertModel>(_innerTracertValue);
             _gridTracert = new DataGridModel();
             _tracerouteHelper = new Traceroute();
-            _chartRepository = chartService;
+            _chartLossRepository = new ChartLossRepository();
+            _requestTimeRepository = new RequestTimeRepository();
+            //_chartLossRepository = new ChartLossRepository(_applicationContext);
+            //_requestTimeRepository = new RequestTimeRepository(_applicationContext);
+            _lockWay = lockWay;
         }
 
         public void StartTraceroute(string hostname, ApplicationViewModel applicationViewModel)
@@ -43,9 +56,8 @@ namespace WinObserver.Service
                 {
                     IEnumerable<string> objectTracertResult = _tracerouteHelper.GetIpTraceRoute(hostname);
 
-                    ClearoldTable();
+                    ClearOldTable();
                     FillingNewtable(objectTracertResult);
-                    _chartRepository.ClearChart();
 
                     while (true)
                     {
@@ -88,7 +100,7 @@ namespace WinObserver.Service
             token = _cancellationTokenSource.Token;
         }
 
-        private void ClearoldTable()
+        private void ClearOldTable()
         {
             App.Current.Dispatcher.BeginInvoke((System.Action)delegate
             {
@@ -101,7 +113,7 @@ namespace WinObserver.Service
         {
             IcmpRequestSender icmpUtilite = new IcmpRequestSender();
             int countHop = 0;
-            _chartRepository.UpdateTimeXAxes();
+            AddTimeXAxes();
 
             foreach (TracertModel objectCollection in _innerTracertValue)
             {
@@ -124,7 +136,7 @@ namespace WinObserver.Service
                 }
 
                 tempValue.PercentLossPacket = DataGridStatisticAlgorithm.RateLosses(tempValue.CounterPacket, tempValue.CounterLossPacket);
-                AddLossChart(countHop, tempValue.PercentLossPacket);
+                UpdateLoss(tempValue);
                 countHop++;
             }
         }
@@ -137,23 +149,33 @@ namespace WinObserver.Service
             {
                 App.Current.Dispatcher.BeginInvoke((System.Action)delegate
                 {
-                    FillingNameChart(addres);
+                    AddHostname(addres); // here!
                     _innerTracertValue.Add(new TracertModel { NumberHostname = countHostname, Hostname = addres });
                     countHostname++;
                     OnPropertyChanged();
                 });
             }
+            _lockWay.IsFullingCollectionHost = true;
         }
 
-
-        private void FillingNameChart(string name)
+        private void AddHostname(string host)
         {
-            _chartRepository.AddHops(name);
+            Loss tmpItem = new Loss() { Hostname = host };
+            _chartLossRepository.AddHostname(tmpItem);
         }
 
-        private void AddLossChart(int count, double loss)
+        private void UpdateLoss(TracertModel newValue)
+        {   
+            var modeltest = _chartLossRepository.GetHostById(newValue.NumberHostname);
+            modeltest.ListLoss += "," + newValue.PercentLossPacket.ToString();
+            _chartLossRepository.UpdateLoss(modeltest);
+        }
+
+        private void AddTimeXAxes()
         {
-            _chartRepository.AddValueLossCollection(count, loss);
+            DateTime date = DateTime.Now;
+            RequestTime tmpDate = new RequestTime() { ListTime = date.ToString("T") };
+            _requestTimeRepository.AddTime(tmpDate);
         }
     }
 }

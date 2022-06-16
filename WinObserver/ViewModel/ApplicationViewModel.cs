@@ -1,4 +1,7 @@
-﻿using LiveChartsCore;
+﻿using Apparat.Helpers;
+using Apparat.Service;
+using Data.Repositories.Connect;
+using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
 using System;
 using System.Collections.Generic;
@@ -7,13 +10,13 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using WinObserver.Model;
-using WinObserver.Repositories;
 using WinObserver.Service;
 
 namespace WinObserver.ViewModel
 {
     public class ApplicationViewModel : INotifyPropertyChanged
     {
+        const string VERSION_APP = "Version: 0.0.20 - alpha";
         private int _click;
         private string _hostname;
         private bool _statusWorkDataGrid = false;
@@ -21,8 +24,10 @@ namespace WinObserver.ViewModel
         private string _borderTextBox = "#FFABADB3";
 
         private GeneralPanelModel? _generalPanelModel;
+        private ApplicationContext _context;
+        private readonly LockWay _lockWay;
         private readonly TracertService? _tracerService;
-        private readonly ChartRepository _chartRepository;
+        private readonly ChartLossService _chartLossService;
         private List<Axis> _timeInfoXAxes;
         private List<Axis> _valueInfoYAxes;
 
@@ -54,9 +59,8 @@ namespace WinObserver.ViewModel
         {
             get
             {
-                return _chartRepository._lossList;
+                return _chartLossService._lossList;
             }
-
         }
 
         public string NameTableDataGrid
@@ -115,7 +119,7 @@ namespace WinObserver.ViewModel
             }
         }
 
-        public string VersionProgramm { get; set; }
+        public string VersionProgramm { get { return VERSION_APP; } }
 
         private DelegateCommand? controlTracert { get; }
         public DelegateCommand ControlTracert
@@ -125,7 +129,8 @@ namespace WinObserver.ViewModel
                 return controlTracert ?? new DelegateCommand((obj) =>
                 {
                     if (_statusWorkDataGrid)
-                    {
+                    {   
+                        _chartLossService.StopUpdateChart();
                         _tracerService!.StopTraceroute();
                         _statusWorkDataGrid = false;
                         ControlBtnName = ViewStatusStringBtn.Start.ToString();
@@ -137,11 +142,12 @@ namespace WinObserver.ViewModel
                             ErrorValidationTextAndAnimation();
                         }
                         else
-                        {
+                        {   
                             NameTableDataGrid = _hostname;
                             ControlBtnName = ViewStatusStringBtn.Stop.ToString();
                             RestartInfoInDataGrid();
                             _tracerService!.StartTraceroute(_hostname, this);
+                            _chartLossService.StartUpdateChart();
                             RemoveInfoinTextBoxPanel();
                             _statusWorkDataGrid = true;
                         }
@@ -166,14 +172,16 @@ namespace WinObserver.ViewModel
 
         public ApplicationViewModel()
         {
-            VersionProgramm = "Version: 0.0.15 - alpha";
-            _chartRepository = new ChartRepository();
-            _tracerService = new TracertService(_chartRepository);
+            _context = new ApplicationContext();
+            _lockWay = new LockWay();
+            _tracerService = new TracertService(_lockWay);
+            _chartLossService = new ChartLossService(_lockWay);
+            //_tracerService = new TracertService(_context, _lockWay);
+            //_chartLossService = new ChartLossService(_context, _lockWay);
             _generalPanelModel = new GeneralPanelModel();
             TracertObject = _tracerService._tracertValue;
-            _timeInfoXAxes = _chartRepository._ObjectXAxes;
-            _valueInfoYAxes = _chartRepository._ObjectYAxes;
-         
+            _timeInfoXAxes = _chartLossService._ObjectXAxes;
+            _valueInfoYAxes = _chartLossService._ObjectYAxes;
         }
 
 

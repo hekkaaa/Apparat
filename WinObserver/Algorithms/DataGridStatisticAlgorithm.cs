@@ -9,9 +9,9 @@ namespace WinObserver.Algorithms
 {
     public static class DataGridStatisticAlgorithm
     {
-        public static double RateLosses(double countPacket, double countLossPacket)
+        public static int RateLosses(int countPacket, int countLossPacket)
         {
-            double result = countLossPacket * 100 / countPacket;
+            int result = countLossPacket * 100 / countPacket;
             return result;
         }
 

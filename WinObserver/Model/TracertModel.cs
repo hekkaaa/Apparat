@@ -6,21 +6,21 @@ namespace WinObserver.Model
 {
     public class TracertModel : INotifyPropertyChanged
     {
-        private int? _numberHostname;
-        private string? _hostname;
+        private int _numberHostname;
+        private string _hostname;
         private int? _lastDelay;
 
         private int _minPing = 0;
         private int _middlePing = 0;
         private int _maxPing = 0;
 
-        private double _percentLossPacket = 0;
+        private int _percentLossPacket = 0;
         private int _counterPacket = 0;
         private int _counterLossPacket = 0;
 
         private List<int>? _arhivePingList = new List<int>();
 
-        public int? NumberHostname
+        public int NumberHostname
         {
             get { return _numberHostname; }
             set
@@ -79,7 +79,7 @@ namespace WinObserver.Model
             }
         }
 
-        public double PercentLossPacket
+        public int PercentLossPacket
         {
             get { return _percentLossPacket; }
             set

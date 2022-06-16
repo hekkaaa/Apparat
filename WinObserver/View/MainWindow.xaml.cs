@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using Data.Repositories.Connect;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Navigation;
 using WinObserver.ViewModel;
@@ -13,7 +14,6 @@ namespace WinObserver
         public MainWindow()
         {
             InitializeComponent();
-
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
