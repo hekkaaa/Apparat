@@ -13,10 +13,15 @@ namespace Data.Repositories
     {
         private ApplicationContext _context;
 
-        public ChartLossRepository(ApplicationContext context)
+        public ChartLossRepository()
         {
-            _context = context;
+            _context = new ApplicationContext();
         }
+
+        //public ChartLossRepository(ApplicationContext context)
+        //{
+        //    _context = context;
+        //}
 
         public int AddHostname(Loss newHost)
         {
@@ -36,9 +41,12 @@ namespace Data.Repositories
             return _context.Losses.FirstOrDefault(x => x.Id == id);
         }
 
-        public List<Loss> GetAllHostInfo()
-        {
-            return _context.Losses.ToList();
+        public Task<List<Loss>> GetAllHostInfo()
+        {   
+            using(var connectT = new ClearDb())
+            {
+                return connectT.Losses.ToListAsync();
+            }
         }
     }
 }

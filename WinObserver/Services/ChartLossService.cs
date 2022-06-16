@@ -36,13 +36,15 @@ namespace Apparat.Service
         private List<Axis> _innerObjectYAxes;
         public readonly List<Axis> _ObjectYAxes;
 
-        public ChartLossService(ApplicationContext context, LockWay lockWay)
+        public ChartLossService(LockWay lockWay)
         {
             //_applicationContext = new ApplicationContext();
-            _applicationContext = context;
+            //_applicationContext = context;
             _lockWay = lockWay;
-            _chartLossRepository = new ChartLossRepository(_applicationContext);
-            _requestTimeRepository = new RequestTimeRepository(_applicationContext);
+            _chartLossRepository = new ChartLossRepository();
+            _requestTimeRepository = new RequestTimeRepository();
+            //_chartLossRepository = new ChartLossRepository(_applicationContext);
+            //_requestTimeRepository = new RequestTimeRepository(_applicationContext);
             DefaultValuesForViewChart();
 
             _innerLoss = new ObservableCollection<ISeries>();
@@ -105,9 +107,9 @@ namespace Apparat.Service
             _innerObjectXAxes[0].Labels = res;
         }
 
-        private void AddHostNameChart()
+        private async void AddHostNameChart()
         {
-            List<Loss> hostList = _chartLossRepository.GetAllHostInfo();
+            List<Loss> hostList = await _chartLossRepository.GetAllHostInfo();
             foreach(Loss loss in hostList)
             {
                 var newHost = new LineSeries<double>
@@ -122,10 +124,11 @@ namespace Apparat.Service
             }
         }
 
-        private void UpdateValueCollectionLoss()
+        private async void UpdateValueCollectionLoss()
         {
-            List<Loss> res = _chartLossRepository.GetAllHostInfo();
-            
+            List<Loss> res = await _chartLossRepository.GetAllHostInfo();
+
+            var ttt = _chartLossRepository.GetHostById(1);
             foreach (Loss loss in res)
             {   
                 if(loss.ListLoss is null)

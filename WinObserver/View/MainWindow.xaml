@@ -62,6 +62,7 @@
                     LegendPosition="Bottom" 
                     LegendFontFamily="Console" 
                     TooltipPosition="Left"
+                    ZoomMode="X"
                     >
             <!--XAxes="{Binding XAxes}"-->
             <!--TooltipPosition="Hidden" 

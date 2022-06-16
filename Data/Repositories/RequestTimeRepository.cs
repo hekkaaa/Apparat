@@ -12,14 +12,19 @@ namespace Data.Repositories
     {
         private ApplicationContext _context;
 
-        public RequestTimeRepository(ApplicationContext context)
+        public RequestTimeRepository()
         {
-            _context = context;
+            _context = new ApplicationContext();
         }
+        //public RequestTimeRepository(ApplicationContext context)
+        //{
+        //    _context = context;
+        //}
 
         public void AddTime(RequestTime newDate)
         {
             _context.RequestsTimes.Add(newDate);
+            _context.SaveChanges();
         }
 
         public List<string> GetAllTime()
