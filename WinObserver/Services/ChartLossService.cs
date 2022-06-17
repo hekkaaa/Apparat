@@ -58,6 +58,7 @@ namespace Apparat.Service
         public void StartUpdateChart()
         {
             ClearOldTable();
+
             Task.Factory.StartNew(() =>
             {
                 try
@@ -69,6 +70,7 @@ namespace Apparat.Service
                         {
                             AddHostNameChart();
                             IsEndWhile = false;
+                            _lockWay.IsFullingCollectionHost = false;
                         }
                     }
 
@@ -153,6 +155,7 @@ namespace Apparat.Service
         {
             App.Current.Dispatcher.BeginInvoke((System.Action)delegate
             {
+                _requestTimeRepository.ClearTable();
                 _innerLoss.Clear();
                 //DefaultValuesForViewChart();
             });

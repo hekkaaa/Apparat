@@ -142,7 +142,7 @@ namespace WinObserver.ViewModel
                             ErrorValidationTextAndAnimation();
                         }
                         else
-                        {   
+                        {
                             NameTableDataGrid = _hostname;
                             ControlBtnName = ViewStatusStringBtn.Stop.ToString();
                             RestartInfoInDataGrid();
@@ -195,6 +195,12 @@ namespace WinObserver.ViewModel
         private void RestartInfoInDataGrid()
         {
             TracertObject = null;
+        }
+
+        private void RestartChart()
+        {
+            _timeInfoXAxes = null;
+            _valueInfoYAxes = null;
         }
 
         private void RemoveInfoinTextBoxPanel()

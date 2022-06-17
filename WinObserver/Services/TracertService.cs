@@ -104,6 +104,7 @@ namespace WinObserver.Service
         {
             App.Current.Dispatcher.BeginInvoke((System.Action)delegate
             {
+                _chartLossRepository.ClearTable();
                 _innerTracertValue.Clear();
                 OnPropertyChanged();
             });
@@ -160,7 +161,7 @@ namespace WinObserver.Service
 
         private void AddHostname(string host)
         {
-            Loss tmpItem = new Loss() { Hostname = host };
+            Loss tmpItem = new Loss() { Hostname = host, ListLoss = String.Empty };
             _chartLossRepository.AddHostname(tmpItem);
         }
 
