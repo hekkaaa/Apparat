@@ -13,6 +13,7 @@ using System.Net.NetworkInformation;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using WinObserver;
 using WinObserver.Model;
 
 namespace Apparat.Service
@@ -56,6 +57,7 @@ namespace Apparat.Service
 
         public void StartUpdateChart()
         {
+            ClearOldTable();
             Task.Factory.StartNew(() =>
             {
                 try
@@ -71,23 +73,24 @@ namespace Apparat.Service
                     }
 
                     while (true)
-                    {   
-                        GetAllTimeXAxes();
-                        UpdateValueCollectionLoss();
+                    {
                         Task.Delay(5000).Wait();
                         if (token.IsCancellationRequested)
                         {
                             _cancellationTokenSource!.Dispose();
                             RestartToken();
+                            IsEndWhile = true;
                             break;
                         }
+                        GetAllTimeXAxes();
+                        UpdateValueCollectionLoss();
                     }
                 }
                 catch (PingException)
                 {
                     _cancellationTokenSource!.Cancel();
                 }
-            });
+            }, token);
         }
 
         public void StopUpdateChart()
@@ -144,6 +147,15 @@ namespace Apparat.Service
                     _innerLoss[loss.Id - 1].Values = myItems;
                 }
             }
+        }
+
+        private void ClearOldTable()
+        {
+            App.Current.Dispatcher.BeginInvoke((System.Action)delegate
+            {
+                _innerLoss.Clear();
+                //DefaultValuesForViewChart();
+            });
         }
 
         private void DefaultValuesForViewChart()

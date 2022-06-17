@@ -16,7 +16,7 @@ namespace WinObserver.ViewModel
 {
     public class ApplicationViewModel : INotifyPropertyChanged
     {
-        const string VERSION_APP = "Version: 0.0.20 - alpha";
+        const string VERSION_APP = "Version: 0.0.21 - alpha";
         private int _click;
         private string _hostname;
         private bool _statusWorkDataGrid = false;
