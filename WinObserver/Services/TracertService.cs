@@ -150,7 +150,7 @@ namespace WinObserver.Service
             {
                 App.Current.Dispatcher.BeginInvoke((System.Action)delegate
                 {
-                    AddHostname(addres); // here!
+                    AddHostname(addres, countHostname); // here!
                     _innerTracertValue.Add(new TracertModel { NumberHostname = countHostname, Hostname = addres });
                     countHostname++;
                     OnPropertyChanged();
@@ -159,9 +159,9 @@ namespace WinObserver.Service
             _lockWay.IsFullingCollectionHost = true;
         }
 
-        private void AddHostname(string host)
+        private void AddHostname(string host, int newId)
         {
-            Loss tmpItem = new Loss() { Hostname = host, ListLoss = String.Empty };
+            Loss tmpItem = new Loss() {Id = newId, Hostname = host, ListLoss = String.Empty };
             _chartLossRepository.AddHostname(tmpItem);
         }
 
