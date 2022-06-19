@@ -16,7 +16,7 @@ namespace WinObserver.ViewModel
 {
     public class ApplicationViewModel : INotifyPropertyChanged
     {
-        const string VERSION_APP = "Version: 0.0.21 - alpha";
+        const string VERSION_APP = "Version: 0.0.24 - alpha";
         private int _click;
         private string _hostname;
         private bool _statusWorkDataGrid = false;
@@ -47,12 +47,13 @@ namespace WinObserver.ViewModel
         public List<Axis> XAxes
         {
             get { return _timeInfoXAxes; }
-            //set { _timeInfoXAxes = value; OnPropertyChanged(); }
+            set { _timeInfoXAxes = value; OnPropertyChanged(); }
         }
 
         public List<Axis> YAxes
         { 
-            get { return _valueInfoYAxes; } 
+            get { return _valueInfoYAxes; }
+            set { _valueInfoYAxes = value; OnPropertyChanged(); }
         }
 
         public ReadOnlyObservableCollection<ISeries> Losses
@@ -132,6 +133,7 @@ namespace WinObserver.ViewModel
                     {   
                         _chartLossService.StopUpdateChart();
                         _tracerService!.StopTraceroute();
+                        
                         _statusWorkDataGrid = false;
                         ControlBtnName = ViewStatusStringBtn.Start.ToString();
                     }
@@ -142,7 +144,7 @@ namespace WinObserver.ViewModel
                             ErrorValidationTextAndAnimation();
                         }
                         else
-                        {
+                        {   
                             NameTableDataGrid = _hostname;
                             ControlBtnName = ViewStatusStringBtn.Stop.ToString();
                             RestartInfoInDataGrid();
@@ -199,8 +201,8 @@ namespace WinObserver.ViewModel
 
         private void RestartChart()
         {
-            _timeInfoXAxes = null;
-            _valueInfoYAxes = null;
+            XAxes = null;
+            YAxes = null;
         }
 
         private void RemoveInfoinTextBoxPanel()

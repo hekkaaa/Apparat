@@ -58,7 +58,7 @@ namespace Apparat.Service
         public void StartUpdateChart()
         {
             ClearOldTable();
-
+           
             Task.Factory.StartNew(() =>
             {
                 try
@@ -157,7 +157,6 @@ namespace Apparat.Service
             {
                 _requestTimeRepository.ClearTable();
                 _innerLoss.Clear();
-                //DefaultValuesForViewChart();
             });
         }
 
