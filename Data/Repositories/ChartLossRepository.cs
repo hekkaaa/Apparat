@@ -48,5 +48,18 @@ namespace Data.Repositories
                 return connectT.Losses.ToListAsync();
             }
         }
+
+        public void ClearTable()
+        {
+            var tmp = _context.Losses.ToList();
+            if(tmp.Count != 0)
+            {
+                _context.Losses.RemoveRange(tmp);
+                _context.SaveChanges();
+            }
+            
+            //_context.Losses.RemoveRange(_context.Losses);
+            //_context.SaveChanges();
+        }
     }
 }

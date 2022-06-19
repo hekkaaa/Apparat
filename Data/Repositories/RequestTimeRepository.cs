@@ -31,5 +31,19 @@ namespace Data.Repositories
         {
             return _context.RequestsTimes.Select(x => x.ListTime).ToList();
         }
+
+        public void ClearTable()
+        {
+            var tmp = _context.RequestsTimes.ToList();
+            if (tmp.Count != 0)
+            {  
+                _context.RequestsTimes.RemoveRange(tmp);
+                _context.SaveChanges();
+            }
+
+
+            //_context.RequestsTimes.RemoveRange(_context.RequestsTimes);
+            //_context.SaveChanges();
+        }
     }
 }
