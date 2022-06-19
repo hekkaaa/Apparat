@@ -16,3 +16,7 @@ _At the moment, early versions - the program may unexpectedly freeze and give er
 
 ## Downloads
 **[Download it now](https://github.com/hekkaaa/Apparat/releases/latest)**
+
+##Feedback and bug reports
+Telegram: https://t.me/Hekkaaa
+Email: silencemyalise@gmail.com
