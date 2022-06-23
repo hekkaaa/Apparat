@@ -17,7 +17,7 @@ namespace Data.Repositories.Connect
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlite(
-                "Data Source=testbaseChart.db");
+                "Data Source=DataBaseChart.db");
             optionsBuilder.UseLazyLoadingProxies();
             //SQLitePCL.raw.SetProvider(new SQLitePCL.SQLite3Provider_e_sqlite3());
         }

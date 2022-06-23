@@ -1,5 +1,6 @@
 ﻿using Data.Entities;
 using Data.Repositories.Connect;
+using Data.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Data.Repositories
 {
-    public class ChartLossRepository
+    public class ChartLossRepository : IChartLossRepository
     {
         private ApplicationContext _context;
 
@@ -42,8 +43,8 @@ namespace Data.Repositories
         }
 
         public Task<List<Loss>> GetAllHostInfo()
-        {   
-            using(var connectT = new ClearDb())
+        {
+            using (var connectT = new DublicateContext())
             {
                 return connectT.Losses.ToListAsync();
             }
@@ -52,14 +53,11 @@ namespace Data.Repositories
         public void ClearTable()
         {
             var tmp = _context.Losses.ToList();
-            if(tmp.Count != 0)
+            if (tmp.Count != 0)
             {
                 _context.Losses.RemoveRange(tmp);
                 _context.SaveChanges();
             }
-            
-            //_context.Losses.RemoveRange(_context.Losses);
-            //_context.SaveChanges();
         }
     }
 }

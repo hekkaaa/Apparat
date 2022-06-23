@@ -1,5 +1,6 @@
 ﻿using Data.Entities;
 using Data.Repositories.Connect;
+using Data.Repositories.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Data.Repositories
 {
-    public class RequestTimeRepository
+    public class RequestTimeRepository : IRequestTimeRepository
     {
         private ApplicationContext _context;
 
@@ -36,14 +37,10 @@ namespace Data.Repositories
         {
             var tmp = _context.RequestsTimes.ToList();
             if (tmp.Count != 0)
-            {  
+            {
                 _context.RequestsTimes.RemoveRange(tmp);
                 _context.SaveChanges();
             }
-
-
-            //_context.RequestsTimes.RemoveRange(_context.RequestsTimes);
-            //_context.SaveChanges();
         }
     }
 }
