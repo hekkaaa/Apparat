@@ -14,15 +14,10 @@ namespace Data.Repositories
     {
         private ApplicationContext _context;
 
-        public ChartLossRepository()
+        public ChartLossRepository(ApplicationContext context)
         {
-            _context = new ApplicationContext();
+            _context = context;
         }
-
-        //public ChartLossRepository(ApplicationContext context)
-        //{
-        //    _context = context;
-        //}
 
         public int AddHostname(Loss newHost)
         {
@@ -44,9 +39,9 @@ namespace Data.Repositories
 
         public Task<List<Loss>> GetAllHostInfo()
         {
-            using (var connectT = new DublicateContext())
+            using (var dublicateConnect = new DublicateContext())
             {
-                return connectT.Losses.ToListAsync();
+                return dublicateConnect.Losses.ToListAsync();
             }
         }
 

@@ -3,6 +3,7 @@ using Apparat.Service.Interface;
 using Data.Entities;
 using Data.Repositories;
 using Data.Repositories.Connect;
+using Data.Repositories.Interfaces;
 using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
 using System;
@@ -24,8 +25,8 @@ namespace Apparat.Service
         private ObservableCollection<ISeries> _innerLoss;
         public readonly ReadOnlyObservableCollection<ISeries> _lossList;
 
-        private readonly RequestTimeRepository _requestTimeRepository;
-        private readonly ChartLossRepository _chartLossRepository;
+        private readonly IRequestTimeRepository _requestTimeRepository;
+        private readonly IChartLossRepository _chartLossRepository;
         private readonly ApplicationContext _applicationContext;
         private readonly LockWay _lockWay;
 
@@ -39,18 +40,15 @@ namespace Apparat.Service
 
         public ChartLossService(LockWay lockWay)
         {
-            //_applicationContext = new ApplicationContext();
-            //_applicationContext = context;
+            _applicationContext = new ApplicationContext();
             _lockWay = lockWay;
-            _chartLossRepository = new ChartLossRepository();
-            _requestTimeRepository = new RequestTimeRepository();
-            //_chartLossRepository = new ChartLossRepository(_applicationContext);
-            //_requestTimeRepository = new RequestTimeRepository(_applicationContext);
+            _chartLossRepository = new ChartLossRepository(_applicationContext);
+            _requestTimeRepository = new RequestTimeRepository(_applicationContext);
             DefaultValuesForViewChart();
 
             _innerLoss = new ObservableCollection<ISeries>();
             _lossList = new ReadOnlyObservableCollection<ISeries>(_innerLoss);
-
+          
             _ObjectXAxes = new List<Axis>(_innerObjectXAxes);
             _ObjectYAxes = new List<Axis>(_innerObjectYAxes);
         }

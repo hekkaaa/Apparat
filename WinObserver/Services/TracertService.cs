@@ -2,6 +2,7 @@
 using Data.Entities;
 using Data.Repositories;
 using Data.Repositories.Connect;
+using Data.Repositories.Interfaces;
 using NetObserver.PingUtility;
 using NetObserver.TracerouteUtility;
 using System;
@@ -25,8 +26,8 @@ namespace WinObserver.Service
 
         public readonly DataGridModel _gridTracert;
         private readonly Traceroute _tracerouteHelper;
-        private readonly ChartLossRepository _chartLossRepository;
-        private readonly RequestTimeRepository _requestTimeRepository;
+        private readonly IChartLossRepository _chartLossRepository;
+        private readonly IRequestTimeRepository _requestTimeRepository;
         private readonly ApplicationContext _applicationContext;
         private readonly LockWay _lockWay;
 
@@ -35,16 +36,13 @@ namespace WinObserver.Service
 
         public TracertService(LockWay lockWay)
         {
-            //_applicationContext = new ApplicationContext();
-            //_applicationContext = context;
+            _applicationContext = new ApplicationContext();
             _innerTracertValue = new ObservableCollection<TracertModel>();
             _tracertValue = new ReadOnlyObservableCollection<TracertModel>(_innerTracertValue);
             _gridTracert = new DataGridModel();
             _tracerouteHelper = new Traceroute();
-            _chartLossRepository = new ChartLossRepository();
-            _requestTimeRepository = new RequestTimeRepository();
-            //_chartLossRepository = new ChartLossRepository(_applicationContext);
-            //_requestTimeRepository = new RequestTimeRepository(_applicationContext);
+            _chartLossRepository = new ChartLossRepository(_applicationContext);
+            _requestTimeRepository = new RequestTimeRepository(_applicationContext);
             _lockWay = lockWay;
         }
 

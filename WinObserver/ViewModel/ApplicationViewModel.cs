@@ -178,8 +178,6 @@ namespace WinObserver.ViewModel
             _lockWay = new LockWay();
             _tracerService = new TracertService(_lockWay);
             _chartLossService = new ChartLossService(_lockWay);
-            //_tracerService = new TracertService(_context, _lockWay);
-            //_chartLossService = new ChartLossService(_context, _lockWay);
             _generalPanelModel = new GeneralPanelModel();
             TracertObject = _tracerService._tracertValue;
             _timeInfoXAxes = _chartLossService._ObjectXAxes;
