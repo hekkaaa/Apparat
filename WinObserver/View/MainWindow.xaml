@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WinObserver" xmlns:viewmodel="clr-namespace:WinObserver.ViewModel" d:DataContext="{d:DesignInstance Type=viewmodel:ApplicationViewModel}"
         mc:Ignorable="d"
-        Title="Apparat" MinHeight="300" MinWidth="400" Height="768" Width="1024" Loaded="Window_Loaded"
+        Title="Apparat" MinHeight="300" MinWidth="400" Height="568" Width="1024" Loaded="Window_Loaded"
         xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.WPF;assembly=LiveChartsCore.SkiaSharpView.WPF"
         WindowStartupLocation="CenterScreen">
 
@@ -14,7 +14,7 @@
             <RowDefinition Height="60" />
             <RowDefinition Height="*" />
             <RowDefinition Height="5" />
-            <RowDefinition Height="*" />
+            <!--<RowDefinition Height="*" />-->
             <RowDefinition Height="20" />
         </Grid.RowDefinitions>
         <Grid Grid.Row="0">
@@ -37,7 +37,7 @@
         <TabControl DockPanel.Dock="Right" Grid.Row="1">
             <TabItem Header="{Binding NameTableDataGrid}">
                 <Grid Background="Azure">
-                    <DataGrid x:Name="DG1" ItemsSource="{Binding TracertObject, UpdateSourceTrigger=PropertyChanged}"  AutoGenerateColumns="False" RowBackground="GhostWhite" AlternatingRowBackground ="LightGray" GridLinesVisibility="None" IsReadOnly="True">
+                    <DataGrid x:Name="DG1" ItemsSource="{Binding TracertObject, UpdateSourceTrigger=PropertyChanged}"  AutoGenerateColumns="False" RowBackground="GhostWhite" AlternatingRowBackground ="LightGray" GridLinesVisibility="None" IsReadOnly="True" FontSize="14">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="№" Binding="{Binding NumberHostname}" Width="0.25*"/>
                             <DataGridTextColumn Header="Hostname" Binding="{Binding Hostname}" Width="*"/>
@@ -53,22 +53,6 @@
                 </Grid>
             </TabItem>
         </TabControl>
-        <GridSplitter Grid.Row="2" Height="5" HorizontalAlignment="Stretch"/>
-        <lvc:CartesianChart 
-                    Grid.Row="3"
-                    Series="{Binding Losses}"
-                    XAxes="{Binding XAxes}"
-                    YAxes="{Binding YAxes}"
-                    LegendPosition="Bottom" 
-                    LegendFontFamily="Console" 
-                    TooltipPosition="Left"
-                    ZoomMode="X">
-            <!--XAxes="{Binding XAxes}"-->
-            <!--TooltipPosition="Hidden" 
-                    LegendPosition="Bottom"-->
-            <!--ZoomMode="X" 
-                    LegendFontFamily="Console"-->
-        </lvc:CartesianChart>
         <Border Grid.Row="4" BorderBrush="Black" BorderThickness="0.5">
         <Grid Background="PowderBlue"  >
             <Grid.ColumnDefinitions>
