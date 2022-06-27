@@ -15,7 +15,7 @@ namespace WinObserver.ViewModel
 {
     public class ApplicationViewModel : INotifyPropertyChanged
     {
-        const string VERSION_APP = "Version: 0.0.24 - alpha";
+        const string VERSION_APP = "Version: 0.1.0 - alpha";
         private int _click;
         private string _hostname;
         private bool _statusWorkDataGrid = false;
@@ -25,7 +25,9 @@ namespace WinObserver.ViewModel
         private GeneralPanelModel? _generalPanelModel;
         private readonly TracertService? _tracerService;
 
+     
         public ReadOnlyObservableCollection<TracertModel>? TracertObject { get; set; }
+
 
         public string ControlBtnName
         {
@@ -143,11 +145,70 @@ namespace WinObserver.ViewModel
             }
         }
 
+        private DelegateCommand _closeTabCommand;
+        public DelegateCommand CloseTabCommand
+        {
+            get
+            {
+                return _closeTabCommand
+                ?? (_closeTabCommand = new DelegateCommand(
+                (obj) =>
+                {
+                    TestTracertObject.Remove(obj as TracertModel);
+                }));
+            }
+        }
+
+        private DelegateCommand _addNewHost;
+        public DelegateCommand AddNewHost
+        {
+            get
+            {
+                return _addNewHost ??
+                 (_addNewHost = new DelegateCommand((obj) =>
+                 {
+                     TestTracertObject.Add(new TracertModel {
+                         Hostname = "vk.com",
+                         CounterLossPacket = 1,
+                         LastDelay = 1,
+                         MiddlePing = 10
+                     });
+                     OnPropertyChanged();
+                 }));
+            }
+        }
+
+        ObservableCollection<TracertModel> _testNameList;
+        public ObservableCollection<TracertModel> TestTracertObject
+        {
+            get { return _testNameList; }
+            set { _testNameList = value; OnPropertyChanged(); }
+        }
+
         public ApplicationViewModel()
         {
             _tracerService = new TracertService();
             _generalPanelModel = new GeneralPanelModel();
             TracertObject = _tracerService._tracertValue;
+
+            _testNameList = new ObservableCollection<TracertModel>
+            {
+                new TracertModel()
+                {
+                    Hostname = "ya.ru",
+                    CounterLossPacket = 1,
+                    LastDelay = 1,
+                    MiddlePing = 10
+
+                },
+                new TracertModel()
+                {
+                    Hostname = "rt1.campus.sibir-2.ru",
+                    CounterLossPacket = 1,
+                    LastDelay = 1,
+                    MiddlePing = 10
+                }
+            };
         }
 
 
