@@ -1,4 +1,5 @@
 ﻿using Apparat.Helpers;
+using Apparat.ViewModel;
 using Data.Repositories.Connect;
 using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
@@ -16,38 +17,18 @@ namespace WinObserver.ViewModel
     public class ApplicationViewModel : INotifyPropertyChanged
     {
         const string VERSION_APP = "Version: 0.1.0 - alpha";
-        private int _click;
         private string _hostname;
-        private bool _statusWorkDataGrid = false;
         private string _textBlockGeneralError;
         private string _borderTextBox = "#FFABADB3";
 
-        private GeneralPanelModel? _generalPanelModel;
-        private readonly TracertService? _tracerService;
+        private ObservableCollection<HostViewModel> _hostsCollection;
 
-     
-        public ReadOnlyObservableCollection<TracertModel>? TracertObject { get; set; }
-
-
-        public string ControlBtnName
+        public ApplicationViewModel()
         {
-            get { return _generalPanelModel!.NameControlBtn; }
-            set
-            {
-                _generalPanelModel!.NameControlBtn = value;
-                OnPropertyChanged();
-            }
+            _hostsCollection = new ObservableCollection<HostViewModel>();
         }
 
-        public string NameTableDataGrid
-        {
-            get { return _tracerService!._gridTracert.HeaderNameTable; }
-            set
-            {
-                _tracerService!._gridTracert.HeaderNameTable = value;
-                OnPropertyChanged();
-            }
-        }
+        public string VersionProgramm { get { return VERSION_APP; } }
 
         public string TextBoxHostname
         {
@@ -56,16 +37,6 @@ namespace WinObserver.ViewModel
             {
                 _hostname = value;
                 OnPropertyChanged();
-            }
-        }
-
-        public int Click
-        {
-            get { return _click; }
-            set
-            {
-                _click = value;
-                OnPropertyChanged("Click");
             }
         }
 
@@ -95,53 +66,30 @@ namespace WinObserver.ViewModel
             }
         }
 
-        public string VersionProgramm { get { return VERSION_APP; } }
-
-        private DelegateCommand? controlTracert { get; }
-        public DelegateCommand ControlTracert
+        public ObservableCollection<HostViewModel> HostsCollection
         {
-            get
-            {
-                return controlTracert ?? new DelegateCommand((obj) =>
-                {
-                    if (_statusWorkDataGrid)
-                    {   
-                        _tracerService!.StopTraceroute();
-                        
-                        _statusWorkDataGrid = false;
-                        ControlBtnName = ViewStatusStringBtn.Start.ToString();
-                    }
-                    else
-                    {
-                        if (String.IsNullOrWhiteSpace(_hostname))
-                        {
-                            ErrorValidationTextAndAnimation();
-                        }
-                        else
-                        {   
-                            NameTableDataGrid = _hostname;
-                            ControlBtnName = ViewStatusStringBtn.Stop.ToString();
-                            RestartInfoInDataGrid();
-                            _tracerService!.StartTraceroute(_hostname, this);
-                            RemoveInfoinTextBoxPanel();
-                            _statusWorkDataGrid = true;
-                        }
-                    }
-                    OnPropertyChanged();
-                });
-            }
+            get => _hostsCollection;
+            set { _hostsCollection = value; OnPropertyChanged(); }
         }
 
 
-        private DelegateCommand? stopCommand;
-        public DelegateCommand StopCommand
+        private DelegateCommand _addNewHost;
+        public DelegateCommand AddNewHost
         {
             get
             {
-                return stopCommand ?? (stopCommand = new DelegateCommand(obj =>
-                {
-                    _tracerService!.StopTraceroute();
-                }));
+                return _addNewHost ??
+                 (_addNewHost = new DelegateCommand((obj) =>
+                 {
+                     if (String.IsNullOrWhiteSpace(_hostname))
+                     {
+                         ErrorValidationTextAndAnimation();
+                     }
+                     HostsCollection.Add(new HostViewModel() {
+                         HostnameView = _hostname,
+                     });
+                     OnPropertyChanged();
+                 }));
             }
         }
 
@@ -154,63 +102,10 @@ namespace WinObserver.ViewModel
                 ?? (_closeTabCommand = new DelegateCommand(
                 (obj) =>
                 {
-                    TestTracertObject.Remove(obj as TracertModel);
+                    HostsCollection.Remove(obj as HostViewModel);
                 }));
             }
         }
-
-        private DelegateCommand _addNewHost;
-        public DelegateCommand AddNewHost
-        {
-            get
-            {
-                return _addNewHost ??
-                 (_addNewHost = new DelegateCommand((obj) =>
-                 {
-                     TestTracertObject.Add(new TracertModel {
-                         Hostname = "vk.com",
-                         CounterLossPacket = 1,
-                         LastDelay = 1,
-                         MiddlePing = 10
-                     });
-                     OnPropertyChanged();
-                 }));
-            }
-        }
-
-        ObservableCollection<TracertModel> _testNameList;
-        public ObservableCollection<TracertModel> TestTracertObject
-        {
-            get { return _testNameList; }
-            set { _testNameList = value; OnPropertyChanged(); }
-        }
-
-        public ApplicationViewModel()
-        {
-            _tracerService = new TracertService();
-            _generalPanelModel = new GeneralPanelModel();
-            TracertObject = _tracerService._tracertValue;
-
-            _testNameList = new ObservableCollection<TracertModel>
-            {
-                new TracertModel()
-                {
-                    Hostname = "ya.ru",
-                    CounterLossPacket = 1,
-                    LastDelay = 1,
-                    MiddlePing = 10
-
-                },
-                new TracertModel()
-                {
-                    Hostname = "rt1.campus.sibir-2.ru",
-                    CounterLossPacket = 1,
-                    LastDelay = 1,
-                    MiddlePing = 10
-                }
-            };
-        }
-
 
         public event PropertyChangedEventHandler? PropertyChanged;
         public void OnPropertyChanged([CallerMemberName] string prop = "")
@@ -219,10 +114,6 @@ namespace WinObserver.ViewModel
                 PropertyChanged(this, new PropertyChangedEventArgs(prop));
         }
 
-        private void RestartInfoInDataGrid()
-        {
-            TracertObject = null;
-        }
 
         private void RemoveInfoinTextBoxPanel()
         {
@@ -236,12 +127,9 @@ namespace WinObserver.ViewModel
             {
                 TextBlockGeneralError = "Hostname not valid";
                 BorderTextBox = "Red";
-                NameTableDataGrid = "New";
 
-                _statusWorkDataGrid = false;
-                ControlBtnName = ViewStatusStringBtn.Start.ToString();
                 RemoveInfoinTextBoxPanel();
-               
+
                 Task.Delay(5000).Wait();
 
                 TextBlockGeneralError = string.Empty;

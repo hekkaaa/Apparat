@@ -39,7 +39,7 @@ namespace WinObserver.Service
             _tracerouteHelper = new Traceroute();
         }
 
-        public void StartTraceroute(string hostname, ApplicationViewModel applicationViewModel)
+        public void StartTraceroute(string hostname)
         {
             ThreadPool.QueueUserWorkItem(new WaitCallback(obj =>
             {
@@ -65,7 +65,6 @@ namespace WinObserver.Service
                 catch (PingException)
                 {
                     _cancellationTokenSource!.Cancel();
-                    applicationViewModel.ErrorValidationTextAndAnimation();
                 }
 
             }), token);

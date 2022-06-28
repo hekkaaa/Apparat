@@ -9,7 +9,7 @@ namespace Apparat.Services.Interface
         event PropertyChangedEventHandler? PropertyChanged;
 
         void OnPropertyChanged([CallerMemberName] string prop = "");
-        void StartTraceroute(string hostname, ApplicationViewModel applicationViewModel);
+        void StartTraceroute(string hostname);
         void StopTraceroute();
     }
 }

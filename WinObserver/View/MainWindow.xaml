@@ -6,72 +6,94 @@
         xmlns:local="clr-namespace:WinObserver" xmlns:viewmodel="clr-namespace:WinObserver.ViewModel" d:DataContext="{d:DesignInstance Type=viewmodel:ApplicationViewModel}"
         mc:Ignorable="d"
         Title="Apparat" MinHeight="300" MinWidth="400" Height="568" Width="1024" Loaded="Window_Loaded"
-        xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.WPF;assembly=LiveChartsCore.SkiaSharpView.WPF"
         WindowStartupLocation="CenterScreen">
 
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="60" />
-            <RowDefinition Height="*" />
-            <RowDefinition Height="5" />
-            <!--<RowDefinition Height="*" />-->
-            <RowDefinition Height="20" />
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="auto"></RowDefinition>
         </Grid.RowDefinitions>
-        <Grid Grid.Row="0">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="4*"/>
+        </Grid.ColumnDefinitions>
+        
+        <!--Control panel-->
+        <Grid Grid.Column="0" Grid.Row="0">
             <Grid.RowDefinitions>
-                <RowDefinition Height="*" />
-                <RowDefinition Height="auto" />
-                <RowDefinition Height="*" />
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition  Width="10" />
-                <ColumnDefinition  Width="120" />
-                <ColumnDefinition  Width="10" />
-                <ColumnDefinition  Width="70" />
-                <ColumnDefinition  Width="10" />
-                <ColumnDefinition  Width="70" />
-            </Grid.ColumnDefinitions>
-            <TextBox x:Name="GetIp" Grid.Column="1" Grid.Row="1" Text="{Binding TextBoxHostname}" BorderBrush="{Binding BorderTextBox}" MouseMove="GetIp_MouseMove" MouseLeave="GetIp_MouseLeave"/>
-            <Button x:Name="ControlButton" Grid.Column="3" Grid.Row="1" Content="{Binding ControlBtnName}" Command="{Binding ControlTracert}"/>
-            <Button Grid.Column="5" Grid.Row="1" Content="Add" Command="{Binding AddNewHost}"/>
-            <TextBlock Text="{Binding TextBlockGeneralError}" Grid.Column="1" Grid.Row="2" Foreground="Red" Grid.ColumnSpan="3" FontSize="14"/>
-            <!--<ComboBox x:Name="GetIp" HorizontalAlignment="Left" Margin="280,0,0,0" VerticalAlignment="Center" Width="120" Text="hellos" IsEditable="True"/>-->
+            
+            <!--Btn and TextBox-->
+            <Grid Grid.Row="0">
+                <StackPanel>
+                    <TextBox x:Name="GetIp" Grid.Column="1" Grid.Row="1" Text="{Binding TextBoxHostname}" BorderBrush="{Binding BorderTextBox}" MouseMove="GetIp_MouseMove" MouseLeave="GetIp_MouseLeave"/>
+                    <Button Grid.Column="5" Grid.Row="1" Content="Add" Command="{Binding AddNewHost}"/>
+                    <TextBlock Text="{Binding TextBlockGeneralError}" Grid.Column="1" Grid.Row="2" Foreground="Red" Grid.ColumnSpan="3" FontSize="14"/>
+                    <!--<ComboBox x:Name="GetIp" HorizontalAlignment="Left" Margin="280,0,0,0" VerticalAlignment="Center" Width="120" Text="hellos" IsEditable="True"/>-->
+                </StackPanel>
+            </Grid>
+            
+            <!--Left List Hostname-->
+            <Grid Grid.Row="1">
+                <ListBox ItemsSource="{Binding HostsCollection}">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Margin="5" Orientation="Horizontal">
+                                <Label VerticalContentAlignment="Center" Content="{Binding HostnameView}"/>
+                                <Button Content="Start" Command="{Binding StartCommand}"/>
+                                <Button Content="X"></Button>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </Grid>
         </Grid>
-        <TabControl DockPanel.Dock="Right" Grid.Row="1" Name="TabMain" ItemsSource="{Binding TestTracertObject,UpdateSourceTrigger=PropertyChanged}">
-            <TabControl.ItemTemplate>
-                <DataTemplate>
-                    <StackPanel Orientation="Horizontal" Cursor="Hand">
-                        <TextBlock Text="{Binding Hostname}" />
-                        <Button DockPanel.Dock="Right" Focusable="False"
+        
+        <!--Splitte between Left panel host and DataGrid-->
+        <GridSplitter Grid.Column="1" Grid.Row="0" ShowsPreview="False" Width="3"
+        HorizontalAlignment="Center"/>
+
+        <!-- Datagrid in TabControl -->
+        <Grid Grid.Row="0" Grid.Column="2">
+            <TabControl DockPanel.Dock="Right" Grid.Row="1" Name="TabMain" ItemsSource="{Binding HostsCollection,UpdateSourceTrigger=PropertyChanged}">
+                <TabControl.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal" Cursor="Hand">
+                            <TextBlock Text="{Binding HostnameView}" />
+                            <Button DockPanel.Dock="Right" Focusable="False"
                                     Margin="10,1,0,0" Padding="0" BorderThickness="0" Background="#E8E8E8"
                                     VerticalContentAlignment="Bottom" Width="10" Height="10"
                                         Command="{Binding DataContext.CloseTabCommand,RelativeSource={RelativeSource AncestorType={x:Type Window}}}" 
                                         CommandParameter="{Binding}">
-                            <Button.Content>
-                                <Image Source="C:\Users\Laise\Downloads\icons8.png"/>
-                            </Button.Content>
-                        </Button>
-                    </StackPanel>
-                </DataTemplate>
-            </TabControl.ItemTemplate>
-            <TabControl.ContentTemplate>
-                <DataTemplate>
-                    <DataGrid>
-                        <DataGrid.Columns>
-                            <DataGridTextColumn Header="№" Binding="{Binding NumberHostname}" Width="0.25*"/>
-                            <DataGridTextColumn Header="Hostname" Binding="{Binding Hostname}" Width="*"/>
-                            <DataGridTextColumn Header="Loss %" Binding="{Binding PercentLossPacket}" Width="*"/>
-                            <DataGridTextColumn Header="Last Delay" Binding="{Binding LastDelay}" Width="*"/>
-                            <DataGridTextColumn Header="Minimal" Binding="{Binding MinPing}" Width="*"/>
-                            <DataGridTextColumn Header="Middle" Binding="{Binding MiddlePing}" Width="*"/>
-                            <DataGridTextColumn Header="Maximum" Binding="{Binding MaxPing}" Width="*"/>
-                            <DataGridTextColumn Header="All Packet" Binding="{Binding CounterPacket}" Width="*"/>
-                            <DataGridTextColumn Header="Loss Packet" Binding="{Binding CounterLossPacket}" Width="*"/>
-                        </DataGrid.Columns>
-                    </DataGrid>
-                </DataTemplate>
-            </TabControl.ContentTemplate>
-            <!--<TabItem Header="{Binding NameTableDataGrid}">
+                                <Button.Content>
+                                    <Image Source="C:\Users\Laise\Downloads\icons8.png"/>
+                                </Button.Content>
+                            </Button>
+                        </StackPanel>
+                    </DataTemplate>
+                </TabControl.ItemTemplate>
+                <TabControl.ContentTemplate>
+                    <DataTemplate>
+                        <DataGrid ItemsSource="{Binding TracertObject, UpdateSourceTrigger=PropertyChanged}"  AutoGenerateColumns="False" RowBackground="GhostWhite" AlternatingRowBackground ="LightGray" GridLinesVisibility="None" IsReadOnly="True" FontSize="14">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="№" Binding="{Binding NumberHostname}" Width="0.25*"/>
+                                <DataGridTextColumn Header="Hostname" Binding="{Binding Hostname}" Width="*"/>
+                                <DataGridTextColumn Header="Loss %" Binding="{Binding PercentLossPacket}" Width="*"/>
+                                <DataGridTextColumn Header="Last Delay" Binding="{Binding LastDelay}" Width="*"/>
+                                <DataGridTextColumn Header="Minimal" Binding="{Binding MinPing}" Width="*"/>
+                                <DataGridTextColumn Header="Middle" Binding="{Binding MiddlePing}" Width="*"/>
+                                <DataGridTextColumn Header="Maximum" Binding="{Binding MaxPing}" Width="*"/>
+                                <DataGridTextColumn Header="All Packet" Binding="{Binding CounterPacket}" Width="*"/>
+                                <DataGridTextColumn Header="Loss Packet" Binding="{Binding CounterLossPacket}" Width="*"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </DataTemplate>
+                </TabControl.ContentTemplate>
+                <!--<TabItem Header="{Binding NameTableDataGrid}">
                 <Grid Background="Azure">
                     <DataGrid x:Name="DG1" ItemsSource="{Binding TracertObject, UpdateSourceTrigger=PropertyChanged}"  AutoGenerateColumns="False" RowBackground="GhostWhite" AlternatingRowBackground ="LightGray" GridLinesVisibility="None" IsReadOnly="True" FontSize="14">
                         <DataGrid.Columns>
@@ -88,8 +110,11 @@
                     </DataGrid>
                 </Grid>
             </TabItem>-->
-        </TabControl>
-        <Border Grid.Row="4" BorderBrush="Black" BorderThickness="0.5">
+            </TabControl>
+        </Grid>
+        
+        <!--Footer -->
+        <Border BorderBrush="Black" BorderThickness="0.5" Grid.ColumnSpan="3" Grid.Row="2">
         <Grid Background="PowderBlue"  >
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="10"/>
