@@ -1,4 +1,5 @@
-﻿using Apparat.Services.Interfaces;
+﻿using Apparat.Helpers;
+using Apparat.Services.Interfaces;
 using Apparat.ViewModel.Interfaces;
 using NetObserver.PingUtility;
 using NetObserver.TracerouteUtility;
@@ -40,7 +41,7 @@ namespace WinObserver.Service
                 try
                 {
                     IEnumerable<string> objectTracertResult = _tracerouteHelper.GetIpTraceRoute(hostname);
-
+                    
                     ClearOldTable();
                     FillingNewtable(objectTracertResult);
 
@@ -57,8 +58,10 @@ namespace WinObserver.Service
                     }
                 }
                 catch (PingException)
-                {
+                {   
                     _cancellationTokenSource!.Cancel();
+                    _cancellationTokenSource!.Dispose();
+                    error.ErrorNameHostname();
                 }
 
             }), token);

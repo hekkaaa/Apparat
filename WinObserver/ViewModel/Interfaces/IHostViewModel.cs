@@ -8,14 +8,17 @@ namespace Apparat.ViewModel.Interfaces
 {
     public interface IHostViewModel
     {
+        string ControlBtnHost { get; set; }
         string ControlBtnName { get; set; }
+        string ErrorHostnameVisibleIcon { get; set; }
         string? HostnameView { get; set; }
         DelegateCommand StartCommand { get; }
-        DelegateCommand StopCommand { get; }
+        string TextErrorToolTip { get; }
         ReadOnlyObservableCollection<TracertModel>? TracertObject { get; set; }
 
         event PropertyChangedEventHandler? PropertyChanged;
 
+        void ErrorNameHostname();
         void OnPropertyChanged([CallerMemberName] string prop = "");
     }
 }

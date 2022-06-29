@@ -3,11 +3,11 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:WinObserver" xmlns:viewmodel="clr-namespace:WinObserver.ViewModel" d:DataContext="{d:DesignInstance Type=viewmodel:ApplicationViewModel}"
+        xmlns:local="clr-namespace:WinObserver" xmlns:viewmodel="clr-namespace:WinObserver.ViewModel"
         mc:Ignorable="d"
-        Title="Apparat" MinHeight="300" MinWidth="400" Height="568" Width="1024" Loaded="Window_Loaded" FontSize="14"
+        Title="Apparat" MinHeight="300" MinWidth="400" Height="568" Width="1024" Loaded="Window_Loaded" FontSize="14" FontWeight="DemiBold" FontFamily="Arial, monospace"
         WindowStartupLocation="CenterScreen">
-
+    <!--d:DataContext="{d:DesignInstance Type=viewmodel:ApplicationViewModel}"-->
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"></RowDefinition>
@@ -32,26 +32,59 @@
                 <StackPanel>
                     <TextBox x:Name="GetIp" Grid.Column="1" Grid.Row="1" Text="{Binding TextBoxHostname}" BorderBrush="{Binding BorderTextBox}" MouseMove="GetIp_MouseMove" MouseLeave="GetIp_MouseLeave"/>
                     <Button Grid.Column="5" Grid.Row="1" Content="Add" Command="{Binding AddNewHost}"/>
-                    <TextBlock Text="{Binding TextBlockGeneralError}" Grid.Column="1" Grid.Row="2" Foreground="Red" Grid.ColumnSpan="3" FontSize="14"/>
+                    <TextBlock Text="{Binding TextBlockGeneralError}" Grid.Column="1" Grid.Row="2" Foreground="Red" Grid.ColumnSpan="3"/>
                     <!--<ComboBox x:Name="GetIp" HorizontalAlignment="Left" Margin="280,0,0,0" VerticalAlignment="Center" Width="120" Text="hellos" IsEditable="True"/>-->
                 </StackPanel>
             </Grid>
             
             <!--Left List Hostname-->
             <Grid Grid.Row="1">
-                <ListBox ItemsSource="{Binding HostsCollection}">
+                <ListBox ItemsSource="{Binding HostsCollection}" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
-                           <StackPanel Margin="5" Orientation="Horizontal" Width="auto" Height="auto">
-                                <Label VerticalContentAlignment="Center" Content="{Binding HostnameView}"/>
-                                <Button Content="Start" Command="{Binding StartCommand}"/>
-                                <Button Content="X"  Command="{Binding DataContext.CloseTabCommand,RelativeSource={RelativeSource AncestorType={x:Type Window}}}" CommandParameter="{Binding}"></Button>
-                            </StackPanel>
+                               <StackPanel Margin="5" Orientation="Horizontal" Width="auto" Height="18" VerticalAlignment="Center">
+                                 <Image Source="\Resources\icons8-error.png" Visibility="{Binding ErrorHostnameVisibleIcon}" 
+                                        Width="20" Height="20" VerticalAlignment="Center"  
+                                        ToolTipService.InitialShowDelay="200">
+                                    <Image.ToolTip>
+                                            <ToolTip BorderThickness="0" Background="LightYellow" FontSize="14" FontWeight="DemiBold" Opacity="0.9">
+                                                <TextBlock Text="{Binding TextErrorToolTip}"/>
+                                            </ToolTip>
+                                    </Image.ToolTip>
+                                 </Image>
+                                   
+                                <TextBlock Text="{Binding HostnameView}" VerticalAlignment="Center" Margin="5,0,0,0" />
+
+                                <Button Command="{Binding StartCommand}" Width="24" Height="24" VerticalAlignment="Center" BorderThickness="0" Background="White" Margin="5,0,5,0">
+                                        <Button.Content>
+                                        <Image Source="{Binding ControlBtnHost}"/>
+                                        </Button.Content>
+                                    </Button>
+                                   
+                                    <Button Command="{Binding DataContext.CloseTabCommand,RelativeSource={RelativeSource AncestorType={x:Type Window}}}" 
+                                            CommandParameter="{Binding}" Width="24" Height="24" VerticalAlignment="Center" BorderThickness="0" Background="White" >
+                                        <Button.Content>
+                                        <Image Source="\Resources\icons8-trash.png" VerticalAlignment="Center"/>
+                                        </Button.Content>
+                                    </Button>
+                                   
+                                </StackPanel>
                         </DataTemplate>
                     </ListBox.ItemTemplate>
                     <ListBox.ItemContainerStyle>
                         <Style TargetType="{x:Type ListBoxItem}">
-                            <Setter Property="Background" Value="{Binding ColorTest}"/>
+                            <Setter Property="Background" Value="White"/>
+                            <Setter Property="Foreground" Value="DarkSlateGray"/>
+                            <Style.Triggers>
+                                <Trigger Property="IsSelected" Value="True">
+                                    <Setter Property="Foreground" Value="Black"/>
+                                    <Setter Property="BorderThickness" Value="1"/>
+                                    <Setter Property="BorderBrush" Value="Black"/>
+                                </Trigger>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="BorderThickness" Value="0"/>
+                                </Trigger>
+                            </Style.Triggers>
                         </Style>
                     </ListBox.ItemContainerStyle>
                 </ListBox>
@@ -83,7 +116,7 @@
                 </TabControl.ItemTemplate>
                 <TabControl.ContentTemplate>
                     <DataTemplate>
-                        <DataGrid ItemsSource="{Binding TracertObject, UpdateSourceTrigger=PropertyChanged}"  AutoGenerateColumns="False" RowBackground="GhostWhite" AlternatingRowBackground ="LightGray" GridLinesVisibility="None" IsReadOnly="True" FontSize="14">
+                        <DataGrid ItemsSource="{Binding TracertObject, UpdateSourceTrigger=PropertyChanged}"  AutoGenerateColumns="False" RowBackground="GhostWhite" AlternatingRowBackground ="LightGray" GridLinesVisibility="None" IsReadOnly="True" FontSize="16">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="№" Binding="{Binding NumberHostname}" Width="0.25*"/>
                                 <DataGridTextColumn Header="Hostname" Binding="{Binding Hostname}" Width="*"/>
@@ -98,42 +131,25 @@
                         </DataGrid>
                     </DataTemplate>
                 </TabControl.ContentTemplate>
-                <!--<TabItem Header="{Binding NameTableDataGrid}">
-                <Grid Background="Azure">
-                    <DataGrid x:Name="DG1" ItemsSource="{Binding TracertObject, UpdateSourceTrigger=PropertyChanged}"  AutoGenerateColumns="False" RowBackground="GhostWhite" AlternatingRowBackground ="LightGray" GridLinesVisibility="None" IsReadOnly="True" FontSize="14">
-                        <DataGrid.Columns>
-                            <DataGridTextColumn Header="№" Binding="{Binding NumberHostname}" Width="0.25*"/>
-                            <DataGridTextColumn Header="Hostname" Binding="{Binding Hostname}" Width="*"/>
-                            <DataGridTextColumn Header="Loss %" Binding="{Binding PercentLossPacket}" Width="*"/>
-                            <DataGridTextColumn Header="Last Delay" Binding="{Binding LastDelay}" Width="*"/>
-                            <DataGridTextColumn Header="Minimal" Binding="{Binding MinPing}" Width="*"/>
-                            <DataGridTextColumn Header="Middle" Binding="{Binding MiddlePing}" Width="*"/>
-                            <DataGridTextColumn Header="Maximum" Binding="{Binding MaxPing}" Width="*"/>
-                            <DataGridTextColumn Header="All Packet" Binding="{Binding CounterPacket}" Width="*"/>
-                            <DataGridTextColumn Header="Loss Packet" Binding="{Binding CounterLossPacket}" Width="*"/>
-                        </DataGrid.Columns>
-                    </DataGrid>
-                </Grid>
-            </TabItem>-->
             </TabControl>
         </Grid>
         
         <!--Footer -->
         <Border BorderBrush="Black" BorderThickness="0.5" Grid.ColumnSpan="3" Grid.Row="2">
-        <Grid Background="PowderBlue"  >
+        <Grid Background="PowderBlue">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="10"/>
                 <ColumnDefinition Width="auto" />
                 <ColumnDefinition/>
                 <ColumnDefinition Width="70" />
             </Grid.ColumnDefinitions>
-                <TextBlock x:Name ="AppVersion" Text="{Binding VersionProgramm}" Margin="0,4,0,0" TextAlignment="Left" Grid.Column="1" FontSize="12"  FontFamily="Console" MouseMove="TextBlockAppVersion_MouseMove" MouseLeave="TextBlockAppVersion_MouseLeave"/>
-                <TextBlock TextAlignment="Center" Grid.Column="3" Margin="0,4,0,0" FontSize="12"  FontFamily="Console" MouseMove="TextBlockGithub_MouseMove" MouseLeave="TextBlockGithub_MouseLeave">
-                <Hyperlink RequestNavigate="Hyperlink_RequestNavigate" NavigateUri="https://github.com/hekkaaa/Apparat">GitHub</Hyperlink>
+                <TextBlock x:Name ="AppVersion" Text="{Binding VersionProgramm}" Margin="0,4,0,0" TextAlignment="Left" Grid.Column="1" FontFamily="Console" MouseMove="TextBlockAppVersion_MouseMove" MouseLeave="TextBlockAppVersion_MouseLeave"/>
+                <TextBlock TextAlignment="Center" Grid.Column="3" Margin="0,4,0,0" FontFamily="Console" MouseMove="TextBlockGithub_MouseMove" MouseLeave="TextBlockGithub_MouseLeave">
+                    <Hyperlink RequestNavigate="Hyperlink_RequestNavigate" NavigateUri="https://github.com/hekkaaa/Apparat">GitHub</Hyperlink>
                     <Popup x:Name="PopUpGithub"  Placement="Mouse" MaxWidth="180" AllowsTransparency="True">
-                        <TextBlock x:Name="PopUpText" TextWrapping="Wrap" Width="180" Background="Cornsilk" Opacity="0.8"/>
+                        <TextBlock x:Name="PopUpText" TextWrapping="Wrap" Width="180" Background="LightYellow" Opacity="0.8" FontSize="14" FontWeight="DemiBold"/>
                     </Popup>
-            </TextBlock>
+                </TextBlock>
         </Grid>
         </Border>
     </Grid>
