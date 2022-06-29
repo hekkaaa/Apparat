@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Apparat.ViewModel.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -11,7 +12,7 @@ using WinObserver.Service;
 
 namespace Apparat.ViewModel
 {
-    public class HostViewModel : INotifyPropertyChanged
+    public class HostViewModel : INotifyPropertyChanged, IHostViewModel
     {
         private readonly TracertService? _tracerService;
         private bool _statusWorkDataGrid = false;
@@ -57,7 +58,7 @@ namespace Apparat.ViewModel
                         //NameTableDataGrid = _hostname;
                         //ControlBtnName = ViewStatusStringBtn.Stop.ToString();
                         //RestartInfoInDataGrid();
-                        _tracerService.StartTraceroute(HostnameView);
+                        _tracerService.StartTraceroute(HostnameView, this);
                         //RemoveInfoinTextBoxPanel();
                         //_statusWorkDataGrid = true;
                         //}
@@ -80,8 +81,6 @@ namespace Apparat.ViewModel
             }
         }
 
-
-
         public string ControlBtnName
         {
             get { return _generalPanelModel!.NameControlBtn; }
@@ -92,6 +91,36 @@ namespace Apparat.ViewModel
             }
         }
 
+        // Можно потом придумать глобальный стиль для всех.
+        public string _ColorTest = "";
+        public string ColorTest
+        {
+            get
+            {
+                return _ColorTest;
+            }
+            set
+            {
+                ColorTest = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public void ErrorNameHostname()
+        {
+            Task.Factory.StartNew(() =>
+            {
+                //TextBlockGeneralError = "Hostname not valid";
+                //BorderTextBox = "Red";
+
+                //RemoveInfoinTextBoxPanel();
+
+                //Task.Delay(5000).Wait();
+
+                //TextBlockGeneralError = string.Empty;
+                //BorderTextBox = "#FFABADB3";
+            });
+        }
 
         public event PropertyChangedEventHandler? PropertyChanged;
         public void OnPropertyChanged([CallerMemberName] string prop = "")

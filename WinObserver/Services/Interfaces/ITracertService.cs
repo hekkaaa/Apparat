@@ -1,15 +1,15 @@
-﻿using System.ComponentModel;
+﻿using Apparat.ViewModel.Interfaces;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using WinObserver.ViewModel;
 
-namespace Apparat.Services.Interface
+namespace Apparat.Services.Interfaces
 {
     public interface ITracertService
     {
         event PropertyChangedEventHandler? PropertyChanged;
 
         void OnPropertyChanged([CallerMemberName] string prop = "");
-        void StartTraceroute(string hostname);
+        void StartTraceroute(string hostname, IHostViewModel error);
         void StopTraceroute();
     }
 }

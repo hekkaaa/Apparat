@@ -1,22 +1,16 @@
-﻿using Apparat.Helpers;
-using Apparat.ViewModel;
-using Data.Repositories.Connect;
-using LiveChartsCore;
-using LiveChartsCore.SkiaSharpView;
+﻿using Apparat.ViewModel;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
-using WinObserver.Model;
 using WinObserver.Service;
 
 namespace WinObserver.ViewModel
 {
     public class ApplicationViewModel : INotifyPropertyChanged
     {
-        const string VERSION_APP = "Version: 0.1.0 - alpha";
+        const string VERSION_APP = "Version: 0.1.3 - alpha";
         private string _hostname;
         private string _textBlockGeneralError;
         private string _borderTextBox = "#FFABADB3";
@@ -84,8 +78,10 @@ namespace WinObserver.ViewModel
                      if (String.IsNullOrWhiteSpace(_hostname))
                      {
                          ErrorValidationTextAndAnimation();
+                         return;
                      }
-                     HostsCollection.Add(new HostViewModel() {
+                     HostsCollection.Add(new HostViewModel()
+                     {
                          HostnameView = _hostname,
                      });
                      OnPropertyChanged();

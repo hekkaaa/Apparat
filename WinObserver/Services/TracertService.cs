@@ -1,12 +1,7 @@
-﻿using Apparat.Helpers;
-using Apparat.Services.Interface;
-using Data.Entities;
-using Data.Repositories;
-using Data.Repositories.Connect;
-using Data.Repositories.Interfaces;
+﻿using Apparat.Services.Interfaces;
+using Apparat.ViewModel.Interfaces;
 using NetObserver.PingUtility;
 using NetObserver.TracerouteUtility;
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -16,7 +11,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using WinObserver.Algorithms;
 using WinObserver.Model;
-using WinObserver.ViewModel;
 
 namespace WinObserver.Service
 {
@@ -39,7 +33,7 @@ namespace WinObserver.Service
             _tracerouteHelper = new Traceroute();
         }
 
-        public void StartTraceroute(string hostname)
+        public void StartTraceroute(string hostname, IHostViewModel error)
         {
             ThreadPool.QueueUserWorkItem(new WaitCallback(obj =>
             {
