@@ -42,8 +42,6 @@ namespace WinObserver.Service
                 {
                     IEnumerable<string> objectTracertResult = _tracerouteHelper.GetIpTraceRoute(hostname);
                     
-                  
-                    
                     ClearOldTable();
                     FillingNewtable(objectTracertResult);
 
@@ -62,6 +60,7 @@ namespace WinObserver.Service
                 catch (PingException)
                 {   
                     _cancellationTokenSource!.Cancel();
+                    _cancellationTokenSource!.Dispose();
                     error.ErrorNameHostname();
                 }
 
