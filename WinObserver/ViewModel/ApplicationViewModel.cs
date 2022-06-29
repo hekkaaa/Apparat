@@ -82,8 +82,10 @@ namespace WinObserver.ViewModel
                      }
                      HostsCollection.Add(new HostViewModel()
                      {
-                         HostnameView = _hostname,
+                         HostnameView = _hostname
+
                      });
+                     RemoveInfoinTextBoxPanel();
                      OnPropertyChanged();
                  }));
             }
