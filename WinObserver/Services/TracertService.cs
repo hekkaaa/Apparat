@@ -1,11 +1,7 @@
-﻿using Apparat.Helpers;
-using Data.Entities;
-using Data.Repositories;
-using Data.Repositories.Connect;
-using Data.Repositories.Interfaces;
+﻿using Apparat.Services.Interfaces;
+using Apparat.ViewModel.Interfaces;
 using NetObserver.PingUtility;
 using NetObserver.TracerouteUtility;
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -15,38 +11,29 @@ using System.Threading;
 using System.Threading.Tasks;
 using WinObserver.Algorithms;
 using WinObserver.Model;
-using WinObserver.ViewModel;
 
 namespace WinObserver.Service
 {
-    public class TracertService : INotifyPropertyChanged
+    public class TracertService : INotifyPropertyChanged, ITracertService
     {
         private ObservableCollection<TracertModel> _innerTracertValue;
         public readonly ReadOnlyObservableCollection<TracertModel> _tracertValue;
 
         public readonly DataGridModel _gridTracert;
         private readonly Traceroute _tracerouteHelper;
-        private readonly IChartLossRepository _chartLossRepository;
-        private readonly IRequestTimeRepository _requestTimeRepository;
-        private readonly ApplicationContext _applicationContext;
-        private readonly LockWay _lockWay;
 
         static CancellationTokenSource? _cancellationTokenSource = new CancellationTokenSource();
         CancellationToken token = _cancellationTokenSource!.Token;
 
-        public TracertService(LockWay lockWay)
+        public TracertService()
         {
-            _applicationContext = new ApplicationContext();
             _innerTracertValue = new ObservableCollection<TracertModel>();
             _tracertValue = new ReadOnlyObservableCollection<TracertModel>(_innerTracertValue);
             _gridTracert = new DataGridModel();
             _tracerouteHelper = new Traceroute();
-            _chartLossRepository = new ChartLossRepository(_applicationContext);
-            _requestTimeRepository = new RequestTimeRepository(_applicationContext);
-            _lockWay = lockWay;
         }
 
-        public void StartTraceroute(string hostname, ApplicationViewModel applicationViewModel)
+        public void StartTraceroute(string hostname, IHostViewModel error)
         {
             ThreadPool.QueueUserWorkItem(new WaitCallback(obj =>
             {
@@ -72,7 +59,6 @@ namespace WinObserver.Service
                 catch (PingException)
                 {
                     _cancellationTokenSource!.Cancel();
-                    applicationViewModel.ErrorValidationTextAndAnimation();
                 }
 
             }), token);
@@ -102,7 +88,6 @@ namespace WinObserver.Service
         {
             App.Current.Dispatcher.BeginInvoke((System.Action)delegate
             {
-                _chartLossRepository.ClearTable();
                 _innerTracertValue.Clear();
                 OnPropertyChanged();
             });
@@ -112,7 +97,6 @@ namespace WinObserver.Service
         {
             IcmpRequestSender icmpUtilite = new IcmpRequestSender();
             int countHop = 0;
-            AddTimeXAxes();
 
             foreach (TracertModel objectCollection in _innerTracertValue)
             {
@@ -135,7 +119,6 @@ namespace WinObserver.Service
                 }
 
                 tempValue.PercentLossPacket = DataGridStatisticAlgorithm.RateLosses(tempValue.CounterPacket, tempValue.CounterLossPacket);
-                UpdateLoss(tempValue);
                 countHop++;
             }
         }
@@ -148,33 +131,11 @@ namespace WinObserver.Service
             {
                 App.Current.Dispatcher.BeginInvoke((System.Action)delegate
                 {
-                    AddHostname(addres, countHostname); // here!
                     _innerTracertValue.Add(new TracertModel { NumberHostname = countHostname, Hostname = addres });
                     countHostname++;
                     OnPropertyChanged();
                 });
             }
-            _lockWay.IsFullingCollectionHost = true;
-        }
-
-        private void AddHostname(string host, int newId)
-        {
-            Loss tmpItem = new Loss() {Id = newId, Hostname = host, ListLoss = String.Empty };
-            _chartLossRepository.AddHostname(tmpItem);
-        }
-
-        private void UpdateLoss(TracertModel newValue)
-        {   
-            var modeltest = _chartLossRepository.GetHostById(newValue.NumberHostname);
-            modeltest.ListLoss += "," + newValue.PercentLossPacket.ToString();
-            _chartLossRepository.UpdateLoss(modeltest);
-        }
-
-        private void AddTimeXAxes()
-        {
-            DateTime date = DateTime.Now;
-            RequestTime tmpDate = new RequestTime() { ListTime = date.ToString("T") };
-            _requestTimeRepository.AddTime(tmpDate);
         }
     }
 }
