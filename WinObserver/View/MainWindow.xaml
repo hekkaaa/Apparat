@@ -3,11 +3,12 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:WinObserver" xmlns:viewmodel="clr-namespace:WinObserver.ViewModel" d:DataContext="{d:DesignInstance Type=viewmodel:ApplicationViewModel}"
+        xmlns:local="clr-namespace:WinObserver" xmlns:viewmodel="clr-namespace:WinObserver.ViewModel"
+       
         mc:Ignorable="d"
         Title="Apparat" MinHeight="300" MinWidth="400" Height="568" Width="1024" Loaded="Window_Loaded" FontSize="14"
         WindowStartupLocation="CenterScreen">
-
+    <!--d:DataContext="{d:DesignInstance Type=viewmodel:ApplicationViewModel}"-->
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"></RowDefinition>
@@ -39,19 +40,40 @@
             
             <!--Left List Hostname-->
             <Grid Grid.Row="1">
-                <ListBox ItemsSource="{Binding HostsCollection}">
+                <ListBox ItemsSource="{Binding HostsCollection}" FontSize="24">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
-                           <StackPanel Margin="5" Orientation="Horizontal" Width="auto" Height="auto">
+                               <StackPanel Margin="5" Orientation="Horizontal" Width="auto" Height="auto">
+                                 <Image Source="\Resources\icons8-error.png" Visibility="{Binding ErrorHostnameVisibleIcon}" 
+                                        Width="20" Height="20" VerticalAlignment="Center" Margin="0,5,0,0" 
+                                        ToolTipService.InitialShowDelay="200">
+                                    <Image.ToolTip>
+                                            <ToolTip BorderThickness="0" Opacity="0.8">
+                                                <TextBlock Text="{Binding TextErrorToolTip}"/>
+                                            </ToolTip>
+                                    </Image.ToolTip>
+                                 </Image>
                                 <Label VerticalContentAlignment="Center" Content="{Binding HostnameView}"/>
-                                <Button Content="Start" Command="{Binding StartCommand}"/>
-                                <Button Content="X"  Command="{Binding DataContext.CloseTabCommand,RelativeSource={RelativeSource AncestorType={x:Type Window}}}" CommandParameter="{Binding}"></Button>
-                            </StackPanel>
+                                   
+                                    <Button Command="{Binding StartCommand}" Width="24" Height="24" BorderThickness="0" Background="White">
+                                        <Button.Content>
+                                            <Image Source="\Resources\icons8-start.png"/>
+                                        </Button.Content>
+                                    </Button>
+                                   
+                                    <Button Command="{Binding DataContext.CloseTabCommand,RelativeSource={RelativeSource AncestorType={x:Type Window}}}" 
+                                            CommandParameter="{Binding}" Width="24" Height="24" BorderThickness="0" Background="White">
+                                        <Button.Content>
+                                            <Image Source="\Resources\icons8-trash.png"/>
+                                        </Button.Content>
+                                    </Button>
+                                   
+                                </StackPanel>
                         </DataTemplate>
                     </ListBox.ItemTemplate>
                     <ListBox.ItemContainerStyle>
                         <Style TargetType="{x:Type ListBoxItem}">
-                            <Setter Property="Background" Value="{Binding ColorTest}"/>
+                            <Setter Property="Background" Value="White"/>
                         </Style>
                     </ListBox.ItemContainerStyle>
                 </ListBox>

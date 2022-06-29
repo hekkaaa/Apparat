@@ -16,6 +16,7 @@ namespace Apparat.ViewModel.Interfaces
 
         event PropertyChangedEventHandler? PropertyChanged;
 
+        void ErrorNameHostname();
         void OnPropertyChanged([CallerMemberName] string prop = "");
     }
 }

@@ -4,9 +4,11 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
+using System.Net.NetworkInformation;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media;
 using WinObserver.Model;
 using WinObserver.Service;
 
@@ -58,7 +60,19 @@ namespace Apparat.ViewModel
                         //NameTableDataGrid = _hostname;
                         //ControlBtnName = ViewStatusStringBtn.Stop.ToString();
                         //RestartInfoInDataGrid();
-                        _tracerService.StartTraceroute(HostnameView, this);
+                        try
+                        {
+                            _tracerService.StartTraceroute(HostnameView, this);
+                        }
+                        catch(PingException)
+                        {
+                            ErrorNameHostname();
+                        }
+                        catch (Exception)
+                        {
+                            // тут будут логи.
+                        }
+                       
                         //RemoveInfoinTextBoxPanel();
                         //_statusWorkDataGrid = true;
                         //}
@@ -92,34 +106,29 @@ namespace Apparat.ViewModel
         }
 
         // Можно потом придумать глобальный стиль для всех.
-        public string _ColorTest = "";
-        public string ColorTest
+        private string _TextErrorToolTip = "The hostname is entered incorrectly";
+        public string TextErrorToolTip
         {
             get
             {
-                return _ColorTest;
+                return _TextErrorToolTip;
             }
-            set
-            {
-                ColorTest = value;
-                OnPropertyChanged();
-            }
+           
         }
+
+        private string _errorHostnameVisibleIcon = "Hidden";
+        public string ErrorHostnameVisibleIcon
+        {
+            get { return _errorHostnameVisibleIcon; }
+            set { _errorHostnameVisibleIcon = value; OnPropertyChanged(); }
+        }
+        
 
         public void ErrorNameHostname()
         {
-            Task.Factory.StartNew(() =>
-            {
-                //TextBlockGeneralError = "Hostname not valid";
-                //BorderTextBox = "Red";
-
-                //RemoveInfoinTextBoxPanel();
-
-                //Task.Delay(5000).Wait();
-
-                //TextBlockGeneralError = string.Empty;
-                //BorderTextBox = "#FFABADB3";
-            });
+            ErrorHostnameVisibleIcon = "Visible";
+            Task.Delay(5000).Wait();
+            
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;

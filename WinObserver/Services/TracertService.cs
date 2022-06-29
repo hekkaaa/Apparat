@@ -57,8 +57,9 @@ namespace WinObserver.Service
                     }
                 }
                 catch (PingException)
-                {
+                {   
                     _cancellationTokenSource!.Cancel();
+                    error.ErrorNameHostname();
                 }
 
             }), token);
