@@ -1,4 +1,5 @@
-﻿using Apparat.Services.Interfaces;
+﻿using Apparat.Helpers;
+using Apparat.Services.Interfaces;
 using Apparat.ViewModel.Interfaces;
 using NetObserver.PingUtility;
 using NetObserver.TracerouteUtility;
@@ -40,7 +41,9 @@ namespace WinObserver.Service
                 try
                 {
                     IEnumerable<string> objectTracertResult = _tracerouteHelper.GetIpTraceRoute(hostname);
-
+                    
+                  
+                    
                     ClearOldTable();
                     FillingNewtable(objectTracertResult);
 
