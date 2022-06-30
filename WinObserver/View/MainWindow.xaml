@@ -10,6 +10,7 @@
     <!--d:DataContext="{d:DesignInstance Type=viewmodel:ApplicationViewModel}"-->
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="50"></RowDefinition>
             <RowDefinition Height="*"></RowDefinition>
             <RowDefinition Height="Auto"></RowDefinition>
             <RowDefinition Height="auto"></RowDefinition>
@@ -19,9 +20,13 @@
             <ColumnDefinition Width="auto"/>
             <ColumnDefinition Width="4*"/>
         </Grid.ColumnDefinitions>
-        
+
+        <!--Top-->
+        <Grid Grid.Column="0" Grid.Row="0" Background="White" Grid.ColumnSpan="3">
+            
+        </Grid>
         <!--Control panel-->
-        <Grid Grid.Column="0" Grid.Row="0">
+        <Grid Grid.Column="0" Grid.Row="1">
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="*"/>
@@ -43,32 +48,33 @@
                     <ListBox.ItemTemplate>
                         <DataTemplate>
                                <StackPanel Margin="5" Orientation="Horizontal" Width="auto" Height="18" VerticalAlignment="Center">
-                                 <Image Source="\Resources\icons8-error.png" Visibility="{Binding ErrorHostnameVisibleIcon}" 
-                                        Width="20" Height="20" VerticalAlignment="Center"  
-                                        ToolTipService.InitialShowDelay="200">
-                                    <Image.ToolTip>
-                                            <ToolTip BorderThickness="0" Background="LightYellow" FontSize="14" FontWeight="DemiBold" Opacity="0.9">
-                                                <TextBlock Text="{Binding TextErrorToolTip}"/>
-                                            </ToolTip>
-                                    </Image.ToolTip>
-                                 </Image>
+                                     <Image Source="\Resources\icons8-error.png" Visibility="{Binding ErrorHostnameVisibleIcon}" 
+                                            Width="20" Height="20" VerticalAlignment="Center"  
+                                            ToolTipService.InitialShowDelay="200">
+                                        <Image.ToolTip>
+                                                <ToolTip BorderThickness="0" Background="LightYellow" FontSize="14" FontWeight="DemiBold" Opacity="0.9">
+                                                    <TextBlock Text="{Binding TextErrorToolTip}"/>
+                                                </ToolTip>
+                                        </Image.ToolTip>
+                                     </Image>
                                    
                                 <TextBlock Text="{Binding HostnameView}" VerticalAlignment="Center" Margin="5,0,0,0" />
 
-                                <Button Command="{Binding StartCommand}" Width="24" Height="24" VerticalAlignment="Center" BorderThickness="0" Background="White" Margin="5,0,5,0">
+                                    <Button x:Name="ControlBtn" Command="{Binding StartCommand}" Width="24" Height="24" VerticalAlignment="Center" 
+                                            BorderThickness="0" Background="White" Margin="5,0,5,0" IsEnabled="{Binding SettingIsEnableControlBtn}" Opacity="{ Binding SettingOpacityControlBtn}"> 
                                         <Button.Content>
-                                        <Image Source="{Binding ControlBtnHost}"/>
+                                            <Image Source="{Binding ControlBtnHost}" VerticalAlignment="Center"/>
                                         </Button.Content>
                                     </Button>
                                    
                                     <Button Command="{Binding DataContext.CloseTabCommand,RelativeSource={RelativeSource AncestorType={x:Type Window}}}" 
                                             CommandParameter="{Binding}" Width="24" Height="24" VerticalAlignment="Center" BorderThickness="0" Background="White" >
                                         <Button.Content>
-                                        <Image Source="\Resources\icons8-trash.png" VerticalAlignment="Center"/>
+                                            <Image Source="\Resources\icons8-trash.png" VerticalAlignment="Center"/>
                                         </Button.Content>
                                     </Button>
                                    
-                                </StackPanel>
+                               </StackPanel>
                         </DataTemplate>
                     </ListBox.ItemTemplate>
                     <ListBox.ItemContainerStyle>
@@ -92,11 +98,11 @@
         </Grid>
         
         <!--Splitte between Left panel host and DataGrid-->
-        <GridSplitter Grid.Column="1" Grid.Row="0" ShowsPreview="False" Width="3"
-        HorizontalAlignment="Center"/>
+        <GridSplitter Grid.Column="1" Grid.Row="1" ShowsPreview="False" Width="3"
+        HorizontalAlignment="Center" BorderThickness="0"/>
 
         <!-- Datagrid in TabControl -->
-        <Grid Grid.Row="0" Grid.Column="2">
+        <Grid Grid.Row="1" Grid.Column="2">
             <TabControl DockPanel.Dock="Right" Grid.Row="1" Name="TabMain" ItemsSource="{Binding HostsCollection,UpdateSourceTrigger=PropertyChanged}">
                 <TabControl.ItemTemplate>
                     <DataTemplate>
@@ -135,7 +141,7 @@
         </Grid>
         
         <!--Footer -->
-        <Border BorderBrush="Black" BorderThickness="0.5" Grid.ColumnSpan="3" Grid.Row="2">
+        <Border BorderBrush="Black" BorderThickness="0.5" Grid.ColumnSpan="3" Grid.Row="3">
         <Grid Background="PowderBlue">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="10"/>
