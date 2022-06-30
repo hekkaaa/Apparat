@@ -3,10 +3,20 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:WinObserver" xmlns:viewmodel="clr-namespace:WinObserver.ViewModel"
+        xmlns:local="clr-namespace:WinObserver" xmlns:viewmodel="clr-namespace:WinObserver.ViewModel" xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d"
-        Title="Apparat" MinHeight="300" MinWidth="400" Height="568" Width="1024" Loaded="Window_Loaded" FontSize="14" FontWeight="DemiBold" FontFamily="Arial, monospace"
-        WindowStartupLocation="CenterScreen">
+        Title="Apparat" MinHeight="300" MinWidth="400" Height="568" Width="1024" Loaded="Window_Loaded"
+        WindowStartupLocation="CenterScreen"
+        
+        
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        Background="{DynamicResource MaterialDesignPaper}"
+        TextElement.FontWeight="DemiBold"
+        FontWeight="DemiBold"
+        FontSize="14"
+        TextElement.FontSize="14"
+        FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
+        >
     <!--d:DataContext="{d:DesignInstance Type=viewmodel:ApplicationViewModel}"-->
     <Grid>
         <Grid.RowDefinitions>
@@ -40,8 +50,17 @@
                             <ColumnDefinition Width="1*"/>
                             <ColumnDefinition Width="auto"/>
                         </Grid.ColumnDefinitions>
-                        <TextBox x:Name="GetIp" Grid.Column="0" Grid.Row="1" Text="{Binding TextBoxHostname}" BorderBrush="{Binding BorderTextBox}" BorderThickness="2" Margin="5,0,5,0" MouseMove="GetIp_MouseMove" MouseLeave="GetIp_MouseLeave"/>
-                        <Button Grid.Column="1" Grid.Row="1" Content="Add" Command="{Binding AddNewHost}"/>
+                        <ComboBox Grid.Column="0" Grid.Row="1" Text="{Binding TextBoxHostname}" BorderBrush="{Binding BorderTextBox}" 
+                              BorderThickness="2" Margin="5,0,5,0"
+                              materialDesign:HintAssist.Hint="Enter the hostname"
+                              materialDesign:TextFieldAssist.PrefixText="  "
+                              IsEditable="True"
+                              ToolTipService.InitialShowDelay="200" ToolTip="Enter hostname.">
+                            <ComboBoxItem Content="ya.ru"/>
+                            <ComboBoxItem Content="vk.com"/>
+                            <ComboBoxItem Content="google.com"/>
+                        </ComboBox>
+                        <Button Grid.Column="1" Grid.Row="1" Content="Add" Command="{Binding AddNewHost}" ToolTipService.InitialShowDelay="200" ToolTip="Add new host"/>
                     </Grid>
                     
                     <TextBlock Text="{Binding TextBlockGeneralError}" Grid.Column="1" Grid.Row="2" Foreground="Red" Grid.ColumnSpan="3" HorizontalAlignment="Center" Margin="0,5,0,5"/>
@@ -54,23 +73,23 @@
                 <ListBox ItemsSource="{Binding HostsCollection}" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
-                               <StackPanel Margin="5" Orientation="Horizontal" Width="auto" Height="18" VerticalAlignment="Center">
+                               <StackPanel Margin="5" Orientation="Horizontal" Width="auto" Height="auto" VerticalAlignment="Center">
                                      <Image Source="\Resources\icons8-error.png" Visibility="{Binding ErrorHostnameVisibleIcon}" 
                                             Width="20" Height="20" VerticalAlignment="Center"  
-                                            ToolTipService.InitialShowDelay="200">
-                                        <Image.ToolTip>
+                                            ToolTipService.InitialShowDelay="200" ToolTip="{Binding TextErrorToolTip}">
+                                        <!--<Image.ToolTip>
                                                 <ToolTip BorderThickness="0" Background="LightYellow" FontSize="14" FontWeight="DemiBold" Opacity="0.9">
                                                     <TextBlock Text="{Binding TextErrorToolTip}"/>
                                                 </ToolTip>
-                                        </Image.ToolTip>
+                                        </Image.ToolTip>-->
                                      </Image>
                                    
                                 <TextBlock Text="{Binding HostnameView}" VerticalAlignment="Center" Margin="5,0,0,0" />
 
                                     <Button x:Name="ControlBtn" Command="{Binding StartCommand}" Width="24" Height="24" VerticalAlignment="Center" 
-                                            BorderThickness="0" Background="White" Margin="5,0,5,0" IsEnabled="{Binding SettingIsEnableControlBtn}" Opacity="{ Binding SettingOpacityControlBtn}"> 
+                                             BorderThickness="0" Background="White" Margin="5,0,5,0" IsEnabled="{Binding SettingIsEnableControlBtn}" Opacity="{ Binding SettingOpacityControlBtn}"> 
                                         <Button.Content>
-                                            <Image Source="{Binding ControlBtnHost}" VerticalAlignment="Center"/>
+                                            <Image Source="{Binding ControlBtnHost}" VerticalAlignment="Center" />
                                         </Button.Content>
                                     </Button>
                                    
@@ -80,8 +99,8 @@
                                             <Image Source="\Resources\icons8-trash.png" VerticalAlignment="Center"/>
                                         </Button.Content>
                                     </Button>
-                                   
-                               </StackPanel>
+
+                            </StackPanel>
                         </DataTemplate>
                     </ListBox.ItemTemplate>
                     <ListBox.ItemContainerStyle>
@@ -110,7 +129,8 @@
 
         <!-- Datagrid in TabControl -->
         <Grid Grid.Row="1" Grid.Column="2">
-            <TabControl DockPanel.Dock="Right" Grid.Row="1" Name="TabMain" ItemsSource="{Binding HostsCollection,UpdateSourceTrigger=PropertyChanged}">
+            <materialDesign:Card>
+                <TabControl DockPanel.Dock="Right" Grid.Row="1" Name="TabMain" ItemsSource="{Binding HostsCollection,UpdateSourceTrigger=PropertyChanged}" materialDesign:ColorZoneAssist.Mode="PrimaryDark" HorizontalContentAlignment="Left">
                 <TabControl.ItemTemplate>
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal" Cursor="Hand">
@@ -129,22 +149,26 @@
                 </TabControl.ItemTemplate>
                 <TabControl.ContentTemplate>
                     <DataTemplate>
-                        <DataGrid ItemsSource="{Binding TracertObject, UpdateSourceTrigger=PropertyChanged}"  AutoGenerateColumns="False" RowBackground="GhostWhite" AlternatingRowBackground ="LightGray" GridLinesVisibility="None" IsReadOnly="True" FontSize="16">
+                        <DataGrid ItemsSource="{Binding TracertObject, UpdateSourceTrigger=PropertyChanged}" 
+                                  AutoGenerateColumns="False" RowBackground="GhostWhite" 
+                                  AlternatingRowBackground ="LightGray" GridLinesVisibility="None" 
+                                  IsReadOnly="True" FontSize="16" CanUserAddRows="False">
                             <DataGrid.Columns>
-                                <DataGridTextColumn Header="№" Binding="{Binding NumberHostname}" Width="0.25*"/>
-                                <DataGridTextColumn Header="Hostname" Binding="{Binding Hostname}" Width="*"/>
+                                <DataGridTextColumn Header="№" Binding="{Binding NumberHostname}" Width="auto"/>
+                                <DataGridTextColumn Header="Hostname" Binding="{Binding Hostname}" Width="auto"/>
                                 <DataGridTextColumn Header="Loss %" Binding="{Binding PercentLossPacket}" Width="*"/>
                                 <DataGridTextColumn Header="Last Delay" Binding="{Binding LastDelay}" Width="*"/>
                                 <DataGridTextColumn Header="Minimal" Binding="{Binding MinPing}" Width="*"/>
                                 <DataGridTextColumn Header="Middle" Binding="{Binding MiddlePing}" Width="*"/>
                                 <DataGridTextColumn Header="Maximum" Binding="{Binding MaxPing}" Width="*"/>
                                 <DataGridTextColumn Header="All Packet" Binding="{Binding CounterPacket}" Width="*"/>
-                                <DataGridTextColumn Header="Loss Packet" Binding="{Binding CounterLossPacket}" Width="*"/>
+                                <DataGridTextColumn Header="Loss Packet" Binding="{Binding CounterLossPacket}" Width="auto"/>
                             </DataGrid.Columns>
                         </DataGrid>
                     </DataTemplate>
                 </TabControl.ContentTemplate>
             </TabControl>
+            </materialDesign:Card>
         </Grid>
         
         <!--Footer -->
@@ -156,12 +180,9 @@
                 <ColumnDefinition/>
                 <ColumnDefinition Width="70" />
             </Grid.ColumnDefinitions>
-                <TextBlock x:Name ="AppVersion" Text="{Binding VersionProgramm}" Margin="0,4,0,0" TextAlignment="Left" Grid.Column="1" FontFamily="Console" MouseMove="TextBlockAppVersion_MouseMove" MouseLeave="TextBlockAppVersion_MouseLeave"/>
-                <TextBlock TextAlignment="Center" Grid.Column="3" Margin="0,4,0,0" FontFamily="Console" MouseMove="TextBlockGithub_MouseMove" MouseLeave="TextBlockGithub_MouseLeave">
-                    <Hyperlink RequestNavigate="Hyperlink_RequestNavigate" NavigateUri="https://github.com/hekkaaa/Apparat">GitHub</Hyperlink>
-                    <Popup x:Name="PopUpGithub"  Placement="Mouse" MaxWidth="180" AllowsTransparency="True">
-                        <TextBlock x:Name="PopUpText" TextWrapping="Wrap" Width="180" Background="LightYellow" Opacity="0.8" FontSize="14" FontWeight="DemiBold"/>
-                    </Popup>
+                <TextBlock x:Name ="AppVersion" Text="{Binding VersionProgramm}" Margin="0,4,0,0" TextAlignment="Left" Grid.Column="1" ToolTipService.InitialShowDelay="200" ToolTip="This version of the program may crash unexpectedly and give errors."/>
+                <TextBlock TextAlignment="Center" Grid.Column="3" Margin="0,4,0,0">
+                    <Hyperlink RequestNavigate="Hyperlink_RequestNavigate" NavigateUri="https://github.com/hekkaaa/Apparat" ToolTipService.InitialShowDelay="200" ToolTip="Link to the author's github.">GitHub</Hyperlink>
                 </TextBlock>
         </Grid>
         </Border>
