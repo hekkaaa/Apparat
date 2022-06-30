@@ -17,7 +17,6 @@
         TextElement.FontSize="14"
         FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
         >
-    <!--d:DataContext="{d:DesignInstance Type=viewmodel:ApplicationViewModel}"-->
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="50"></RowDefinition>
@@ -128,11 +127,12 @@
         <!-- Datagrid in TabControl -->
         <Grid Grid.Row="1" Grid.Column="2">
             <materialDesign:Card>
-                <TabControl DockPanel.Dock="Right" Grid.Row="1" Name="TabMain" ItemsSource="{Binding HostsCollection,UpdateSourceTrigger=PropertyChanged}" materialDesign:ColorZoneAssist.Mode="PrimaryDark" HorizontalContentAlignment="Left">
+                <TabControl DockPanel.Dock="Right" Grid.Row="1" Name="TabMain" ItemsSource="{Binding HostsCollection,UpdateSourceTrigger=PropertyChanged}" 
+                            materialDesign:ColorZoneAssist.Mode="Light" HorizontalContentAlignment="Left">
                 <TabControl.ItemTemplate>
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal" Cursor="Hand">
-                                <!-- yext hostname tab -->
+                                <!-- Text hostname tab -->
                                 <TextBlock Text="{Binding HostnameView}" />
                             
                                 <!-- Close btn -->
