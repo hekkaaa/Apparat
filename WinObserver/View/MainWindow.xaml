@@ -35,9 +35,16 @@
             <!--Btn and TextBox-->
             <Grid Grid.Row="0">
                 <StackPanel>
-                    <TextBox x:Name="GetIp" Grid.Column="1" Grid.Row="1" Text="{Binding TextBoxHostname}" BorderBrush="{Binding BorderTextBox}" MouseMove="GetIp_MouseMove" MouseLeave="GetIp_MouseLeave"/>
-                    <Button Grid.Column="5" Grid.Row="1" Content="Add" Command="{Binding AddNewHost}"/>
-                    <TextBlock Text="{Binding TextBlockGeneralError}" Grid.Column="1" Grid.Row="2" Foreground="Red" Grid.ColumnSpan="3"/>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBox x:Name="GetIp" Grid.Column="0" Grid.Row="1" Text="{Binding TextBoxHostname}" BorderBrush="{Binding BorderTextBox}" BorderThickness="2" Margin="5,0,5,0" MouseMove="GetIp_MouseMove" MouseLeave="GetIp_MouseLeave"/>
+                        <Button Grid.Column="1" Grid.Row="1" Content="Add" Command="{Binding AddNewHost}"/>
+                    </Grid>
+                    
+                    <TextBlock Text="{Binding TextBlockGeneralError}" Grid.Column="1" Grid.Row="2" Foreground="Red" Grid.ColumnSpan="3" HorizontalAlignment="Center" Margin="0,5,0,5"/>
                     <!--<ComboBox x:Name="GetIp" HorizontalAlignment="Left" Margin="280,0,0,0" VerticalAlignment="Center" Width="120" Text="hellos" IsEditable="True"/>-->
                 </StackPanel>
             </Grid>
