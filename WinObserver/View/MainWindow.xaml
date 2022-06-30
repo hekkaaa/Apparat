@@ -54,7 +54,7 @@
                               materialDesign:HintAssist.Hint="Enter the hostname"
                               materialDesign:TextFieldAssist.PrefixText="  "
                               IsEditable="True"
-                              ToolTipService.InitialShowDelay="200" ToolTip="Enter hostname.">
+                              ToolTipService.InitialShowDelay="200" ToolTip="Example: google.com">
                             <ComboBoxItem Content="ya.ru"/>
                             <ComboBoxItem Content="vk.com"/>
                             <ComboBoxItem Content="google.com"/>
@@ -63,7 +63,6 @@
                     </Grid>
                     
                     <TextBlock Text="{Binding TextBlockGeneralError}" Grid.Column="1" Grid.Row="2" Foreground="Red" Grid.ColumnSpan="3" HorizontalAlignment="Center" Margin="0,5,0,5"/>
-                    <!--<ComboBox x:Name="GetIp" HorizontalAlignment="Left" Margin="280,0,0,0" VerticalAlignment="Center" Width="120" Text="hellos" IsEditable="True"/>-->
                 </StackPanel>
             </Grid>
             

@@ -11,7 +11,7 @@ namespace Apparat.Helpers
         public static string Start { get; } = "Play";
         public static string Stop { get; } = "Stop";
         public static string Restart { get; } = "Restart";
-        public static string Trash { get; } = "\\Resources\\icons8-trash.png";
-        public static string Error { get; } = "\\Resources\\icons8-error.png";
+        public static string Trash { get; } = "Delete";
+        public static string Error { get; } = @"\Resources\icons8-error.png";
     }
 }
