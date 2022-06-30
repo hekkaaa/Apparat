@@ -22,33 +22,17 @@
 
   <ItemGroup>
     <None Remove="Resources\icons8-error.png" />
-    <None Remove="Resources\icons8-restart.png" />
-    <None Remove="Resources\icons8-start.png" />
-    <None Remove="Resources\icons8-stop.png" />
-    <None Remove="Resources\icons8-trash.png" />
   </ItemGroup>
 
   <ItemGroup>
     <Content Include="Resources\AppIcon.ico" />
     <Content Include="Resources\icons8-error.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\icons8-restart.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\icons8-start.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\icons8-stop.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\icons8-trash.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="LiveChartsCore.SkiaSharpView.WPF" Version="2.0.0-beta.300" />
+    <PackageReference Include="MaterialDesignThemes" Version="4.5.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0" />
     <PackageReference Include="NetObserver.Helper" Version="1.1.2" />
   </ItemGroup>
