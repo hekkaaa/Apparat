@@ -77,27 +77,25 @@
                                      <Image Source="\Resources\icons8-error.png" Visibility="{Binding ErrorHostnameVisibleIcon}" 
                                             Width="20" Height="20" VerticalAlignment="Center"  
                                             ToolTipService.InitialShowDelay="200" ToolTip="{Binding TextErrorToolTip}">
-                                        <!--<Image.ToolTip>
-                                                <ToolTip BorderThickness="0" Background="LightYellow" FontSize="14" FontWeight="DemiBold" Opacity="0.9">
-                                                    <TextBlock Text="{Binding TextErrorToolTip}"/>
-                                                </ToolTip>
-                                        </Image.ToolTip>-->
                                      </Image>
-                                   
-                                <TextBlock Text="{Binding HostnameView}" VerticalAlignment="Center" Margin="5,0,0,0" />
 
-                                    <Button x:Name="ControlBtn" Command="{Binding StartCommand}" Width="24" Height="24" VerticalAlignment="Center" 
-                                             BorderThickness="0" Background="White" Margin="5,0,5,0" IsEnabled="{Binding SettingIsEnableControlBtn}" Opacity="{ Binding SettingOpacityControlBtn}"> 
-                                        <Button.Content>
-                                            <Image Source="{Binding ControlBtnHost}" VerticalAlignment="Center" />
-                                        </Button.Content>
-                                    </Button>
+                                    <TextBlock Text="{Binding HostnameView}" VerticalAlignment="Center" Margin="5,0,0,0" />
                                    
+                                    <Button x:Name="ControlBtn" Command="{Binding StartCommand}" VerticalAlignment="Center"
+                                        Style="{StaticResource MaterialDesignIconForegroundButton}"
+                                        ToolTip="MaterialDesignIconForegroundButton"
+                                         Height="24" Width="24"    
+                                         IsEnabled="{Binding SettingIsEnableControlBtn}" Opacity="{ Binding SettingOpacityControlBtn}"
+                                         Margin="15,0,7,0">
+                                        <materialDesign:PackIcon Kind="{Binding ControlBtnHost}" />
+                                    </Button>
+                                 
                                     <Button Command="{Binding DataContext.CloseTabCommand,RelativeSource={RelativeSource AncestorType={x:Type Window}}}" 
-                                            CommandParameter="{Binding}" Width="24" Height="24" VerticalAlignment="Center" BorderThickness="0" Background="White" >
-                                        <Button.Content>
-                                            <Image Source="\Resources\icons8-trash.png" VerticalAlignment="Center"/>
-                                        </Button.Content>
+                                            CommandParameter="{Binding}" VerticalAlignment="Center" 
+                                            Style="{StaticResource MaterialDesignIconForegroundButton}"
+                                            ToolTip="Delete Hostname"
+                                            Height="24" Width="24">  
+                                        <materialDesign:PackIcon Kind="Delete" Width="20" Height="20"/>
                                     </Button>
 
                             </StackPanel>
@@ -134,17 +132,21 @@
                 <TabControl.ItemTemplate>
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal" Cursor="Hand">
-                            <TextBlock Text="{Binding HostnameView}" />
-                            <Button DockPanel.Dock="Right" Focusable="False"
-                                    Margin="10,1,0,0" Padding="0" BorderThickness="0" Background="#E8E8E8"
-                                    VerticalContentAlignment="Bottom" Width="10" Height="10"
-                                        Command="{Binding DataContext.CloseTabCommand,RelativeSource={RelativeSource AncestorType={x:Type Window}}}" 
-                                        CommandParameter="{Binding}">
-                                <Button.Content>
-                                    <Image Source="C:\Users\Laise\Downloads\icons8.png"/>
-                                </Button.Content>
-                            </Button>
-                        </StackPanel>
+                                <!-- yext hostname tab -->
+                                <TextBlock Text="{Binding HostnameView}" />
+                            
+                                <!-- Close btn -->
+                                <Button Command="{Binding DataContext.CloseTabCommand,RelativeSource={RelativeSource AncestorType={x:Type Window}}}" 
+                                        CommandParameter="{Binding}"
+                                         DockPanel.Dock="Right" Focusable="False" Margin="10,0,0,7" 
+                                         BorderThickness="0" Width="auto" Height="auto"
+                                         Style="{StaticResource MaterialDesignIconForegroundButton}"
+                                         ToolTipService.InitialShowDelay="300"
+                                         ToolTip="Delete Ping"
+                                         IsEnabled="{Binding DataContext.ControlsEnabled, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}">
+                                    <materialDesign:PackIcon Kind="Close" Width="auto" Height="auto"/>
+                                </Button>
+                            </StackPanel>
                     </DataTemplate>
                 </TabControl.ItemTemplate>
                 <TabControl.ContentTemplate>
@@ -178,9 +180,13 @@
                 <ColumnDefinition Width="10"/>
                 <ColumnDefinition Width="auto" />
                 <ColumnDefinition/>
-                <ColumnDefinition Width="70" />
+                <ColumnDefinition Width="100" />
             </Grid.ColumnDefinitions>
+                <!-- Text Version app -->
                 <TextBlock x:Name ="AppVersion" Text="{Binding VersionProgramm}" Margin="0,4,0,0" TextAlignment="Left" Grid.Column="1" ToolTipService.InitialShowDelay="200" ToolTip="This version of the program may crash unexpectedly and give errors."/>
+
+                <!-- Icon and link for github -->
+                <materialDesign:PackIcon Kind="Github" Margin="7,4,0,0" Grid.Column="3"/>
                 <TextBlock TextAlignment="Center" Grid.Column="3" Margin="0,4,0,0">
                     <Hyperlink RequestNavigate="Hyperlink_RequestNavigate" NavigateUri="https://github.com/hekkaaa/Apparat" ToolTipService.InitialShowDelay="200" ToolTip="Link to the author's github.">GitHub</Hyperlink>
                 </TextBlock>
