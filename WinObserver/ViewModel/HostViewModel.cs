@@ -1,15 +1,8 @@
 ﻿using Apparat.Helpers;
 using Apparat.ViewModel.Interfaces;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Linq;
-using System.Net.NetworkInformation;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Media;
 using WinObserver.Model;
 using WinObserver.Service;
 
@@ -53,22 +46,12 @@ namespace Apparat.ViewModel
                     }
                     else
                     {
-                        //if (String.IsNullOrWhiteSpace(_hostname))
-                        //{
-                        //    ErrorValidationTextAndAnimation();
-                        //}
-                        //else
-                        //{
-                        //NameTableDataGrid = _hostname;
-                        //ControlBtnName = ViewStatusStringBtn.Stop.ToString();
                         //RestartInfoInDataGrid();
-                       
+
                         ControlBtnHost = IconeMap.Stop;
                         _tracerService.StartTraceroute(HostnameView, this);
                         _statusWorkDataGrid = true;
                         //RemoveInfoinTextBoxPanel();
-
-                        //}
                     }
                     OnPropertyChanged();
                 });
@@ -102,12 +85,40 @@ namespace Apparat.ViewModel
             set { _controlBtnHost = value; OnPropertyChanged(); }
         }
 
+        private string _settingOpacityControlBtn;
+        public string SettingOpacityControlBtn
+        {
+            get { return _settingOpacityControlBtn; }
+            set { _settingOpacityControlBtn = value; OnPropertyChanged(); }
+        }
+
+        private string _settingIsEnableControlBtn;
+        public string SettingIsEnableControlBtn
+        {
+            get { return _settingIsEnableControlBtn; }
+            set { _settingIsEnableControlBtn = value; OnPropertyChanged(); }
+        }
 
         public void ErrorNameHostname()
         {
             ControlBtnHost = IconeMap.Start;
             ErrorHostnameVisibleIcon = "Visible";
-            Task.Delay(5000).Wait();
+            SettingIsEnableControlBtn = "False";
+            SettingOpacityControlBtn = "0.5";
+        }
+
+        public void ManagementEnableGeneralControlBtn(bool obj)
+        {
+            if (obj)
+            {
+                SettingIsEnableControlBtn = "True";
+                SettingOpacityControlBtn = "1";
+            }
+            else
+            {
+                SettingIsEnableControlBtn = "False";
+                SettingOpacityControlBtn = "0.5";
+            }
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;

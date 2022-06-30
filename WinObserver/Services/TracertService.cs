@@ -34,25 +34,28 @@ namespace WinObserver.Service
             _tracerouteHelper = new Traceroute();
         }
 
-        public void StartTraceroute(string hostname, IHostViewModel error)
+        public void StartTraceroute(string hostname, IHostViewModel appViewModel)
         {
             ThreadPool.QueueUserWorkItem(new WaitCallback(obj =>
             {
                 try
                 {
+                    appViewModel.ManagementEnableGeneralControlBtn(false);
                     IEnumerable<string> objectTracertResult = _tracerouteHelper.GetIpTraceRoute(hostname);
                     
                     ClearOldTable();
                     FillingNewtable(objectTracertResult);
-
+                    appViewModel.ManagementEnableGeneralControlBtn(true);
                     while (true)
                     {
                         Task.Delay(1000).Wait();
                         UpdateStatistic();
                         if (token.IsCancellationRequested)
                         {
+                            appViewModel.ManagementEnableGeneralControlBtn(false);
                             _cancellationTokenSource!.Dispose();
                             RestartToken();
+                            appViewModel.ManagementEnableGeneralControlBtn(true);
                             break;
                         }
                     }
@@ -60,8 +63,7 @@ namespace WinObserver.Service
                 catch (PingException)
                 {   
                     _cancellationTokenSource!.Cancel();
-                    _cancellationTokenSource!.Dispose();
-                    error.ErrorNameHostname();
+                    appViewModel.ErrorNameHostname();
                 }
 
             }), token);

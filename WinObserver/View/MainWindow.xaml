@@ -43,32 +43,33 @@
                     <ListBox.ItemTemplate>
                         <DataTemplate>
                                <StackPanel Margin="5" Orientation="Horizontal" Width="auto" Height="18" VerticalAlignment="Center">
-                                 <Image Source="\Resources\icons8-error.png" Visibility="{Binding ErrorHostnameVisibleIcon}" 
-                                        Width="20" Height="20" VerticalAlignment="Center"  
-                                        ToolTipService.InitialShowDelay="200">
-                                    <Image.ToolTip>
-                                            <ToolTip BorderThickness="0" Background="LightYellow" FontSize="14" FontWeight="DemiBold" Opacity="0.9">
-                                                <TextBlock Text="{Binding TextErrorToolTip}"/>
-                                            </ToolTip>
-                                    </Image.ToolTip>
-                                 </Image>
+                                     <Image Source="\Resources\icons8-error.png" Visibility="{Binding ErrorHostnameVisibleIcon}" 
+                                            Width="20" Height="20" VerticalAlignment="Center"  
+                                            ToolTipService.InitialShowDelay="200">
+                                        <Image.ToolTip>
+                                                <ToolTip BorderThickness="0" Background="LightYellow" FontSize="14" FontWeight="DemiBold" Opacity="0.9">
+                                                    <TextBlock Text="{Binding TextErrorToolTip}"/>
+                                                </ToolTip>
+                                        </Image.ToolTip>
+                                     </Image>
                                    
                                 <TextBlock Text="{Binding HostnameView}" VerticalAlignment="Center" Margin="5,0,0,0" />
 
-                                <Button Command="{Binding StartCommand}" Width="24" Height="24" VerticalAlignment="Center" BorderThickness="0" Background="White" Margin="5,0,5,0">
+                                    <Button x:Name="ControlBtn" Command="{Binding StartCommand}" Width="24" Height="24" VerticalAlignment="Center" 
+                                            BorderThickness="0" Background="White" Margin="5,0,5,0" IsEnabled="{Binding SettingIsEnableControlBtn}" Opacity="{ Binding SettingOpacityControlBtn}"> 
                                         <Button.Content>
-                                        <Image Source="{Binding ControlBtnHost}"/>
+                                            <Image Source="{Binding ControlBtnHost}" VerticalAlignment="Center"/>
                                         </Button.Content>
                                     </Button>
                                    
                                     <Button Command="{Binding DataContext.CloseTabCommand,RelativeSource={RelativeSource AncestorType={x:Type Window}}}" 
                                             CommandParameter="{Binding}" Width="24" Height="24" VerticalAlignment="Center" BorderThickness="0" Background="White" >
                                         <Button.Content>
-                                        <Image Source="\Resources\icons8-trash.png" VerticalAlignment="Center"/>
+                                            <Image Source="\Resources\icons8-trash.png" VerticalAlignment="Center"/>
                                         </Button.Content>
                                     </Button>
                                    
-                                </StackPanel>
+                               </StackPanel>
                         </DataTemplate>
                     </ListBox.ItemTemplate>
                     <ListBox.ItemContainerStyle>
@@ -93,7 +94,7 @@
         
         <!--Splitte between Left panel host and DataGrid-->
         <GridSplitter Grid.Column="1" Grid.Row="0" ShowsPreview="False" Width="3"
-        HorizontalAlignment="Center"/>
+        HorizontalAlignment="Center" BorderThickness="0"/>
 
         <!-- Datagrid in TabControl -->
         <Grid Grid.Row="0" Grid.Column="2">
