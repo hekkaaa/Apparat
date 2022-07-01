@@ -1,21 +1,21 @@
 ﻿using Data.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace Data.Repositories.Connect
+namespace Data.Connect
 {
-    public class DublicateContext : DbContext
+    public class ApplicationSettingContext : DbContext
     {
-        public DbSet<Loss> Losses { get; set; }
-        public DbSet<RequestTime> RequestsTimes { get; set; }
+        public DbSet<HistoryHost> History { get; set; }
 
-        public DublicateContext()
+        public ApplicationSettingContext()
         {
+            Database.EnsureCreated();
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlite(
-                "Data Source=DataBaseChart.db");
+                "Data Source=SettingDb.db");
             optionsBuilder.UseLazyLoadingProxies();
         }
     }

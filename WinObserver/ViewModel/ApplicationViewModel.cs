@@ -1,5 +1,9 @@
-﻿using Apparat.ViewModel;
+﻿using Apparat.Services;
+using Apparat.Services.Interfaces;
+using Apparat.ViewModel;
+using Data.Connect;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
@@ -16,10 +20,13 @@ namespace WinObserver.ViewModel
         private string _borderTextBox = "#FFABADB3";
 
         private ObservableCollection<HostViewModel> _hostsCollection;
+        private readonly IAppSettingService _appSettingService;
 
         public ApplicationViewModel()
         {
             _hostsCollection = new ObservableCollection<HostViewModel>();
+            _appSettingService = new AppSettingService();
+            UpdateCollectionHistoryHostInCombobox();
         }
 
         public string VersionProgramm { get { return VERSION_APP; } }
@@ -60,6 +67,21 @@ namespace WinObserver.ViewModel
             }
         }
 
+
+        private List<string> _collectionRecentHost;
+        public List<string> CollectionRecentHost
+        {
+            get
+            {
+                return _collectionRecentHost;
+            }
+            set
+            {
+                _collectionRecentHost = value;
+                OnPropertyChanged();
+            }
+        }
+
         public ObservableCollection<HostViewModel> HostsCollection
         {
             get => _hostsCollection;
@@ -84,8 +106,12 @@ namespace WinObserver.ViewModel
                      {
                          HostnameView = _hostname
                      });
+
+                     _appSettingService.AddHostInHistory(_hostname);
+                     UpdateCollectionHistoryHostInCombobox();
                      RemoveInfoinTextBoxPanel();
                      OnPropertyChanged();
+
                  }));
             }
         }
@@ -104,11 +130,17 @@ namespace WinObserver.ViewModel
             }
         }
 
+
         public event PropertyChangedEventHandler? PropertyChanged;
         public void OnPropertyChanged([CallerMemberName] string prop = "")
         {
             if (PropertyChanged != null)
                 PropertyChanged(this, new PropertyChangedEventArgs(prop));
+        }
+
+        private void UpdateCollectionHistoryHostInCombobox()
+        {
+            CollectionRecentHost = _appSettingService.GetLastFiveHistoryHost();
         }
 
 
