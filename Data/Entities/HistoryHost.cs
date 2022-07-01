@@ -2,10 +2,10 @@
 
 namespace Data.Entities
 {
-    [Table("RequestTime")]
-    public class RequestTime
+    [Table("HistoryHost")]
+    public class HistoryHost
     {
         public int Id { get; set; }
-        public string ListTime { get; set; }
+        public string Hostname { get; set; }
     }
 }

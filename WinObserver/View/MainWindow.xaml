@@ -3,87 +3,220 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:WinObserver" xmlns:viewmodel="clr-namespace:WinObserver.ViewModel" d:DataContext="{d:DesignInstance Type=viewmodel:ApplicationViewModel}"
+        xmlns:local="clr-namespace:WinObserver" xmlns:viewmodel="clr-namespace:WinObserver.ViewModel" xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d"
-        Title="Apparat" MinHeight="300" MinWidth="400" Height="768" Width="1024" Loaded="Window_Loaded"
-        xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.WPF;assembly=LiveChartsCore.SkiaSharpView.WPF"
-        WindowStartupLocation="CenterScreen">
-
+        Title="Apparat" MinHeight="700" MinWidth="940" Height="568" Width="1024" Loaded="Window_Loaded"
+        WindowStartupLocation="CenterScreen"
+        
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        Background="{DynamicResource MaterialDesignPaper}"
+        TextElement.FontWeight="DemiBold"
+        FontWeight="DemiBold"
+        FontSize="14"
+        TextElement.FontSize="14"
+        FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto">
+    
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="60" />
-            <RowDefinition Height="*" />
-            <RowDefinition Height="5" />
-            <RowDefinition Height="*" />
-            <RowDefinition Height="20" />
+            <RowDefinition Height="50"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="auto"></RowDefinition>
         </Grid.RowDefinitions>
-        <Grid Grid.Row="0">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*" />
-                <RowDefinition Height="auto" />
-                <RowDefinition Height="*" />
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition  Width="10" />
-                <ColumnDefinition  Width="120" />
-                <ColumnDefinition  Width="10" />
-                <ColumnDefinition  Width="70" />
-            </Grid.ColumnDefinitions>
-            <TextBox x:Name="GetIp" Grid.Column="1" Grid.Row="1" Text="{Binding TextBoxHostname}" BorderBrush="{Binding BorderTextBox}" MouseMove="GetIp_MouseMove" MouseLeave="GetIp_MouseLeave"/>
-            <Button x:Name="ControlButton" Grid.Column="3" Grid.Row="1" Content="{Binding ControlBtnName}" Command="{Binding ControlTracert}"/>
-            <TextBlock Text="{Binding TextBlockGeneralError}" Grid.Column="1" Grid.Row="2" Foreground="Red" Grid.ColumnSpan="3" FontSize="14"/>
-            <!--<ComboBox x:Name="GetIp" HorizontalAlignment="Left" Margin="280,0,0,0" VerticalAlignment="Center" Width="120" Text="hellos" IsEditable="True"/>-->
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="4*"/>
+        </Grid.ColumnDefinitions>
+
+        <!--Top-->
+        <Grid Grid.Column="0" Grid.Row="0" Background="White" Grid.ColumnSpan="3">
         </Grid>
-        <TabControl DockPanel.Dock="Right" Grid.Row="1">
-            <TabItem Header="{Binding NameTableDataGrid}">
-                <Grid Background="Azure">
-                    <DataGrid x:Name="DG1" ItemsSource="{Binding TracertObject, UpdateSourceTrigger=PropertyChanged}"  AutoGenerateColumns="False" RowBackground="GhostWhite" AlternatingRowBackground ="LightGray" GridLinesVisibility="None" IsReadOnly="True">
-                        <DataGrid.Columns>
-                            <DataGridTextColumn Header="№" Binding="{Binding NumberHostname}" Width="0.25*"/>
-                            <DataGridTextColumn Header="Hostname" Binding="{Binding Hostname}" Width="*"/>
-                            <DataGridTextColumn Header="Loss %" Binding="{Binding PercentLossPacket}" Width="*"/>
-                            <DataGridTextColumn Header="Last Delay" Binding="{Binding LastDelay}" Width="*"/>
-                            <DataGridTextColumn Header="Minimal" Binding="{Binding MinPing}" Width="*"/>
-                            <DataGridTextColumn Header="Middle" Binding="{Binding MiddlePing}" Width="*"/>
-                            <DataGridTextColumn Header="Maximum" Binding="{Binding MaxPing}" Width="*"/>
-                            <DataGridTextColumn Header="All Packet" Binding="{Binding CounterPacket}" Width="*"/>
-                            <DataGridTextColumn Header="Loss Packet" Binding="{Binding CounterLossPacket}" Width="*"/>
-                        </DataGrid.Columns>
-                    </DataGrid>
-                </Grid>
-            </TabItem>
-        </TabControl>
-        <GridSplitter Grid.Row="2" Height="5" HorizontalAlignment="Stretch"/>
-        <lvc:CartesianChart 
-                    Grid.Row="3"
-                    Series="{Binding Losses}"
-                    XAxes="{Binding XAxes}"
-                    YAxes="{Binding YAxes}"
-                    LegendPosition="Bottom" 
-                    LegendFontFamily="Console" 
-                    TooltipPosition="Left"
-                    ZoomMode="X">
-            <!--XAxes="{Binding XAxes}"-->
-            <!--TooltipPosition="Hidden" 
-                    LegendPosition="Bottom"-->
-            <!--ZoomMode="X" 
-                    LegendFontFamily="Console"-->
-        </lvc:CartesianChart>
-        <Border Grid.Row="4" BorderBrush="Black" BorderThickness="0.5">
-        <Grid Background="PowderBlue"  >
+        
+        <!--Control panel-->
+        <Grid Grid.Column="0" Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            
+            <!--Btn and Combobox enter hostname-->
+            <Grid Grid.Row="0" Background="WhiteSmoke">
+                <StackPanel>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+                        <Button
+                              Content="Add" Command="{Binding AddNewHost}" 
+                              ToolTipService.InitialShowDelay="200" ToolTip="Add new host"
+                              Style="{StaticResource MaterialDesignFlatButton}"
+                              HorizontalAlignment="Left" Foreground="DarkSlateGray"/>
+                        <Button
+                              Content="Clear"
+                              ToolTipService.InitialShowDelay="200" ToolTip="Clear all history"
+                              Style="{StaticResource MaterialDesignFlatButton}"
+                              HorizontalAlignment="Right"
+                              Grid.Column="1"
+                              Command="{Binding ClearAllCollectionHost}" Foreground="DarkSlateGray"/>
+                    </Grid>
+
+                    <ComboBox Background="White"
+                        x:Name="OutlinedComboBox"
+                        Style="{StaticResource MaterialDesignOutlinedComboBox}"
+                        Text="{Binding TextBoxHostname}" BorderBrush="{Binding BorderTextBox}"
+                        ItemsSource="{Binding CollectionRecentHost}"
+                        BorderThickness="1" Margin="7,3,7,3"
+                        materialDesign:HintAssist.Hint="Enter the hostname"
+                        materialDesign:TextFieldAssist.PrefixText="  "
+                        IsEditable="True"
+                        ShouldPreserveUserEnteredPrefix ="False"
+                        ToolTipService.InitialShowDelay="200" ToolTip="Example: google.com">
+                        <ComboBox.InputBindings>
+                            <KeyBinding Command="{Binding AddNewHost}" Key="Enter"/>
+                        </ComboBox.InputBindings>
+                    </ComboBox>
+                    
+                    <TextBlock Text="{Binding TextBlockGeneralError}"  Foreground="Red" Grid.ColumnSpan="3" HorizontalAlignment="Center" Margin="0,5,0,5"/>
+
+                </StackPanel>
+            </Grid>
+            
+            <!--Left List Hostname-->
+            <Grid Grid.Row="1" Background="WhiteSmoke">
+                <ListBox ItemsSource="{Binding HostsCollection}" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                               <StackPanel Margin="5" Orientation="Horizontal" Width="auto" Height="auto" VerticalAlignment="Center">
+                                    <Image Source="\Resources\icons8-error.png" Visibility="{Binding ErrorHostnameVisibleIcon}" 
+                                                Width="20" Height="20" VerticalAlignment="Center"
+                                                Margin="5,0,5,0"
+                                                ToolTipService.InitialShowDelay="200" ToolTip="{Binding TextErrorToolTip}">
+                                         </Image>
+
+                                    <ProgressBar  
+                                        Style="{StaticResource MaterialDesignCircularProgressBar}"
+                                        Value="0"
+                                        IsIndeterminate="True" Margin="5,0,5,0"
+                                        ToolTipService.InitialShowDelay="200"
+                                        ToolTip="In work" Foreground="LightSeaGreen" 
+                                        Visibility="{Binding ValueVisibleProgressBar}">
+                                    </ProgressBar>
+
+                                <TextBlock Text="{Binding HostnameView}" VerticalAlignment="Center" Margin="5,0,0,0" />
+                                   
+                                    <Button x:Name="ControlBtn" Command="{Binding StartCommand}" 
+                                            VerticalAlignment="Center"
+                                            Style="{StaticResource MaterialDesignIconForegroundButton}"
+                                            ToolTip="MaterialDesignIconForegroundButton"
+                                            Height="24" Width="24"    
+                                            IsEnabled="{Binding SettingIsEnableControlBtn}" Opacity="{ Binding SettingOpacityControlBtn}"
+                                            Margin="15,0,7,0">
+                                            <materialDesign:PackIcon Kind="{Binding ControlBtnHost}" />
+                                    </Button>
+                                 
+                                    <Button Command="{Binding DataContext.CloseTabCommand,RelativeSource={RelativeSource AncestorType={x:Type Window}}}" 
+                                            CommandParameter="{Binding}" VerticalAlignment="Center" 
+                                            Style="{StaticResource MaterialDesignIconForegroundButton}"
+                                            ToolTip="Delete Hostname"
+                                            Height="24" Width="24">  
+                                        <materialDesign:PackIcon Kind="Delete" Width="20" Height="20"/>
+                                    </Button>
+                               
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                    <ListBox.ItemContainerStyle>
+                        <Style TargetType="{x:Type ListBoxItem}">
+                            <!--<Setter Property="Background" Value="White"/>-->
+                            <Setter Property="Foreground" Value="DarkSlateGray"/>
+                            <Style.Triggers>
+                                <Trigger Property="IsSelected" Value="True">
+                                    <Setter Property="Foreground" Value="Black"/>
+                                    <Setter Property="BorderThickness" Value="1"/>
+                                    <Setter Property="BorderBrush" Value="Black"/>
+                                </Trigger>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="BorderThickness" Value="1"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ListBox.ItemContainerStyle>
+                </ListBox>
+            </Grid>
+        </Grid>
+        
+        <!--Splitte between Left panel host and DataGrid-->
+        <GridSplitter Grid.Column="1" Grid.Row="1" ShowsPreview="False" Width="3"
+        HorizontalAlignment="Center" BorderThickness="0"/>
+
+        <!-- Datagrid in TabControl -->
+        <Grid Grid.Row="1" Grid.Column="2">
+            <materialDesign:Card>
+                <TabControl DockPanel.Dock="Right" Grid.Row="1" Name="TabMain" ItemsSource="{Binding HostsCollection,UpdateSourceTrigger=PropertyChanged}" 
+                            materialDesign:ColorZoneAssist.Mode="Light" HorizontalContentAlignment="Left">
+                <TabControl.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal" Cursor="Hand">
+                                <!-- Text hostname tab -->
+                                <TextBlock Text="{Binding HostnameView}" />
+                            
+                                <!-- Close btn -->
+                                <Button Command="{Binding DataContext.CloseTabCommand,RelativeSource={RelativeSource AncestorType={x:Type Window}}}" 
+                                        CommandParameter="{Binding}"
+                                         DockPanel.Dock="Right" Focusable="False" Margin="10,0,0,7" 
+                                         BorderThickness="0" Width="auto" Height="auto"
+                                         Style="{StaticResource MaterialDesignIconForegroundButton}"
+                                         ToolTipService.InitialShowDelay="300"
+                                         ToolTip="Delete Ping"
+                                         IsEnabled="{Binding DataContext.ControlsEnabled, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}">
+                                    <materialDesign:PackIcon Kind="Close" Width="auto" Height="auto"/>
+                                </Button>
+                            </StackPanel>
+                    </DataTemplate>
+                </TabControl.ItemTemplate>
+                <TabControl.ContentTemplate>
+                    <DataTemplate>
+                        <DataGrid ItemsSource="{Binding TracertObject, UpdateSourceTrigger=PropertyChanged}" 
+                                  AutoGenerateColumns="False" RowBackground="GhostWhite" 
+                                  AlternatingRowBackground ="LightGray" GridLinesVisibility="None" 
+                                  IsReadOnly="True" FontSize="16" CanUserAddRows="False">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="№" Binding="{Binding NumberHostname}" Width="auto"/>
+                                <DataGridTextColumn Header="Hostname" Binding="{Binding Hostname}" Width="auto"/>
+                                <DataGridTextColumn Header="Loss %" Binding="{Binding PercentLossPacket}" Width="*"/>
+                                <DataGridTextColumn Header="Last Delay" Binding="{Binding LastDelay}" Width="*"/>
+                                <DataGridTextColumn Header="Minimal" Binding="{Binding MinPing}" Width="*"/>
+                                <DataGridTextColumn Header="Middle" Binding="{Binding MiddlePing}" Width="*"/>
+                                <DataGridTextColumn Header="Maximum" Binding="{Binding MaxPing}" Width="*"/>
+                                <DataGridTextColumn Header="All Packet" Binding="{Binding CounterPacket}" Width="*"/>
+                                <DataGridTextColumn Header="Loss Packet" Binding="{Binding CounterLossPacket}" Width="auto"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </DataTemplate>
+                </TabControl.ContentTemplate>
+            </TabControl>
+            </materialDesign:Card>
+        </Grid>
+        
+        <!--Footer -->
+        <Border BorderBrush="Black" BorderThickness="0.5" Grid.ColumnSpan="3" Grid.Row="3">
+        <Grid Background="PowderBlue">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="10"/>
                 <ColumnDefinition Width="auto" />
                 <ColumnDefinition/>
-                <ColumnDefinition Width="70" />
+                <ColumnDefinition Width="100" />
             </Grid.ColumnDefinitions>
-                <TextBlock x:Name ="AppVersion" Text="{Binding VersionProgramm}" Margin="0,4,0,0" TextAlignment="Left" Grid.Column="1" FontSize="12"  FontFamily="Console" MouseMove="TextBlockAppVersion_MouseMove" MouseLeave="TextBlockAppVersion_MouseLeave"/>
-                <TextBlock TextAlignment="Center" Grid.Column="3" Margin="0,4,0,0" FontSize="12"  FontFamily="Console" MouseMove="TextBlockGithub_MouseMove" MouseLeave="TextBlockGithub_MouseLeave">
-                <Hyperlink RequestNavigate="Hyperlink_RequestNavigate" NavigateUri="https://github.com/hekkaaa/Apparat">GitHub</Hyperlink>
-                    <Popup x:Name="PopUpGithub"  Placement="Mouse" MaxWidth="180" AllowsTransparency="True">
-                        <TextBlock x:Name="PopUpText" TextWrapping="Wrap" Width="180" Background="Cornsilk" Opacity="0.8"/>
-                    </Popup>
-            </TextBlock>
+                <!-- Text Version app -->
+                <TextBlock x:Name ="AppVersion" Text="{Binding VersionProgramm}" Margin="0,4,0,0" TextAlignment="Left" Grid.Column="1" ToolTipService.InitialShowDelay="200" ToolTip="This program is in Beta stage."/>
+
+                <!-- Icon and link for github -->
+                <materialDesign:PackIcon Kind="Github" Margin="7,4,0,0" Grid.Column="3"/>
+                <TextBlock TextAlignment="Center" Grid.Column="3" Margin="0,4,0,0">
+                    <Hyperlink RequestNavigate="Hyperlink_RequestNavigate" NavigateUri="https://github.com/hekkaaa/Apparat" ToolTipService.InitialShowDelay="200" ToolTip="Link to the author's github.">GitHub</Hyperlink>
+                </TextBlock>
         </Grid>
         </Border>
     </Grid>

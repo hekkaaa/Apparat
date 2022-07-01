@@ -21,11 +21,18 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Include="Resources\AppIcon.ico" />
+    <None Remove="Resources\icons8-error.png" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="LiveChartsCore.SkiaSharpView.WPF" Version="2.0.0-beta.300" />
+    <Content Include="Resources\AppIcon.ico" />
+    <Content Include="Resources\icons8-error.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MaterialDesignThemes" Version="4.5.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0" />
     <PackageReference Include="NetObserver.Helper" Version="1.1.2" />
   </ItemGroup>
