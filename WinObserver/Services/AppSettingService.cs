@@ -18,8 +18,23 @@ namespace Apparat.Services
 
         public void AddHostInHistory(string newhost)
         {
-            HistoryHost newItem = new HistoryHost() { Hostname = newhost };
-            _appSettingRepository.AddNewHost(newItem);
+            List<string> checkCollection = GetLastFiveHistoryHost();
+            bool flag = false;
+
+            foreach (string check in checkCollection)
+            {
+                if(check == newhost)
+                {
+                    flag = true;
+                }
+            }
+
+            if (!flag)
+            {
+                HistoryHost newItem = new HistoryHost() { Hostname = newhost };
+                _appSettingRepository.AddNewHost(newItem);
+            }
+            
         }
 
         public List<string> GetLastFiveHistoryHost()
