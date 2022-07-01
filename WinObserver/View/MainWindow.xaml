@@ -31,8 +31,6 @@
 
         <!--Top-->
         <Grid Grid.Column="0" Grid.Row="0" Background="White" Grid.ColumnSpan="3">
-            <ProgressBar
-  IsIndeterminate="True" />
         </Grid>
         
         <!--Control panel-->
@@ -93,14 +91,14 @@
                                <StackPanel Margin="5" Orientation="Horizontal" Width="auto" Height="auto" VerticalAlignment="Center">
                                     <Image Source="\Resources\icons8-error.png" Visibility="{Binding ErrorHostnameVisibleIcon}" 
                                                 Width="20" Height="20" VerticalAlignment="Center"
-                                                Margin="5"
+                                                Margin="5,0,5,0"
                                                 ToolTipService.InitialShowDelay="200" ToolTip="{Binding TextErrorToolTip}">
                                          </Image>
 
                                     <ProgressBar  
                                         Style="{StaticResource MaterialDesignCircularProgressBar}"
                                         Value="0"
-                                        IsIndeterminate="True" Margin="5"
+                                        IsIndeterminate="True" Margin="5,0,5,0"
                                         ToolTipService.InitialShowDelay="200"
                                         ToolTip="In work" Foreground="LightSeaGreen" 
                                         Visibility="{Binding ValueVisibleProgressBar}">
