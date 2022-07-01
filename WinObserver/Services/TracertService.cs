@@ -23,8 +23,8 @@ namespace WinObserver.Service
         public readonly DataGridModel _gridTracert;
         private readonly Traceroute _tracerouteHelper;
 
-        static CancellationTokenSource? _cancellationTokenSource = new CancellationTokenSource();
-        CancellationToken token = _cancellationTokenSource!.Token;
+        CancellationTokenSource? _cancellationTokenSource;
+        CancellationToken _token;
 
         public TracertService()
         {
@@ -32,6 +32,9 @@ namespace WinObserver.Service
             _tracertValue = new ReadOnlyObservableCollection<TracertModel>(_innerTracertValue);
             _gridTracert = new DataGridModel();
             _tracerouteHelper = new Traceroute();
+
+            _cancellationTokenSource = new CancellationTokenSource();
+            _token = _cancellationTokenSource!.Token;
         }
 
         public void StartTraceroute(string hostname, IHostViewModel appViewModel)
@@ -46,11 +49,12 @@ namespace WinObserver.Service
                     ClearOldTable();
                     FillingNewtable(objectTracertResult);
                     appViewModel.ManagementEnableGeneralControlBtn(true);
+
                     while (true)
                     {
                         Task.Delay(1000).Wait();
                         UpdateStatistic();
-                        if (token.IsCancellationRequested)
+                        if (_token.IsCancellationRequested)
                         {
                             appViewModel.ManagementEnableGeneralControlBtn(false);
                             _cancellationTokenSource!.Dispose();
@@ -61,12 +65,13 @@ namespace WinObserver.Service
                     }
                 }
                 catch (PingException)
-                {   
+                {
                     _cancellationTokenSource!.Cancel();
+                    _cancellationTokenSource.Dispose();
                     appViewModel.ErrorNameHostname();
                 }
 
-            }), token);
+            }), _token);
         }
 
         public void StopTraceroute()
@@ -86,7 +91,7 @@ namespace WinObserver.Service
         private void RestartToken()
         {
             _cancellationTokenSource = new CancellationTokenSource();
-            token = _cancellationTokenSource.Token;
+            _token = _cancellationTokenSource.Token;
         }
 
         private void ClearOldTable()

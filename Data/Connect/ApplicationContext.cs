@@ -6,7 +6,6 @@ namespace Data.Repositories.Connect
     public class ApplicationContext : DbContext
     {
         public DbSet<Loss> Losses { get; set; }
-        public DbSet<RequestTime> RequestsTimes { get; set; }
 
         public ApplicationContext()
         {
