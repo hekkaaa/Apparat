@@ -210,7 +210,7 @@
                 <ColumnDefinition Width="100" />
             </Grid.ColumnDefinitions>
                 <!-- Text Version app -->
-                <TextBlock x:Name ="AppVersion" Text="{Binding VersionProgramm}" Margin="0,4,0,0" TextAlignment="Left" Grid.Column="1" ToolTipService.InitialShowDelay="200" ToolTip="This version of the program may crash unexpectedly and give errors."/>
+                <TextBlock x:Name ="AppVersion" Text="{Binding VersionProgramm}" Margin="0,4,0,0" TextAlignment="Left" Grid.Column="1" ToolTipService.InitialShowDelay="200" ToolTip="This program is in Beta stage."/>
 
                 <!-- Icon and link for github -->
                 <materialDesign:PackIcon Kind="Github" Margin="7,4,0,0" Grid.Column="3"/>
