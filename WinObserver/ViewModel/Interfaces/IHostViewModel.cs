@@ -22,6 +22,7 @@ namespace Apparat.ViewModel.Interfaces
 
         void ErrorNameHostname();
         void ManagementEnableGeneralControlBtn(bool obj);
+        void WorkingProggresbarInListBoxHostanme(bool boolValue);
         void OnPropertyChanged([CallerMemberName] string prop = "");
     }
 }

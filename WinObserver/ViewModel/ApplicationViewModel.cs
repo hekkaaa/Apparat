@@ -102,6 +102,12 @@ namespace WinObserver.ViewModel
                          ErrorValidationTextAndAnimation();
                          return;
                      }
+                     if(_hostname.Length <= 3)
+                     {
+                         ErrorValidationTextAndAnimation();
+                         return;
+                     }
+
                      HostsCollection.Add(new HostViewModel()
                      {
                          HostnameView = _hostname
@@ -130,6 +136,20 @@ namespace WinObserver.ViewModel
             }
         }
 
+        private DelegateCommand _clearAllCollectionHost;
+        public DelegateCommand ClearAllCollectionHost
+        {
+            get
+            {
+                return _closeTabCommand
+                ?? (_clearAllCollectionHost = new DelegateCommand(
+                (obj) =>
+                {
+                    _appSettingService.ClearAllCollectionHistoryHost();
+                    UpdateCollectionHistoryHostInCombobox();
+                }));
+            }
+        }
 
         public event PropertyChangedEventHandler? PropertyChanged;
         public void OnPropertyChanged([CallerMemberName] string prop = "")

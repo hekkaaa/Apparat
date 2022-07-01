@@ -34,7 +34,6 @@ namespace Apparat.Services
                 HistoryHost newItem = new HistoryHost() { Hostname = newhost };
                 _appSettingRepository.AddNewHost(newItem);
             }
-            
         }
 
         public List<string> GetLastFiveHistoryHost()
@@ -49,6 +48,12 @@ namespace Apparat.Services
             }
 
             return resultCollection;
+        }
+
+        public bool ClearAllCollectionHistoryHost()
+        {
+            _appSettingRepository.ClearAllTable();
+            return true;
         }
     }
 }

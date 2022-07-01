@@ -7,5 +7,6 @@ namespace Apparat.Services.Interfaces
     {
         void AddHostInHistory(string newhost);
         List<string> GetLastFiveHistoryHost();
+        bool ClearAllCollectionHistoryHost();
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Data.Repositories.Connect;
 using System.Diagnostics;
 using System.Windows;
+using System.Windows.Input;
 using System.Windows.Navigation;
 using WinObserver.ViewModel;
 
@@ -25,6 +26,11 @@ namespace WinObserver
         {
             Process.Start(new ProcessStartInfo("cmd", $"/c start {e.Uri.AbsoluteUri}"));
             e.Handled = true;
+        }
+
+        public void ClearOutlinedComboBox_Click(object sender, RoutedEventArgs e)
+        {
+            OutlinedComboBox.Text = "";
         }
     }
 }

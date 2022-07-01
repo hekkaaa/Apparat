@@ -29,5 +29,12 @@ namespace Data.Repositories
         {
             return _context.History.OrderByDescending(x => x).Take(5).ToList();
         }
+
+        public bool ClearAllTable()
+        {
+            _context.History.RemoveRange(_context.History);
+            _context.SaveChanges();
+            return true;
+        }
     }
 }

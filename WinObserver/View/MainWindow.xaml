@@ -5,9 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WinObserver" xmlns:viewmodel="clr-namespace:WinObserver.ViewModel" xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d"
-        Title="Apparat" MinHeight="300" MinWidth="400" Height="568" Width="1024" Loaded="Window_Loaded"
+        Title="Apparat" MinHeight="700" MinWidth="940" Height="568" Width="1024" Loaded="Window_Loaded"
         WindowStartupLocation="CenterScreen"
-        
         
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
         Background="{DynamicResource MaterialDesignPaper}"
@@ -15,8 +14,8 @@
         FontWeight="DemiBold"
         FontSize="14"
         TextElement.FontSize="14"
-        FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
-        >
+        FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto">
+    
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="50"></RowDefinition>
@@ -32,8 +31,10 @@
 
         <!--Top-->
         <Grid Grid.Column="0" Grid.Row="0" Background="White" Grid.ColumnSpan="3">
-            
+            <ProgressBar
+  IsIndeterminate="True" />
         </Grid>
+        
         <!--Control panel-->
         <Grid Grid.Column="0" Grid.Row="1">
             <Grid.RowDefinitions>
@@ -41,49 +42,80 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
             
-            <!--Btn and TextBox-->
-            <Grid Grid.Row="0">
+            <!--Btn and Combobox enter hostname-->
+            <Grid Grid.Row="0" Background="WhiteSmoke">
                 <StackPanel>
                     <Grid>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="1*"/>
-                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition />
+                            <ColumnDefinition />
                         </Grid.ColumnDefinitions>
-                        <ComboBox Grid.Column="0" Grid.Row="1" Text="{Binding TextBoxHostname}" BorderBrush="{Binding BorderTextBox}"
-                              ItemsSource="{Binding CollectionRecentHost}"
-                              BorderThickness="2" Margin="5,0,5,0"
-                              materialDesign:HintAssist.Hint="Enter the hostname"
-                              materialDesign:TextFieldAssist.PrefixText="  "
-                              IsEditable="True"
-                              ToolTipService.InitialShowDelay="200" ToolTip="Example: google.com">
-                        </ComboBox>
-                        <Button Grid.Column="1" Grid.Row="1" Content="Add" Command="{Binding AddNewHost}" ToolTipService.InitialShowDelay="200" ToolTip="Add new host"/>
+                        <Button
+                              Content="Add" Command="{Binding AddNewHost}" 
+                              ToolTipService.InitialShowDelay="200" ToolTip="Add new host"
+                              Style="{StaticResource MaterialDesignFlatButton}"
+                              HorizontalAlignment="Left" Foreground="DarkSlateGray"/>
+                        <Button
+                              Content="Clear"
+                              ToolTipService.InitialShowDelay="200" ToolTip="Clear all history"
+                              Style="{StaticResource MaterialDesignFlatButton}"
+                              HorizontalAlignment="Right"
+                              Grid.Column="1"
+                              Command="{Binding ClearAllCollectionHost}" Foreground="DarkSlateGray"/>
                     </Grid>
+
+                    <ComboBox Background="White"
+                        x:Name="OutlinedComboBox"
+                        Style="{StaticResource MaterialDesignOutlinedComboBox}"
+                        Text="{Binding TextBoxHostname}" BorderBrush="{Binding BorderTextBox}"
+                        ItemsSource="{Binding CollectionRecentHost}"
+                        BorderThickness="1" Margin="7,3,7,3"
+                        materialDesign:HintAssist.Hint="Enter the hostname"
+                        materialDesign:TextFieldAssist.PrefixText="  "
+                        IsEditable="True"
+                        ShouldPreserveUserEnteredPrefix ="False"
+                        ToolTipService.InitialShowDelay="200" ToolTip="Example: google.com">
+                        <ComboBox.InputBindings>
+                            <KeyBinding Command="{Binding AddNewHost}" Key="Enter"/>
+                        </ComboBox.InputBindings>
+                    </ComboBox>
                     
-                    <TextBlock Text="{Binding TextBlockGeneralError}" Grid.Column="1" Grid.Row="2" Foreground="Red" Grid.ColumnSpan="3" HorizontalAlignment="Center" Margin="0,5,0,5"/>
+                    <TextBlock Text="{Binding TextBlockGeneralError}"  Foreground="Red" Grid.ColumnSpan="3" HorizontalAlignment="Center" Margin="0,5,0,5"/>
+
                 </StackPanel>
             </Grid>
             
             <!--Left List Hostname-->
-            <Grid Grid.Row="1">
+            <Grid Grid.Row="1" Background="WhiteSmoke">
                 <ListBox ItemsSource="{Binding HostsCollection}" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
                                <StackPanel Margin="5" Orientation="Horizontal" Width="auto" Height="auto" VerticalAlignment="Center">
-                                     <Image Source="\Resources\icons8-error.png" Visibility="{Binding ErrorHostnameVisibleIcon}" 
-                                            Width="20" Height="20" VerticalAlignment="Center"  
-                                            ToolTipService.InitialShowDelay="200" ToolTip="{Binding TextErrorToolTip}">
-                                     </Image>
+                                    <Image Source="\Resources\icons8-error.png" Visibility="{Binding ErrorHostnameVisibleIcon}" 
+                                                Width="20" Height="20" VerticalAlignment="Center"
+                                                Margin="5"
+                                                ToolTipService.InitialShowDelay="200" ToolTip="{Binding TextErrorToolTip}">
+                                         </Image>
 
-                                    <TextBlock Text="{Binding HostnameView}" VerticalAlignment="Center" Margin="5,0,0,0" />
+                                    <ProgressBar  
+                                        Style="{StaticResource MaterialDesignCircularProgressBar}"
+                                        Value="0"
+                                        IsIndeterminate="True" Margin="5"
+                                        ToolTipService.InitialShowDelay="200"
+                                        ToolTip="In work" Foreground="LightSeaGreen" 
+                                        Visibility="{Binding ValueVisibleProgressBar}">
+                                    </ProgressBar>
+
+                                <TextBlock Text="{Binding HostnameView}" VerticalAlignment="Center" Margin="5,0,0,0" />
                                    
-                                    <Button x:Name="ControlBtn" Command="{Binding StartCommand}" VerticalAlignment="Center"
-                                        Style="{StaticResource MaterialDesignIconForegroundButton}"
-                                        ToolTip="MaterialDesignIconForegroundButton"
-                                         Height="24" Width="24"    
-                                         IsEnabled="{Binding SettingIsEnableControlBtn}" Opacity="{ Binding SettingOpacityControlBtn}"
-                                         Margin="15,0,7,0">
-                                        <materialDesign:PackIcon Kind="{Binding ControlBtnHost}" />
+                                    <Button x:Name="ControlBtn" Command="{Binding StartCommand}" 
+                                            VerticalAlignment="Center"
+                                            Style="{StaticResource MaterialDesignIconForegroundButton}"
+                                            ToolTip="MaterialDesignIconForegroundButton"
+                                            Height="24" Width="24"    
+                                            IsEnabled="{Binding SettingIsEnableControlBtn}" Opacity="{ Binding SettingOpacityControlBtn}"
+                                            Margin="15,0,7,0">
+                                            <materialDesign:PackIcon Kind="{Binding ControlBtnHost}" />
                                     </Button>
                                  
                                     <Button Command="{Binding DataContext.CloseTabCommand,RelativeSource={RelativeSource AncestorType={x:Type Window}}}" 
@@ -93,13 +125,13 @@
                                             Height="24" Width="24">  
                                         <materialDesign:PackIcon Kind="Delete" Width="20" Height="20"/>
                                     </Button>
-
+                               
                             </StackPanel>
                         </DataTemplate>
                     </ListBox.ItemTemplate>
                     <ListBox.ItemContainerStyle>
                         <Style TargetType="{x:Type ListBoxItem}">
-                            <Setter Property="Background" Value="White"/>
+                            <!--<Setter Property="Background" Value="White"/>-->
                             <Setter Property="Foreground" Value="DarkSlateGray"/>
                             <Style.Triggers>
                                 <Trigger Property="IsSelected" Value="True">

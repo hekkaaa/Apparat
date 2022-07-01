@@ -43,6 +43,7 @@ namespace WinObserver.Service
             {
                 try
                 {
+                    appViewModel.WorkingProggresbarInListBoxHostanme(true);
                     appViewModel.ManagementEnableGeneralControlBtn(false);
                     IEnumerable<string> objectTracertResult = _tracerouteHelper.GetIpTraceRoute(hostname);
                     
@@ -56,6 +57,7 @@ namespace WinObserver.Service
                         UpdateStatistic();
                         if (_token.IsCancellationRequested)
                         {
+                            appViewModel.WorkingProggresbarInListBoxHostanme(false);
                             appViewModel.ManagementEnableGeneralControlBtn(false);
                             _cancellationTokenSource!.Dispose();
                             RestartToken();
@@ -68,6 +70,7 @@ namespace WinObserver.Service
                 {
                     _cancellationTokenSource!.Cancel();
                     _cancellationTokenSource.Dispose();
+                    appViewModel.WorkingProggresbarInListBoxHostanme(false);
                     appViewModel.ErrorNameHostname();
                 }
 

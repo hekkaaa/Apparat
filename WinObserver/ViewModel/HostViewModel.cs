@@ -71,7 +71,7 @@ namespace Apparat.ViewModel
             get { return _TextErrorToolTip; }
         }
 
-        private string _errorHostnameVisibleIcon = "Hidden";
+        private string _errorHostnameVisibleIcon = "Collapsed";
         public string ErrorHostnameVisibleIcon
         {
             get { return _errorHostnameVisibleIcon; }
@@ -99,12 +99,33 @@ namespace Apparat.ViewModel
             set { _settingIsEnableControlBtn = value; OnPropertyChanged(); }
         }
 
+        private string _valueVisibleProgressBar = "Hidden";
+        public string ValueVisibleProgressBar
+        {
+            get { return _valueVisibleProgressBar; }
+            set { _valueVisibleProgressBar = value; OnPropertyChanged(); }
+        }
+
         public void ErrorNameHostname()
         {
             ControlBtnHost = IconeMap.Start;
+            ValueVisibleProgressBar = "Collapsed";
             ErrorHostnameVisibleIcon = "Visible";
             SettingIsEnableControlBtn = "False";
             SettingOpacityControlBtn = "0.5";
+        }
+
+
+        public void WorkingProggresbarInListBoxHostanme(bool boolValue)
+        {
+            if (boolValue)
+            {
+                ValueVisibleProgressBar = "Visible";
+            }
+            else
+            {
+                ValueVisibleProgressBar = "Hidden";
+            }
         }
 
         public void ManagementEnableGeneralControlBtn(bool obj)
