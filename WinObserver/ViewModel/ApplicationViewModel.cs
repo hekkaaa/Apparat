@@ -2,6 +2,7 @@
 using Apparat.Services.Interfaces;
 using Apparat.ViewModel;
 using Data.Connect;
+using Data.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -25,7 +26,9 @@ namespace WinObserver.ViewModel
         public ApplicationViewModel()
         {
             _hostsCollection = new ObservableCollection<HostViewModel>();
-            _appSettingService = new AppSettingService();
+            // init object class
+            _appSettingService = new AppSettingService(new AppSettingRepository(new ApplicationSettingContext()));
+
             UpdateCollectionHistoryHostInCombobox();
         }
 
@@ -185,6 +188,5 @@ namespace WinObserver.ViewModel
                 BorderTextBox = "#FFABADB3";
             });
         }
-
     }
 }

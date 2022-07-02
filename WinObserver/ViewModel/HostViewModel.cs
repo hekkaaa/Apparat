@@ -1,4 +1,5 @@
 ﻿using Apparat.Helpers;
+using Apparat.Services.Interfaces;
 using Apparat.ViewModel.Interfaces;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -10,7 +11,7 @@ namespace Apparat.ViewModel
 {
     public class HostViewModel : INotifyPropertyChanged, IHostViewModel
     {
-        private readonly TracertService? _tracerService;
+        private readonly ITracertService? _tracerService;
         private bool _statusWorkDataGrid = false;
         public ReadOnlyObservableCollection<TracertModel>? TracertObject { get; set; }
         private string? _hostnameView;
@@ -25,9 +26,8 @@ namespace Apparat.ViewModel
         public HostViewModel()
         {
             _tracerService = new TracertService();
-            TracertObject = _tracerService._tracertValue;
+            TracertObject = _tracerService.GetActualCollectionTracertValue();
         }
-
 
         private DelegateCommand? _startCommand { get; }
         public DelegateCommand StartCommand
@@ -42,12 +42,10 @@ namespace Apparat.ViewModel
                         _tracerService!.StopTraceroute();
 
                         _statusWorkDataGrid = false;
-                        //ControlBtnName = ViewStatusStringBtn.Start.ToString();
                     }
                     else
                     {
                         //RestartInfoInDataGrid();
-
                         ControlBtnHost = IconeMap.Stop;
                         _tracerService.StartTraceroute(HostnameView, this);
                         _statusWorkDataGrid = true;
@@ -64,7 +62,6 @@ namespace Apparat.ViewModel
             set { _generalPanelModel!.NameControlBtn = value; OnPropertyChanged(); }
         }
 
-        // Можно потом придумать глобальный стиль для всех.
         private string _TextErrorToolTip = "The hostname is entered incorrectly";
         public string TextErrorToolTip
         {

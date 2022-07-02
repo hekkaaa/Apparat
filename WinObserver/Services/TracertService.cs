@@ -82,6 +82,11 @@ namespace WinObserver.Service
             _cancellationTokenSource!.Cancel();
         }
 
+        public ReadOnlyObservableCollection<TracertModel> GetActualCollectionTracertValue()
+        {
+            return _tracertValue;
+        }
+
 
         public event PropertyChangedEventHandler? PropertyChanged;
         public void OnPropertyChanged([CallerMemberName] string prop = "")

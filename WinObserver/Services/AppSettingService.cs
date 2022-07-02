@@ -11,9 +11,9 @@ namespace Apparat.Services
     {
         private readonly IAppSettingRepository _appSettingRepository;
 
-        public AppSettingService()
+        public AppSettingService(IAppSettingRepository repository)
         {
-            _appSettingRepository = new AppSettingRepository(new ApplicationSettingContext());
+            _appSettingRepository = repository;
         }
 
         public void AddHostInHistory(string newhost)
