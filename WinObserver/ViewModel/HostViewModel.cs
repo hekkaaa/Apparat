@@ -15,7 +15,6 @@ namespace Apparat.ViewModel
         private bool _statusWorkDataGrid = false;
         public ReadOnlyObservableCollection<TracertModel>? TracertObject { get; set; }
         private string? _hostnameView;
-        private GeneralPanelModel? _generalPanelModel;
 
         public string? HostnameView
         {
@@ -39,15 +38,14 @@ namespace Apparat.ViewModel
                     if (_statusWorkDataGrid)
                     {
                         ControlBtnHost = IconeMap.Restart;
-                        _tracerService!.StopTraceroute();
-
+                        _tracerService!.StopStreamTracerouteHost();
                         _statusWorkDataGrid = false;
                     }
                     else
                     {
                         //RestartInfoInDataGrid();
                         ControlBtnHost = IconeMap.Stop;
-                        _tracerService.StartTraceroute(HostnameView, this);
+                        _tracerService!.StartStreamTracerouteHost(HostnameView!, this);
                         _statusWorkDataGrid = true;
                         //RemoveInfoinTextBoxPanel();
                     }
@@ -56,6 +54,7 @@ namespace Apparat.ViewModel
             }
         }
 
+        private GeneralPanelModel? _generalPanelModel;
         public string ControlBtnName
         {
             get { return _generalPanelModel!.NameControlBtn; }
@@ -82,14 +81,14 @@ namespace Apparat.ViewModel
             set { _controlBtnHost = value; OnPropertyChanged(); }
         }
 
-        private string _settingOpacityControlBtn;
+        private string _settingOpacityControlBtn = "1.0";
         public string SettingOpacityControlBtn
         {
             get { return _settingOpacityControlBtn; }
             set { _settingOpacityControlBtn = value; OnPropertyChanged(); }
         }
 
-        private string _settingIsEnableControlBtn;
+        private string _settingIsEnableControlBtn = "True";
         public string SettingIsEnableControlBtn
         {
             get { return _settingIsEnableControlBtn; }

@@ -105,7 +105,8 @@
                                     </ProgressBar>
 
                                 <TextBlock Text="{Binding HostnameView}" VerticalAlignment="Center" Margin="5,0,0,0" />
-                                   
+                                    
+                                    <!--Start\Stop\Restart btn-->
                                     <Button x:Name="ControlBtn" Command="{Binding StartCommand}" 
                                             VerticalAlignment="Center"
                                             Style="{StaticResource MaterialDesignIconForegroundButton}"
@@ -115,7 +116,8 @@
                                             Margin="15,0,7,0">
                                             <materialDesign:PackIcon Kind="{Binding ControlBtnHost}" />
                                     </Button>
-                                 
+                                   
+                                    <!--Delete button-->
                                     <Button Command="{Binding DataContext.CloseTabCommand,RelativeSource={RelativeSource AncestorType={x:Type Window}}}" 
                                             CommandParameter="{Binding}" VerticalAlignment="Center" 
                                             Style="{StaticResource MaterialDesignIconForegroundButton}"
@@ -169,9 +171,8 @@
                                          BorderThickness="0" Width="auto" Height="auto"
                                          Style="{StaticResource MaterialDesignIconForegroundButton}"
                                          ToolTipService.InitialShowDelay="300"
-                                         ToolTip="Delete Ping"
-                                         IsEnabled="{Binding DataContext.ControlsEnabled, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}">
-                                    <materialDesign:PackIcon Kind="Close" Width="auto" Height="auto"/>
+                                         ToolTip="Delete Ping">
+                                   <materialDesign:PackIcon Kind="Close" Width="auto" Height="auto"/>
                                 </Button>
                             </StackPanel>
                     </DataTemplate>
