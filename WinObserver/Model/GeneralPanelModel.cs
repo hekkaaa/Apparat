@@ -5,7 +5,7 @@ namespace WinObserver.Model
 {
     public class GeneralPanelModel : INotifyPropertyChanged
     {
-        private string _nameStartBtn = ViewStatusStringBtn.Start.ToString();
+        private string _nameStartBtn = ViewStatusStringBtnEnum.Start.ToString();
 
         public string NameControlBtn
         {
