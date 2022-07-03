@@ -16,8 +16,8 @@ namespace WinObserver.ViewModel
     public class ApplicationViewModel : INotifyPropertyChanged
     {
         const string VERSION_APP = "Version: 0.1.10 - Beta";
-        private string _hostname;
-        private string _textBlockGeneralError;
+        private string _hostname = String.Empty;
+        private string _textBlockGeneralError = String.Empty;
         private string _borderTextBox = "#FFABADB3";
 
         private ObservableCollection<HostViewModel> _hostsCollection;
@@ -71,7 +71,7 @@ namespace WinObserver.ViewModel
         }
 
 
-        private List<string> _collectionRecentHost;
+        private List<string> _collectionRecentHost = null!;
         public List<string> CollectionRecentHost
         {
             get
@@ -92,7 +92,7 @@ namespace WinObserver.ViewModel
         }
 
 
-        private DelegateCommand _addNewHost;
+        private DelegateCommand _addNewHost = null!;
         public DelegateCommand AddNewHost
         {
             get
@@ -125,7 +125,7 @@ namespace WinObserver.ViewModel
             }
         }
 
-        private DelegateCommand _closeTabCommand;
+        private DelegateCommand _closeTabCommand = null!;
         public DelegateCommand CloseTabCommand
         {
             get
@@ -134,12 +134,13 @@ namespace WinObserver.ViewModel
                 ?? (_closeTabCommand = new DelegateCommand(
                 (obj) =>
                 {
-                    HostsCollection.Remove(obj as HostViewModel);
+                    HostViewModel? deleteObject = obj as HostViewModel;
+                    if(deleteObject != null) HostsCollection.Remove(deleteObject!);
                 }));
             }
         }
 
-        private DelegateCommand _clearAllCollectionHost;
+        private DelegateCommand _clearAllCollectionHost = null!;
         public DelegateCommand ClearAllCollectionHost
         {
             get
