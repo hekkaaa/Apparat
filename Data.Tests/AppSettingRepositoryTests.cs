@@ -10,9 +10,7 @@ namespace Data.Tests
     {
         private AppSettingRepository _testAppSettingRepository;
         private ApplicationSettingContext _context;
-
         private DbContextOptions<ApplicationSettingContext> _contextOptions;
-
 
         [SetUp]
         public void Setup()
