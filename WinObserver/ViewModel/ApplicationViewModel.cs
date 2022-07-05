@@ -1,4 +1,5 @@
-﻿using Apparat.Services;
+﻿using Apparat.Commands;
+using Apparat.Services;
 using Apparat.Services.Interfaces;
 using Apparat.ViewModel;
 using Data.Connect;
@@ -9,7 +10,6 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
-using WinObserver.Service;
 
 namespace WinObserver.ViewModel
 {
@@ -135,7 +135,8 @@ namespace WinObserver.ViewModel
                 (obj) =>
                 {
                     HostViewModel? deleteObject = obj as HostViewModel;
-                    if(deleteObject != null) HostsCollection.Remove(deleteObject!);
+                    deleteObject.ControlStopStream();
+                    if (deleteObject != null) HostsCollection.Remove(deleteObject!);
                 }));
             }
         }
@@ -145,7 +146,7 @@ namespace WinObserver.ViewModel
         {
             get
             {
-                return _closeTabCommand
+                return _clearAllCollectionHost
                 ?? (_clearAllCollectionHost = new DelegateCommand(
                 (obj) =>
                 {
