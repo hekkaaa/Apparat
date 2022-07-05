@@ -80,7 +80,7 @@
                         </ComboBox.InputBindings>
                     </ComboBox>
 
-                    <Grid x:Name="StubElement" Margin="0,5,0,5"/>
+                    <Grid x:Name="StubElement" Margin="0,5,0,7"/>
 
                 </StackPanel>
             </Grid>
