@@ -5,7 +5,7 @@ namespace Apparat.Services.Interfaces
 {
     public interface IAppSettingService
     {
-        void AddHostInHistory(string newhost);
+        int AddHostInHistory(string newhost);
         List<string> GetLastFiveHistoryHost();
         bool ClearAllCollectionHistoryHost();
     }

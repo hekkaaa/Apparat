@@ -1,9 +1,12 @@
-﻿using Apparat.Helpers;
+﻿using Apparat.Commands;
+using Apparat.Helpers;
 using Apparat.Services.Interfaces;
 using Apparat.ViewModel.Interfaces;
+using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Text;
 using WinObserver.Model;
 using WinObserver.Service;
 
@@ -37,14 +40,13 @@ namespace Apparat.ViewModel
                 {
                     if (_statusWorkDataGrid)
                     {
-                        ControlBtnHost = IconeMap.Restart;
-                        _tracerService!.StopStreamTracerouteHost();
-                        _statusWorkDataGrid = false;
+                        ControlStopStream();
                     }
                     else
                     {
                         //RestartInfoInDataGrid();
                         ControlBtnHost = IconeMap.Stop;
+                        ControlDatatime();
                         _tracerService!.StartStreamTracerouteHost(HostnameView!, this);
                         _statusWorkDataGrid = true;
                         //RemoveInfoinTextBoxPanel();
@@ -102,9 +104,32 @@ namespace Apparat.ViewModel
             set { _valueVisibleProgressBar = value; OnPropertyChanged(); }
         }
 
+        private string _startDatatime = string.Empty;
+        public string StartDatatime
+        {
+            get { return _startDatatime; }
+            set { _startDatatime = value; OnPropertyChanged(); }
+        }
+
+        private string _visibleDatatimeTextBlock = "Collapsed";
+        public string VisibleDatatimeTextBlock
+        {
+            get { return _visibleDatatimeTextBlock; }
+            set { _visibleDatatimeTextBlock = value; OnPropertyChanged(); }
+        }
+        
+
+        public void ControlStopStream()
+        {
+            ControlBtnHost = IconeMap.Restart;
+            _tracerService!.StopStreamTracerouteHost();
+            _statusWorkDataGrid = false;
+        }
+
         public void ErrorNameHostname()
         {
             ControlBtnHost = IconeMap.Start;
+            StartDatatime = "Error";
             ValueVisibleProgressBar = "Collapsed";
             ErrorHostnameVisibleIcon = "Visible";
             SettingIsEnableControlBtn = "False";
@@ -143,6 +168,15 @@ namespace Apparat.ViewModel
         {
             if (PropertyChanged != null)
                 PropertyChanged(this, new PropertyChangedEventArgs(prop));
+        }
+
+        private void ControlDatatime()
+        {   
+            DateTime dt = DateTime.Now;
+            StringBuilder sb = new StringBuilder("Start Time: ");
+            sb.Append(dt.ToString("T"));
+            StartDatatime = sb.ToString();
+            VisibleDatatimeTextBlock = "Visible";
         }
     }
 }
