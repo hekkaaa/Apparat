@@ -70,6 +70,8 @@
                               BorderThickness="1" Margin="7,3,7,3"
                               materialDesign:HintAssist.Hint="Enter the hostname"
                               materialDesign:TextFieldAssist.PrefixText="  "
+                              materialDesign:HintAssist.HelperText ="{Binding TextBlockGeneralError}"
+                              materialDesign:HintAssist.HelperTextFontSize="12"
                               IsEditable="True"
                               ShouldPreserveUserEnteredPrefix ="False"
                               ToolTipService.InitialShowDelay="200" ToolTip="Example: google.com">
@@ -77,8 +79,8 @@
                             <KeyBinding Command="{Binding AddNewHost}" Key="Enter"/>
                         </ComboBox.InputBindings>
                     </ComboBox>
-                    
-                    <TextBlock Text="{Binding TextBlockGeneralError}"  Foreground="Red" Grid.ColumnSpan="3" HorizontalAlignment="Center" Margin="0,5,0,5"/>
+
+                    <Grid x:Name="StubElement" Margin="0,5,0,5"/>
 
                 </StackPanel>
             </Grid>
