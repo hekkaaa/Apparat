@@ -1,8 +1,8 @@
-﻿using System.Collections.ObjectModel;
+﻿using Apparat.Commands;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using WinObserver.Model;
-using WinObserver.Service;
 
 namespace Apparat.ViewModel.Interfaces
 {
@@ -20,6 +20,7 @@ namespace Apparat.ViewModel.Interfaces
 
         event PropertyChangedEventHandler? PropertyChanged;
 
+        void ControlStopStream();
         void ErrorNameHostname();
         void ManagementEnableGeneralControlBtn(bool obj);
         void WorkingProggresbarInListBoxHostanme(bool boolValue);

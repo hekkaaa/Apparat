@@ -7,7 +7,7 @@ namespace WinObserver.Model
     public class TracertModel : INotifyPropertyChanged
     {
         private int _numberHostname;
-        private string _hostname;
+        private string _hostname = string.Empty;
         private int? _lastDelay;
 
         private int _minPing = 0;

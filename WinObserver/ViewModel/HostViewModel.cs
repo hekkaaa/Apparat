@@ -1,8 +1,12 @@
-﻿using Apparat.Helpers;
+﻿using Apparat.Commands;
+using Apparat.Helpers;
+using Apparat.Services.Interfaces;
 using Apparat.ViewModel.Interfaces;
+using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Text;
 using WinObserver.Model;
 using WinObserver.Service;
 
@@ -10,11 +14,10 @@ namespace Apparat.ViewModel
 {
     public class HostViewModel : INotifyPropertyChanged, IHostViewModel
     {
-        private readonly TracertService? _tracerService;
+        private readonly ITracertService? _tracerService;
         private bool _statusWorkDataGrid = false;
         public ReadOnlyObservableCollection<TracertModel>? TracertObject { get; set; }
         private string? _hostnameView;
-        private GeneralPanelModel? _generalPanelModel;
 
         public string? HostnameView
         {
@@ -25,9 +28,8 @@ namespace Apparat.ViewModel
         public HostViewModel()
         {
             _tracerService = new TracertService();
-            TracertObject = _tracerService._tracertValue;
+            TracertObject = _tracerService.GetActualCollectionTracertValue();
         }
-
 
         private DelegateCommand? _startCommand { get; }
         public DelegateCommand StartCommand
@@ -38,18 +40,14 @@ namespace Apparat.ViewModel
                 {
                     if (_statusWorkDataGrid)
                     {
-                        ControlBtnHost = IconeMap.Restart;
-                        _tracerService!.StopTraceroute();
-
-                        _statusWorkDataGrid = false;
-                        //ControlBtnName = ViewStatusStringBtn.Start.ToString();
+                        ControlStopStream();
                     }
                     else
                     {
                         //RestartInfoInDataGrid();
-
                         ControlBtnHost = IconeMap.Stop;
-                        _tracerService.StartTraceroute(HostnameView, this);
+                        ControlDatatime();
+                        _tracerService!.StartStreamTracerouteHost(HostnameView!, this);
                         _statusWorkDataGrid = true;
                         //RemoveInfoinTextBoxPanel();
                     }
@@ -58,13 +56,13 @@ namespace Apparat.ViewModel
             }
         }
 
+        private GeneralPanelModel? _generalPanelModel;
         public string ControlBtnName
         {
             get { return _generalPanelModel!.NameControlBtn; }
             set { _generalPanelModel!.NameControlBtn = value; OnPropertyChanged(); }
         }
 
-        // Можно потом придумать глобальный стиль для всех.
         private string _TextErrorToolTip = "The hostname is entered incorrectly";
         public string TextErrorToolTip
         {
@@ -85,14 +83,14 @@ namespace Apparat.ViewModel
             set { _controlBtnHost = value; OnPropertyChanged(); }
         }
 
-        private string _settingOpacityControlBtn;
+        private string _settingOpacityControlBtn = "1.0";
         public string SettingOpacityControlBtn
         {
             get { return _settingOpacityControlBtn; }
             set { _settingOpacityControlBtn = value; OnPropertyChanged(); }
         }
 
-        private string _settingIsEnableControlBtn;
+        private string _settingIsEnableControlBtn = "True";
         public string SettingIsEnableControlBtn
         {
             get { return _settingIsEnableControlBtn; }
@@ -106,9 +104,32 @@ namespace Apparat.ViewModel
             set { _valueVisibleProgressBar = value; OnPropertyChanged(); }
         }
 
+        private string _startDatatime = string.Empty;
+        public string StartDatatime
+        {
+            get { return _startDatatime; }
+            set { _startDatatime = value; OnPropertyChanged(); }
+        }
+
+        private string _visibleDatatimeTextBlock = "Collapsed";
+        public string VisibleDatatimeTextBlock
+        {
+            get { return _visibleDatatimeTextBlock; }
+            set { _visibleDatatimeTextBlock = value; OnPropertyChanged(); }
+        }
+        
+
+        public void ControlStopStream()
+        {
+            ControlBtnHost = IconeMap.Restart;
+            _tracerService!.StopStreamTracerouteHost();
+            _statusWorkDataGrid = false;
+        }
+
         public void ErrorNameHostname()
         {
             ControlBtnHost = IconeMap.Start;
+            StartDatatime = "Error";
             ValueVisibleProgressBar = "Collapsed";
             ErrorHostnameVisibleIcon = "Visible";
             SettingIsEnableControlBtn = "False";
@@ -147,6 +168,15 @@ namespace Apparat.ViewModel
         {
             if (PropertyChanged != null)
                 PropertyChanged(this, new PropertyChangedEventArgs(prop));
+        }
+
+        private void ControlDatatime()
+        {   
+            DateTime dt = DateTime.Now;
+            StringBuilder sb = new StringBuilder("Start Time: ");
+            sb.Append(dt.ToString("T"));
+            StartDatatime = sb.ToString();
+            VisibleDatatimeTextBlock = "Visible";
         }
     }
 }

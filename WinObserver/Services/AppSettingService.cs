@@ -1,7 +1,5 @@
 ﻿using Apparat.Services.Interfaces;
-using Data.Connect;
 using Data.Entities;
-using Data.Repositories;
 using Data.Repositories.Interfaces;
 using System.Collections.Generic;
 
@@ -11,29 +9,32 @@ namespace Apparat.Services
     {
         private readonly IAppSettingRepository _appSettingRepository;
 
-        public AppSettingService()
+        public AppSettingService(IAppSettingRepository repository)
         {
-            _appSettingRepository = new AppSettingRepository(new ApplicationSettingContext());
+            _appSettingRepository = repository;
         }
 
-        public void AddHostInHistory(string newhost)
+        public int AddHostInHistory(string newhost)
         {
             List<string> checkCollection = GetLastFiveHistoryHost();
             bool flag = false;
 
-            foreach (string check in checkCollection)
+            foreach (string checkHostname in checkCollection)
             {
-                if(check == newhost)
+                if (checkHostname == newhost)
                 {
                     flag = true;
+                    break;
                 }
             }
 
             if (!flag)
             {
                 HistoryHost newItem = new HistoryHost() { Hostname = newhost };
-                _appSettingRepository.AddNewHost(newItem);
+                return _appSettingRepository.AddNewHost(newItem);
             }
+
+            return 0;
         }
 
         public List<string> GetLastFiveHistoryHost()

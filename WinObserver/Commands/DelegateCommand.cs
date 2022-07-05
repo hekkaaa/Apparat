@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Input;
 
-namespace WinObserver.Service
+namespace Apparat.Commands
 {
     public class DelegateCommand : ICommand
     {
@@ -20,14 +20,14 @@ namespace WinObserver.Service
             this.canExecute = canExecute;
         }
 
-        public bool CanExecute(object parameter)
+        public bool CanExecute(object? parameter)
         {
-            return this.canExecute == null || this.canExecute(parameter);
+            return canExecute == null || canExecute(parameter!);
         }
 
-        public void Execute(object parameter)
+        public void Execute(object? parameter)
         {
-            this.execute(parameter);
+            execute(parameter!);
         }
     }
 }

@@ -1,17 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using WinObserver.Model;
+﻿using WinObserver.Model;
 
 namespace WinObserver.Algorithms
 {
     public static class DataGridStatisticAlgorithm
     {
-        public static int RateLosses(int countPacket, int countLossPacket)
+        public static int CalculationofLossesOnElementsHost(TracertModel TraceElement)
         {
-            int result = countLossPacket * 100 / countPacket;
+            int result = TraceElement.CounterLossPacket * 100 / TraceElement.CounterPacket;
             return result;
         }
 

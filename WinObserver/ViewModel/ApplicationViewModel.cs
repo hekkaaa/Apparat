@@ -1,22 +1,23 @@
-﻿using Apparat.Services;
+﻿using Apparat.Commands;
+using Apparat.Services;
 using Apparat.Services.Interfaces;
 using Apparat.ViewModel;
 using Data.Connect;
+using Data.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
-using WinObserver.Service;
 
 namespace WinObserver.ViewModel
 {
     public class ApplicationViewModel : INotifyPropertyChanged
     {
-        const string VERSION_APP = "Version: 0.1.9 - Beta";
-        private string _hostname;
-        private string _textBlockGeneralError;
+        const string VERSION_APP = "Version: 0.1.12 - Beta";
+        private string _hostname = String.Empty;
+        private string _textBlockGeneralError = String.Empty;
         private string _borderTextBox = "#FFABADB3";
 
         private ObservableCollection<HostViewModel> _hostsCollection;
@@ -25,7 +26,9 @@ namespace WinObserver.ViewModel
         public ApplicationViewModel()
         {
             _hostsCollection = new ObservableCollection<HostViewModel>();
-            _appSettingService = new AppSettingService();
+            // init object class
+            _appSettingService = new AppSettingService(new AppSettingRepository(new ApplicationSettingContext()));
+
             UpdateCollectionHistoryHostInCombobox();
         }
 
@@ -68,7 +71,7 @@ namespace WinObserver.ViewModel
         }
 
 
-        private List<string> _collectionRecentHost;
+        private List<string> _collectionRecentHost = null!;
         public List<string> CollectionRecentHost
         {
             get
@@ -89,7 +92,7 @@ namespace WinObserver.ViewModel
         }
 
 
-        private DelegateCommand _addNewHost;
+        private DelegateCommand _addNewHost = null!;
         public DelegateCommand AddNewHost
         {
             get
@@ -122,7 +125,7 @@ namespace WinObserver.ViewModel
             }
         }
 
-        private DelegateCommand _closeTabCommand;
+        private DelegateCommand _closeTabCommand = null!;
         public DelegateCommand CloseTabCommand
         {
             get
@@ -131,17 +134,19 @@ namespace WinObserver.ViewModel
                 ?? (_closeTabCommand = new DelegateCommand(
                 (obj) =>
                 {
-                    HostsCollection.Remove(obj as HostViewModel);
+                    HostViewModel? deleteObject = obj as HostViewModel;
+                    deleteObject.ControlStopStream();
+                    if (deleteObject != null) HostsCollection.Remove(deleteObject!);
                 }));
             }
         }
 
-        private DelegateCommand _clearAllCollectionHost;
+        private DelegateCommand _clearAllCollectionHost = null!;
         public DelegateCommand ClearAllCollectionHost
         {
             get
             {
-                return _closeTabCommand
+                return _clearAllCollectionHost
                 ?? (_clearAllCollectionHost = new DelegateCommand(
                 (obj) =>
                 {
@@ -185,6 +190,5 @@ namespace WinObserver.ViewModel
                 BorderTextBox = "#FFABADB3";
             });
         }
-
     }
 }

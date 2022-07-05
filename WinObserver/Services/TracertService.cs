@@ -1,43 +1,38 @@
 ﻿using Apparat.Helpers;
+using Apparat.Helpers.Interfaces;
 using Apparat.Services.Interfaces;
 using Apparat.ViewModel.Interfaces;
-using NetObserver.PingUtility;
-using NetObserver.TracerouteUtility;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Net.NetworkInformation;
-using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
-using WinObserver.Algorithms;
 using WinObserver.Model;
 
 namespace WinObserver.Service
 {
-    public class TracertService : INotifyPropertyChanged, ITracertService
+    public class TracertService : ITracertService
     {
-        private ObservableCollection<TracertModel> _innerTracertValue;
-        public readonly ReadOnlyObservableCollection<TracertModel> _tracertValue;
-
-        public readonly DataGridModel _gridTracert;
-        private readonly Traceroute _tracerouteHelper;
+        private ObservableCollection<TracertModel> _innerCollectionTracerouteValue;
+        public readonly ReadOnlyObservableCollection<TracertModel> _collectionTracerouteValue;
+        private readonly IHostRouteHelper _hostRouteHelper;
+        private readonly IUpdateStatisticOfTracerouteElementsHelper _updateInfoStatistic;
 
         CancellationTokenSource? _cancellationTokenSource;
         CancellationToken _token;
 
         public TracertService()
         {
-            _innerTracertValue = new ObservableCollection<TracertModel>();
-            _tracertValue = new ReadOnlyObservableCollection<TracertModel>(_innerTracertValue);
-            _gridTracert = new DataGridModel();
-            _tracerouteHelper = new Traceroute();
-
+            _innerCollectionTracerouteValue = new ObservableCollection<TracertModel>();
+            _collectionTracerouteValue = new ReadOnlyObservableCollection<TracertModel>(_innerCollectionTracerouteValue);
+            _hostRouteHelper = new HostRouteHelper();
+            _updateInfoStatistic = new UpdateStatisticOfTracerouteElementsHelper();
             _cancellationTokenSource = new CancellationTokenSource();
             _token = _cancellationTokenSource!.Token;
         }
 
-        public void StartTraceroute(string hostname, IHostViewModel appViewModel)
+        public void StartStreamTracerouteHost(string hostname, IHostViewModel appViewModel)
         {
             ThreadPool.QueueUserWorkItem(new WaitCallback(obj =>
             {
@@ -45,16 +40,18 @@ namespace WinObserver.Service
                 {
                     appViewModel.WorkingProggresbarInListBoxHostanme(true);
                     appViewModel.ManagementEnableGeneralControlBtn(false);
-                    IEnumerable<string> objectTracertResult = _tracerouteHelper.GetIpTraceRoute(hostname);
-                    
+                   
+                   
                     ClearOldTable();
-                    FillingNewtable(objectTracertResult);
+                    IEnumerable<string> createNewRouteList = _hostRouteHelper.CreateNewRouteCollection(hostname);
+                    _hostRouteHelper.FillingNewRoute(ref _innerCollectionTracerouteValue, createNewRouteList);
+                    
                     appViewModel.ManagementEnableGeneralControlBtn(true);
 
                     while (true)
                     {
                         Task.Delay(1000).Wait();
-                        UpdateStatistic();
+                        _innerCollectionTracerouteValue = _updateInfoStatistic.Update(_innerCollectionTracerouteValue);
                         if (_token.IsCancellationRequested)
                         {
                             appViewModel.WorkingProggresbarInListBoxHostanme(false);
@@ -73,23 +70,26 @@ namespace WinObserver.Service
                     appViewModel.WorkingProggresbarInListBoxHostanme(false);
                     appViewModel.ErrorNameHostname();
                 }
+                catch (Exception)
+                {
+                    _cancellationTokenSource!.Cancel();
+                    _cancellationTokenSource.Dispose();
+                    appViewModel.WorkingProggresbarInListBoxHostanme(false);
+                    appViewModel.ErrorNameHostname();
+                }
 
             }), _token);
         }
 
-        public void StopTraceroute()
+        public void StopStreamTracerouteHost()
         {
             _cancellationTokenSource!.Cancel();
         }
 
-
-        public event PropertyChangedEventHandler? PropertyChanged;
-        public void OnPropertyChanged([CallerMemberName] string prop = "")
+        public ReadOnlyObservableCollection<TracertModel> GetActualCollectionTracertValue()
         {
-            if (PropertyChanged != null)
-                PropertyChanged(this, new PropertyChangedEventArgs(prop));
+            return _collectionTracerouteValue;
         }
-
 
         private void RestartToken()
         {
@@ -101,54 +101,8 @@ namespace WinObserver.Service
         {
             App.Current.Dispatcher.BeginInvoke((System.Action)delegate
             {
-                _innerTracertValue.Clear();
-                OnPropertyChanged();
+                _innerCollectionTracerouteValue.Clear();
             });
-        }
-
-        private void UpdateStatistic()
-        {
-            IcmpRequestSender icmpUtilite = new IcmpRequestSender();
-            int countHop = 0;
-
-            foreach (TracertModel objectCollection in _innerTracertValue)
-            {
-                PingReply tmpResult = icmpUtilite.RequestIcmp(objectCollection.Hostname, 1500);
-                TracertModel tempValue = objectCollection;
-
-                if (tmpResult.Status == IPStatus.Success)
-                {
-                    tempValue.LastDelay = (int)tmpResult.RoundtripTime;
-                    tempValue.ArhivePingList!.Add((int)tmpResult.RoundtripTime);
-                    DataGridStatisticAlgorithm.UpdateMinMaxPing(ref tempValue, (int)tmpResult.RoundtripTime);
-                    DataGridStatisticAlgorithm.MiddlePing(ref tempValue);
-                    tempValue.CounterPacket++;
-                }
-                else
-                {
-                    tempValue.LastDelay = 0;
-                    tempValue.CounterPacket++;
-                    tempValue.CounterLossPacket++;
-                }
-
-                tempValue.PercentLossPacket = DataGridStatisticAlgorithm.RateLosses(tempValue.CounterPacket, tempValue.CounterLossPacket);
-                countHop++;
-            }
-        }
-
-        private void FillingNewtable(IEnumerable<string> collectionIpAddres)
-        {
-            int countHostname = 1;
-
-            foreach (string addres in collectionIpAddres)
-            {
-                App.Current.Dispatcher.BeginInvoke((System.Action)delegate
-                {
-                    _innerTracertValue.Add(new TracertModel { NumberHostname = countHostname, Hostname = addres });
-                    countHostname++;
-                    OnPropertyChanged();
-                });
-            }
         }
     }
 }

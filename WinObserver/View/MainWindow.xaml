@@ -20,11 +20,11 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="50"></RowDefinition>
             <RowDefinition Height="*"></RowDefinition>
-            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="auto"></RowDefinition>
             <RowDefinition Height="auto"></RowDefinition>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="1.1*"/>
             <ColumnDefinition Width="auto"/>
             <ColumnDefinition Width="4*"/>
         </Grid.ColumnDefinitions>
@@ -63,22 +63,24 @@
                     </Grid>
 
                     <ComboBox Background="White"
-                        x:Name="OutlinedComboBox"
-                        Style="{StaticResource MaterialDesignOutlinedComboBox}"
-                        Text="{Binding TextBoxHostname}" BorderBrush="{Binding BorderTextBox}"
-                        ItemsSource="{Binding CollectionRecentHost}"
-                        BorderThickness="1" Margin="7,3,7,3"
-                        materialDesign:HintAssist.Hint="Enter the hostname"
-                        materialDesign:TextFieldAssist.PrefixText="  "
-                        IsEditable="True"
-                        ShouldPreserveUserEnteredPrefix ="False"
-                        ToolTipService.InitialShowDelay="200" ToolTip="Example: google.com">
+                              x:Name="OutlinedComboBox"
+                              Style="{StaticResource MaterialDesignOutlinedComboBox}"
+                              Text="{Binding TextBoxHostname}" BorderBrush="{Binding BorderTextBox}"
+                              ItemsSource="{Binding CollectionRecentHost}"
+                              BorderThickness="1" Margin="7,3,7,3"
+                              materialDesign:HintAssist.Hint="Enter the hostname"
+                              materialDesign:TextFieldAssist.PrefixText="  "
+                              materialDesign:HintAssist.HelperText ="{Binding TextBlockGeneralError}"
+                              materialDesign:HintAssist.HelperTextFontSize="12"
+                              IsEditable="True"
+                              ShouldPreserveUserEnteredPrefix ="False"
+                              ToolTipService.InitialShowDelay="200" ToolTip="Example: google.com">
                         <ComboBox.InputBindings>
                             <KeyBinding Command="{Binding AddNewHost}" Key="Enter"/>
                         </ComboBox.InputBindings>
                     </ComboBox>
-                    
-                    <TextBlock Text="{Binding TextBlockGeneralError}"  Foreground="Red" Grid.ColumnSpan="3" HorizontalAlignment="Center" Margin="0,5,0,5"/>
+
+                    <Grid x:Name="StubElement" Margin="0,5,0,7"/>
 
                 </StackPanel>
             </Grid>
@@ -89,11 +91,12 @@
                     <ListBox.ItemTemplate>
                         <DataTemplate>
                                <StackPanel Margin="5" Orientation="Horizontal" Width="auto" Height="auto" VerticalAlignment="Center">
-                                    <Image Source="\Resources\icons8-error.png" Visibility="{Binding ErrorHostnameVisibleIcon}" 
+                                    
+                                   <Image Source="\Resources\icons8-error.png" Visibility="{Binding ErrorHostnameVisibleIcon}" 
                                                 Width="20" Height="20" VerticalAlignment="Center"
                                                 Margin="5,0,5,0"
                                                 ToolTipService.InitialShowDelay="200" ToolTip="{Binding TextErrorToolTip}">
-                                         </Image>
+                                    </Image>
 
                                     <ProgressBar  
                                         Style="{StaticResource MaterialDesignCircularProgressBar}"
@@ -104,8 +107,12 @@
                                         Visibility="{Binding ValueVisibleProgressBar}">
                                     </ProgressBar>
 
-                                <TextBlock Text="{Binding HostnameView}" VerticalAlignment="Center" Margin="5,0,0,0" />
-                                   
+                                    <StackPanel Margin="5,5,0,0">
+                                        <TextBlock Text="{Binding HostnameView}" FontWeight="Bold" />          
+                                        <TextBlock Text="{Binding StartDatatime}" Visibility="{Binding VisibleDatatimeTextBlock}" FontSize="10" Foreground="LightSlateGray"/>
+                                    </StackPanel>
+                                    
+                                    <!--Start\Stop\Restart btn-->
                                     <Button x:Name="ControlBtn" Command="{Binding StartCommand}" 
                                             VerticalAlignment="Center"
                                             Style="{StaticResource MaterialDesignIconForegroundButton}"
@@ -115,7 +122,8 @@
                                             Margin="15,0,7,0">
                                             <materialDesign:PackIcon Kind="{Binding ControlBtnHost}" />
                                     </Button>
-                                 
+                                   
+                                    <!--Delete button-->
                                     <Button Command="{Binding DataContext.CloseTabCommand,RelativeSource={RelativeSource AncestorType={x:Type Window}}}" 
                                             CommandParameter="{Binding}" VerticalAlignment="Center" 
                                             Style="{StaticResource MaterialDesignIconForegroundButton}"
@@ -123,7 +131,6 @@
                                             Height="24" Width="24">  
                                         <materialDesign:PackIcon Kind="Delete" Width="20" Height="20"/>
                                     </Button>
-                               
                             </StackPanel>
                         </DataTemplate>
                     </ListBox.ItemTemplate>
@@ -169,9 +176,8 @@
                                          BorderThickness="0" Width="auto" Height="auto"
                                          Style="{StaticResource MaterialDesignIconForegroundButton}"
                                          ToolTipService.InitialShowDelay="300"
-                                         ToolTip="Delete Ping"
-                                         IsEnabled="{Binding DataContext.ControlsEnabled, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}">
-                                    <materialDesign:PackIcon Kind="Close" Width="auto" Height="auto"/>
+                                         ToolTip="Delete Ping">
+                                   <materialDesign:PackIcon Kind="Close" Width="auto" Height="auto"/>
                                 </Button>
                             </StackPanel>
                     </DataTemplate>

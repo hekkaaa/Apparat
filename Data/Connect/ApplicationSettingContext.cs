@@ -12,11 +12,19 @@ namespace Data.Connect
             Database.EnsureCreated();
         }
 
+        public ApplicationSettingContext(DbContextOptions<ApplicationSettingContext> options) : base(options)
+        {
+
+        }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlite(
-                "Data Source=SettingDb.db");
-            optionsBuilder.UseLazyLoadingProxies();
+            if (!optionsBuilder.IsConfigured)
+            {
+                optionsBuilder.UseSqlite(
+                     "Data Source=SettingDb.db");
+                optionsBuilder.UseLazyLoadingProxies();
+            }
         }
     }
 }
