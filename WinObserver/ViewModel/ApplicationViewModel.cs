@@ -135,7 +135,6 @@ namespace WinObserver.ViewModel
                 (obj) =>
                 {
                     HostViewModel? deleteObject = obj as HostViewModel;
-                    deleteObject.ControlStopStream();
                     if (deleteObject != null) HostsCollection.Remove(deleteObject!);
                 }));
             }

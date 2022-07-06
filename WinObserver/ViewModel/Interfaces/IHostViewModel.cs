@@ -20,7 +20,6 @@ namespace Apparat.ViewModel.Interfaces
 
         event PropertyChangedEventHandler? PropertyChanged;
 
-        void ControlStopStream();
         void ErrorNameHostname();
         void ManagementEnableGeneralControlBtn(bool obj);
         void WorkingProggresbarInListBoxHostanme(bool boolValue);

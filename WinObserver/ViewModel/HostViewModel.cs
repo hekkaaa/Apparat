@@ -40,16 +40,16 @@ namespace Apparat.ViewModel
                 {
                     if (_statusWorkDataGrid)
                     {
-                        ControlStopStream();
+                        ControlBtnHost = IconeMap.Restart;
+                        _tracerService!.StopStreamTracerouteHost();
+                        _statusWorkDataGrid = false;
                     }
                     else
                     {
-                        //RestartInfoInDataGrid();
                         ControlBtnHost = IconeMap.Stop;
                         ControlDatatime();
                         _tracerService!.StartStreamTracerouteHost(HostnameView!, this);
                         _statusWorkDataGrid = true;
-                        //RemoveInfoinTextBoxPanel();
                     }
                     OnPropertyChanged();
                 });
@@ -116,14 +116,6 @@ namespace Apparat.ViewModel
         {
             get { return _visibleDatatimeTextBlock; }
             set { _visibleDatatimeTextBlock = value; OnPropertyChanged(); }
-        }
-        
-
-        public void ControlStopStream()
-        {
-            ControlBtnHost = IconeMap.Restart;
-            _tracerService!.StopStreamTracerouteHost();
-            _statusWorkDataGrid = false;
         }
 
         public void ErrorNameHostname()
