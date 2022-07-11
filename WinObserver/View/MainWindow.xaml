@@ -93,7 +93,7 @@
                                                 ToolTip="Delete Hostname"
                                                 Height="24" Width="24"
                                                 Grid.Column="1" HorizontalAlignment="Right">
-                                            <materialDesign:PackIcon Kind="Eraser" Width="20" Height="20"/>
+                                            <materialDesign:PackIcon Kind="DeleteOffOutline" Width="20" Height="20"/>
                                         </Button>
                                     </Grid>
                                 </ItemsControl>
