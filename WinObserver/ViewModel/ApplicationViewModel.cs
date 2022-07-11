@@ -6,18 +6,16 @@ using Apparat.ViewModel;
 using Data.Connect;
 using Data.Repositories;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace WinObserver.ViewModel
 {
     public class ApplicationViewModel : INotifyPropertyChanged
     {
-        const string VERSION_APP = "Version: 0.1.12 - Beta";
+        const string VERSION_APP = "Version: 0.1.13 - Beta | Tester build";
         private string _hostname = String.Empty;
         private string _textBlockGeneralError = String.Empty;
         private string _borderTextBox = "#FFABADB3";
