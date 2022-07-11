@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace Data.Tests
 {
+    [TestFixture]
     public class AppSettingRepositoryTests
     {
         private AppSettingRepository _testAppSettingRepository;
@@ -23,10 +24,15 @@ namespace Data.Tests
 
             _context = new ApplicationSettingContext(_contextOptions);
 
-            _context.Database.EnsureDeleted();
             _context.Database.EnsureCreated();
 
             _testAppSettingRepository = new AppSettingRepository(_context);
+        }
+
+        [TearDown]
+        public void Cleanup()
+        {
+            _context.Database.EnsureDeleted();
         }
 
         [Test]
@@ -91,6 +97,38 @@ namespace Data.Tests
             Assert.NotNull(resultAct);
             Assert.IsTrue(resultAct);
             Assert.That(act.Count, Is.EqualTo(0));
+        }
+
+        [Test]
+        public void DeleteHostnameTest()
+        {
+            //given
+            string deleteTestHost = "github.com";
+            
+            string[] testMassHostname = new string[] { "google.ru", "ya.ru", "github.com", "overcoder.net", "youtube.com" };
+            int expectedCount = testMassHostname.Length - 1;
+
+            foreach (var testName in testMassHostname)
+            {
+                HistoryHost testItem = new HistoryHost() { Hostname = testName };
+                _testAppSettingRepository.AddNewHost(testItem);
+            }
+
+            //when
+            List<HistoryHost> tmpTestCollection = _testAppSettingRepository.GetLastFiveHostname();
+            HistoryHost foundObj = tmpTestCollection.FirstOrDefault(x => x.Hostname == deleteTestHost)!;
+
+            var resultAct = _testAppSettingRepository.DeleteHostname(foundObj);
+            var act = _context.History.ToList();
+
+            tmpTestCollection = _testAppSettingRepository.GetLastFiveHostname();
+            HistoryHost actObj = tmpTestCollection.FirstOrDefault(x => x.Hostname == deleteTestHost)!;
+
+            //then
+            Assert.NotNull(resultAct);
+            Assert.IsTrue(resultAct);
+            Assert.That(act.Count, Is.EqualTo(expectedCount));
+            Assert.IsNull(actObj);
         }
     }
 }

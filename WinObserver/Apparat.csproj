@@ -5,19 +5,20 @@
     <TargetFramework>net6.0-windows</TargetFramework>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
-    <Version>0.0.24</Version>
+    <Version>0.1.12</Version>
     <PackageId>Apparat</PackageId>
     <Authors>Alexander Pototsky</Authors>
     <Company>Alexander Pototsky</Company>
     <Product>Apparat</Product>
-    <Description>Data trace tracking</Description>
+    <Description>Monitoring the traceroute</Description>
     <PackageProjectUrl>https://github.com/hekkaaa/WinObserver</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/hekkaaa/WinObserver</RepositoryUrl>
+    <RepositoryUrl>https://github.com/hekkaaa/Apparat</RepositoryUrl>
     <PackageTags>Traceroute; Tracert; Icmp; Network; Monitoring;</PackageTags>
     <PackageReleaseNotes>pre-alpha</PackageReleaseNotes>
     <PackageIcon>testnew.png</PackageIcon>
     <AssemblyName>Apparat</AssemblyName>
     <ApplicationIcon>Resources\AppIcon.ico</ApplicationIcon>
+    <Copyright>Belongs to Alexander Pototsky</Copyright>
   </PropertyGroup>
 
   <ItemGroup>
