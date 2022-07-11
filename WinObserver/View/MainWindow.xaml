@@ -188,8 +188,8 @@
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal" Cursor="Hand">
                                 <!-- Text hostname tab -->
-                                <TextBlock Text="{Binding HostnameView}" />
-                            
+                                <TextBlock Text="{Binding HostnameView}"/>
+
                                 <!-- Close btn -->
                                 <Button Command="{Binding DataContext.CloseTabCommand,RelativeSource={RelativeSource AncestorType={x:Type Window}}}" 
                                         CommandParameter="{Binding}"
@@ -209,18 +209,23 @@
                                   AutoGenerateColumns="False" RowBackground="GhostWhite" 
                                   AlternatingRowBackground ="LightGray" GridLinesVisibility="None" 
                                   IsReadOnly="True" FontSize="16" CanUserAddRows="False">
-                            <DataGrid.Columns>
-                                <DataGridTextColumn Header="№" Binding="{Binding NumberHostname}" Width="auto"/>
-                                <DataGridTextColumn Header="Hostname" Binding="{Binding Hostname}" Width="auto"/>
-                                <DataGridTextColumn Header="Loss %" Binding="{Binding PercentLossPacket}" Width="*"/>
-                                <DataGridTextColumn Header="Last Delay" Binding="{Binding LastDelay}" Width="*"/>
-                                <DataGridTextColumn Header="Minimal" Binding="{Binding MinPing}" Width="*"/>
-                                <DataGridTextColumn Header="Middle" Binding="{Binding MiddlePing}" Width="*"/>
-                                <DataGridTextColumn Header="Maximum" Binding="{Binding MaxPing}" Width="*"/>
-                                <DataGridTextColumn Header="All Packet" Binding="{Binding CounterPacket}" Width="*"/>
-                                <DataGridTextColumn Header="Loss Packet" Binding="{Binding CounterLossPacket}" Width="auto"/>
+                                <DataGrid.Resources>
+                                    <Style x:Key="CenterTextStyle" TargetType="TextBlock">
+                                        <Setter Property="TextAlignment" Value="Center"/>
+                                    </Style>
+                                </DataGrid.Resources>
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="№" Binding="{Binding NumberHostname}" Width="auto" ElementStyle="{StaticResource CenterTextStyle}"/>
+                                    <DataGridTextColumn Header="Hostname" Binding="{Binding Hostname}" Width="auto" ElementStyle="{StaticResource CenterTextStyle}"/>
+                                    <DataGridTextColumn Header="Loss %" Binding="{Binding PercentLossPacket}" Width="*" ElementStyle="{StaticResource CenterTextStyle}"/>
+                                    <DataGridTextColumn Header="Last Delay" Binding="{Binding LastDelay}" Width="*" ElementStyle="{StaticResource CenterTextStyle}"/>
+                                    <DataGridTextColumn Header="Minimal" Binding="{Binding MinPing}" Width="*" ElementStyle="{StaticResource CenterTextStyle}"/>
+                                    <DataGridTextColumn Header="Middle" Binding="{Binding MiddlePing}" Width="*" ElementStyle="{StaticResource CenterTextStyle}"/>
+                                    <DataGridTextColumn Header="Maximum" Binding="{Binding MaxPing}" Width="*" ElementStyle="{StaticResource CenterTextStyle}"/>
+                                    <DataGridTextColumn Header="All Packet" Binding="{Binding CounterPacket}" Width="*" ElementStyle="{StaticResource CenterTextStyle}"/>
+                                    <DataGridTextColumn Header="Loss Packet" Binding="{Binding CounterLossPacket}" Width="auto" ElementStyle="{StaticResource CenterTextStyle}"/>
                             </DataGrid.Columns>
-                        </DataGrid>
+                            </DataGrid>
                     </DataTemplate>
                 </TabControl.ContentTemplate>
             </TabControl>
