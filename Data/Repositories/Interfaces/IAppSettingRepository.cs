@@ -7,5 +7,6 @@ namespace Data.Repositories.Interfaces
         int AddNewHost(HistoryHost newHostname);
         List<HistoryHost> GetLastFiveHostname();
         bool ClearAllTable();
+        bool DeleteHostname(HistoryHost removeHostname);
     }
 }

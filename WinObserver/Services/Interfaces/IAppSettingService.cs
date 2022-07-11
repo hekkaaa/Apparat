@@ -1,12 +1,12 @@
-﻿using Data.Entities;
-using System.Collections.Generic;
+﻿using System.Collections.ObjectModel;
 
 namespace Apparat.Services.Interfaces
 {
     public interface IAppSettingService
     {
         int AddHostInHistory(string newhost);
-        List<string> GetLastFiveHistoryHost();
+        ObservableCollection<string> GetLastFiveHistoryHost();
         bool ClearAllCollectionHistoryHost();
+        bool DeleteOneHostnameFromHistoryCollection(string deleteHostname);
     }
 }

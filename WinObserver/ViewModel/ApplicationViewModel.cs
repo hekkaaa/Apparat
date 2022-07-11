@@ -71,8 +71,8 @@ namespace WinObserver.ViewModel
         }
 
 
-        private List<string> _collectionRecentHost = null!;
-        public List<string> CollectionRecentHost
+        private ObservableCollection<string> _collectionRecentHost = null!;
+        public ObservableCollection<string> CollectionRecentHost
         {
             get
             {
@@ -100,12 +100,7 @@ namespace WinObserver.ViewModel
                 return _addNewHost ??
                  (_addNewHost = new DelegateCommand((obj) =>
                  {
-                     if (String.IsNullOrWhiteSpace(_hostname))
-                     {
-                         ErrorValidationTextAndAnimation();
-                         return;
-                     }
-                     if(_hostname.Length <= 3)
+                     if (String.IsNullOrWhiteSpace(_hostname) || _hostname.Length <= 3)
                      {
                          ErrorValidationTextAndAnimation();
                          return;
@@ -151,6 +146,23 @@ namespace WinObserver.ViewModel
                 {
                     _appSettingService.ClearAllCollectionHistoryHost();
                     UpdateCollectionHistoryHostInCombobox();
+                }));
+            }
+        }
+
+        private DelegateCommand _deleteOneItemHistoryHostname = null!;
+        public DelegateCommand DeleteOneItemHistoryHostname
+        {
+            get
+            {
+                return _deleteOneItemHistoryHostname
+                ?? (_deleteOneItemHistoryHostname = new DelegateCommand(
+                (obj) =>
+                {
+                    string deleteObject = obj as string;
+
+                    bool removeResult = _appSettingService.DeleteOneHostnameFromHistoryCollection(deleteObject);
+                    if (removeResult) UpdateCollectionHistoryHostInCombobox();
                 }));
             }
         }
