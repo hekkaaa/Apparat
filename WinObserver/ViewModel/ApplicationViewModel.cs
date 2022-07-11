@@ -1,11 +1,11 @@
 ﻿using Apparat.Commands;
+using Apparat.Helpers;
 using Apparat.Services;
 using Apparat.Services.Interfaces;
 using Apparat.ViewModel;
 using Data.Connect;
 using Data.Repositories;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
@@ -15,7 +15,7 @@ namespace WinObserver.ViewModel
 {
     public class ApplicationViewModel : INotifyPropertyChanged
     {
-        const string VERSION_APP = "Version: 0.1.12 - Beta";
+        const string VERSION_APP = "Version: 0.1.13 - Beta | Tester build";
         private string _hostname = String.Empty;
         private string _textBlockGeneralError = String.Empty;
         private string _borderTextBox = "#FFABADB3";
@@ -100,7 +100,10 @@ namespace WinObserver.ViewModel
                 return _addNewHost ??
                  (_addNewHost = new DelegateCommand((obj) =>
                  {
-                     if (String.IsNullOrWhiteSpace(_hostname) || _hostname.Length <= 3)
+                     string adjustedHostname = ValidationConditionsAndCorrections.RemovingSpaces(_hostname);
+                     bool result = ValidationConditionsAndCorrections.ValidationCheck(adjustedHostname);
+
+                     if (!result)
                      {
                          ErrorValidationTextAndAnimation();
                          return;
@@ -108,10 +111,10 @@ namespace WinObserver.ViewModel
 
                      HostsCollection.Add(new HostViewModel()
                      {
-                         HostnameView = _hostname
+                         HostnameView = adjustedHostname
                      });
 
-                     _appSettingService.AddHostInHistory(_hostname);
+                     _appSettingService.AddHostInHistory(adjustedHostname);
                      UpdateCollectionHistoryHostInCombobox();
                      RemoveInfoinTextBoxPanel();
                      OnPropertyChanged();
