@@ -1,4 +1,5 @@
 ﻿using Apparat.Commands;
+using Apparat.Helpers;
 using Apparat.Services;
 using Apparat.Services.Interfaces;
 using Apparat.ViewModel;
@@ -9,6 +10,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace WinObserver.ViewModel
@@ -100,7 +102,10 @@ namespace WinObserver.ViewModel
                 return _addNewHost ??
                  (_addNewHost = new DelegateCommand((obj) =>
                  {
-                     if (String.IsNullOrWhiteSpace(_hostname) || _hostname.Length <= 3)
+                     string adjustedHostname = ValidationConditionsAndCorrections.RemovingSpaces(_hostname);
+                     bool result = ValidationConditionsAndCorrections.ValidationCheck(adjustedHostname);
+
+                     if (!result)
                      {
                          ErrorValidationTextAndAnimation();
                          return;
@@ -108,10 +113,10 @@ namespace WinObserver.ViewModel
 
                      HostsCollection.Add(new HostViewModel()
                      {
-                         HostnameView = _hostname
+                         HostnameView = adjustedHostname
                      });
 
-                     _appSettingService.AddHostInHistory(_hostname);
+                     _appSettingService.AddHostInHistory(adjustedHostname);
                      UpdateCollectionHistoryHostInCombobox();
                      RemoveInfoinTextBoxPanel();
                      OnPropertyChanged();
