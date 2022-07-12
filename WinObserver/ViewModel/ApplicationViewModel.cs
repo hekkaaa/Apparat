@@ -1,10 +1,7 @@
 ﻿using Apparat.Commands;
 using Apparat.Helpers;
-using Apparat.Services;
 using Apparat.Services.Interfaces;
 using Apparat.ViewModel;
-using Data.Connect;
-using Data.Repositories;
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -13,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace WinObserver.ViewModel
 {
-    public class ApplicationViewModel : INotifyPropertyChanged
+    public class ApplicationViewModel : INotifyPropertyChanged, IApplicationViewModel
     {
         const string VERSION_APP = "Version: 0.1.13 - Alpha | Tester build";
         private string _hostname = String.Empty;
@@ -23,14 +20,13 @@ namespace WinObserver.ViewModel
         private ObservableCollection<HostViewModel> _hostsCollection;
         private readonly IAppSettingService _appSettingService;
 
-        public ApplicationViewModel()
+        public ApplicationViewModel(IAppSettingService appService)
         {
             _hostsCollection = new ObservableCollection<HostViewModel>();
-            // init object class
-            _appSettingService = new AppSettingService(new AppSettingRepository(new ApplicationSettingContext()));
+            // init object class  
+            _appSettingService = appService;
 
             UpdateCollectionHistoryHostInCombobox();
-           
         }
 
         public string VersionProgramm { get { return VERSION_APP; } }

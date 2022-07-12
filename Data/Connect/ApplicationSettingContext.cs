@@ -14,7 +14,7 @@ namespace Data.Connect
 
         public ApplicationSettingContext(DbContextOptions<ApplicationSettingContext> options) : base(options)
         {
-
+            Database.EnsureCreated();
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

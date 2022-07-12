@@ -1,4 +1,6 @@
-﻿using System.Diagnostics;
+﻿using Apparat.Services.Interfaces;
+using Data.Repositories.Interfaces;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Navigation;
 using WinObserver.ViewModel;
@@ -10,14 +12,17 @@ namespace WinObserver
     /// </summary>
     public partial class MainWindow : Window
     {
-        public MainWindow()
+        IApplicationViewModel _applicationViewModel;
+
+        public MainWindow(IApplicationViewModel applicationViewModel)
         {
             InitializeComponent();
+            _applicationViewModel = applicationViewModel;
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            DataContext = new ApplicationViewModel();
+            DataContext = _applicationViewModel;
         }
 
         private void Hyperlink_RequestNavigate(object sender, RequestNavigateEventArgs e)
