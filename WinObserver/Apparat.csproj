@@ -22,10 +22,18 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Files\database\init_database_file.txt" />
+    <None Remove="Files\log\initlog.txt" />
     <None Remove="Resources\icons8-error.png" />
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="Files\database\init_database_file.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Files\log\initlog.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Resources\AppIcon.ico" />
     <Content Include="Resources\icons8-error.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

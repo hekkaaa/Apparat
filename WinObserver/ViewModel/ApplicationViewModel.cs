@@ -15,7 +15,7 @@ namespace WinObserver.ViewModel
 {
     public class ApplicationViewModel : INotifyPropertyChanged
     {
-        const string VERSION_APP = "Version: 0.1.13 - Beta | Tester build";
+        const string VERSION_APP = "Version: 0.1.13 - Alpha | Tester build";
         private string _hostname = String.Empty;
         private string _textBlockGeneralError = String.Empty;
         private string _borderTextBox = "#FFABADB3";
@@ -30,6 +30,7 @@ namespace WinObserver.ViewModel
             _appSettingService = new AppSettingService(new AppSettingRepository(new ApplicationSettingContext()));
 
             UpdateCollectionHistoryHostInCombobox();
+           
         }
 
         public string VersionProgramm { get { return VERSION_APP; } }
