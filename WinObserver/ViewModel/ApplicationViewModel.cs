@@ -1,10 +1,9 @@
 ﻿using Apparat.Commands;
 using Apparat.Helpers;
-using Apparat.Services;
 using Apparat.Services.Interfaces;
 using Apparat.ViewModel;
-using Data.Connect;
-using Data.Repositories;
+using Apparat.ViewModel.Interfaces;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -13,9 +12,9 @@ using System.Threading.Tasks;
 
 namespace WinObserver.ViewModel
 {
-    public class ApplicationViewModel : INotifyPropertyChanged
+    public class ApplicationViewModel : INotifyPropertyChanged, IApplicationViewModel
     {
-        const string VERSION_APP = "Version: 0.1.13 - Beta | Tester build";
+        const string VERSION_APP = "Version: 0.1.13 - Alpha | Tester build";
         private string _hostname = String.Empty;
         private string _textBlockGeneralError = String.Empty;
         private string _borderTextBox = "#FFABADB3";
@@ -23,12 +22,19 @@ namespace WinObserver.ViewModel
         private ObservableCollection<HostViewModel> _hostsCollection;
         private readonly IAppSettingService _appSettingService;
 
-        public ApplicationViewModel()
+        ILogger<IApplicationViewModel> _logger;
+        ILogger<IHostViewModel> _hostVMlog;
+
+        public ApplicationViewModel(IAppSettingService appService,
+            ILogger<IApplicationViewModel> log,
+            ILogger<IHostViewModel> hostVMlog)
         {
             _hostsCollection = new ObservableCollection<HostViewModel>();
-            // init object class
-            _appSettingService = new AppSettingService(new AppSettingRepository(new ApplicationSettingContext()));
+            _logger = log;
+            _hostVMlog = hostVMlog;
 
+            // init object class  
+            _appSettingService = appService;
             UpdateCollectionHistoryHostInCombobox();
         }
 
@@ -100,23 +106,24 @@ namespace WinObserver.ViewModel
                 return _addNewHost ??
                  (_addNewHost = new DelegateCommand((obj) =>
                  {
+                     
                      string adjustedHostname = ValidationConditionsAndCorrections.RemovingSpaces(_hostname);
                      bool result = ValidationConditionsAndCorrections.ValidationCheck(adjustedHostname);
 
                      if (!result)
                      {
-                         ErrorValidationTextAndAnimation();
+                         ErrorValidationTextAndAnimation(_hostname);
                          return;
                      }
 
-                     HostsCollection.Add(new HostViewModel()
-                     {
-                         HostnameView = adjustedHostname
-                     });
-
+                     HostViewModel newObject = new HostViewModel(_hostVMlog) { HostnameView = adjustedHostname };
+                     HostsCollection.Add(newObject);
+                    
                      _appSettingService.AddHostInHistory(adjustedHostname);
                      UpdateCollectionHistoryHostInCombobox();
                      RemoveInfoinTextBoxPanel();
+
+                     _logger.LogWarning($"Create new Hostname {adjustedHostname} | ID:{newObject.PublicId}");
                      OnPropertyChanged();
 
                  }));
@@ -133,7 +140,11 @@ namespace WinObserver.ViewModel
                 (obj) =>
                 {
                     HostViewModel? deleteObject = obj as HostViewModel;
-                    if (deleteObject != null) HostsCollection.Remove(deleteObject!);
+                    if (deleteObject != null)
+                    { 
+                        HostsCollection.Remove(deleteObject!);
+                        _logger.LogWarning($"Delete object tracert {deleteObject.HostnameView} | ID:{deleteObject.PublicId}");
+                    }
                 }));
             }
         }
@@ -149,6 +160,7 @@ namespace WinObserver.ViewModel
                 {
                     _appSettingService.ClearAllCollectionHistoryHost();
                     UpdateCollectionHistoryHostInCombobox();
+                    _logger.LogWarning($"Clear all collection history");
                 }));
             }
         }
@@ -165,7 +177,11 @@ namespace WinObserver.ViewModel
                     string deleteObject = obj as string;
 
                     bool removeResult = _appSettingService.DeleteOneHostnameFromHistoryCollection(deleteObject);
-                    if (removeResult) UpdateCollectionHistoryHostInCombobox();
+                    if (removeResult)
+                    {
+                        _logger.LogWarning($"Remove {deleteObject} from collection history hostname");
+                        UpdateCollectionHistoryHostInCombobox();
+                    }
                 }));
             }
         }
@@ -189,10 +205,12 @@ namespace WinObserver.ViewModel
         }
 
 
-        public void ErrorValidationTextAndAnimation()
+        private void ErrorValidationTextAndAnimation(string errorHostname)
         {
+            _logger.LogError($"invalid hostname: '{errorHostname}'");
+
             Task.Factory.StartNew(() =>
-            {
+            {   
                 TextBlockGeneralError = "Hostname not valid";
                 BorderTextBox = "Red";
 

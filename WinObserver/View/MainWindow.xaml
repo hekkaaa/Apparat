@@ -14,7 +14,7 @@
         FontWeight="DemiBold"
         FontSize="14"
         TextElement.FontSize="14"
-        FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto">
+        FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto" Closed="Window_Closed">
     
     <Grid>
         <Grid.RowDefinitions>

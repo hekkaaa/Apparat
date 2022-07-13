@@ -2,6 +2,7 @@
 using Apparat.Helpers;
 using Apparat.Services.Interfaces;
 using Apparat.ViewModel.Interfaces;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -18,6 +19,8 @@ namespace Apparat.ViewModel
         private bool _statusWorkDataGrid = false;
         public ReadOnlyObservableCollection<TracertModel>? TracertObject { get; set; }
         private string? _hostnameView;
+        ILogger<IHostViewModel> _logger;
+
 
         public string? HostnameView
         {
@@ -25,10 +28,13 @@ namespace Apparat.ViewModel
             set { _hostnameView = value; OnPropertyChanged(); }
         }
 
-        public HostViewModel()
+        public HostViewModel(ILogger<IHostViewModel> log)
         {
+            //test.LogInformation("HosView");
+            _logger = log;
             _tracerService = new TracertService();
             TracertObject = _tracerService.GetActualCollectionTracertValue();
+            _publicId = Guid.NewGuid().ToString("N");
         }
 
         private DelegateCommand? _startCommand { get; }
@@ -40,12 +46,14 @@ namespace Apparat.ViewModel
                 {
                     if (_statusWorkDataGrid)
                     {
+                        _logger.LogWarning($"Stop traceroute {HostnameView}| ID:{PublicId}");
                         ControlBtnHost = IconeMap.Restart;
                         _tracerService!.StopStreamTracerouteHost();
                         _statusWorkDataGrid = false;
                     }
                     else
                     {
+                        _logger.LogWarning($"Start traceroute {HostnameView}| ID:{PublicId}");
                         ControlBtnHost = IconeMap.Stop;
                         ControlDatatime();
                         _tracerService!.StartStreamTracerouteHost(HostnameView!, this);
@@ -61,6 +69,12 @@ namespace Apparat.ViewModel
         {
             get { return _generalPanelModel!.NameControlBtn; }
             set { _generalPanelModel!.NameControlBtn = value; OnPropertyChanged(); }
+        }
+
+        private string _publicId = string.Empty;
+        public string PublicId
+        {
+            get { return _publicId; }
         }
 
         private string _TextErrorToolTip = "The hostname is entered incorrectly";
@@ -163,7 +177,7 @@ namespace Apparat.ViewModel
         }
 
         private void ControlDatatime()
-        {   
+        {
             DateTime dt = DateTime.Now;
             StringBuilder sb = new StringBuilder("Start Time: ");
             sb.Append(dt.ToString("T"));
