@@ -25,8 +25,8 @@ namespace WinObserver.ViewModel
         ILogger<IApplicationViewModel> _logger;
         ILogger<IHostViewModel> _hostVMlog;
 
-        public ApplicationViewModel(IAppSettingService appService, 
-            ILogger<IApplicationViewModel> log, 
+        public ApplicationViewModel(IAppSettingService appService,
+            ILogger<IApplicationViewModel> log,
             ILogger<IHostViewModel> hostVMlog)
         {
             _hostsCollection = new ObservableCollection<HostViewModel>();

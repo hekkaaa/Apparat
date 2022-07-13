@@ -22,7 +22,7 @@ namespace Data.Connect
             if (!optionsBuilder.IsConfigured)
             {
                 optionsBuilder.UseSqlite(
-                     "Data Source=SettingDb.db");
+                     @"Data Source=Files\database\SettingDb.db");
                 optionsBuilder.UseLazyLoadingProxies();
             }
         }
