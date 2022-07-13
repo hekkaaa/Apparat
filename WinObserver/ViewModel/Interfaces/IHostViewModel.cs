@@ -8,6 +8,7 @@ namespace Apparat.ViewModel.Interfaces
 {
     public interface IHostViewModel
     {
+        string PublicId { get;}
         string ControlBtnHost { get; set; }
         string ControlBtnName { get; set; }
         string ErrorHostnameVisibleIcon { get; set; }

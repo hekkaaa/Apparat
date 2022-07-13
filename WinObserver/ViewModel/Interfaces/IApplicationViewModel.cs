@@ -20,8 +20,6 @@ namespace WinObserver.ViewModel
         string VersionProgramm { get; }
 
         event PropertyChangedEventHandler? PropertyChanged;
-
-        void ErrorValidationTextAndAnimation();
         void OnPropertyChanged([CallerMemberName] string prop = "");
     }
 }

@@ -2,6 +2,8 @@
 using Apparat.Helpers;
 using Apparat.Services.Interfaces;
 using Apparat.ViewModel;
+using Apparat.ViewModel.Interfaces;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -20,12 +22,19 @@ namespace WinObserver.ViewModel
         private ObservableCollection<HostViewModel> _hostsCollection;
         private readonly IAppSettingService _appSettingService;
 
-        public ApplicationViewModel(IAppSettingService appService)
+        ILogger<IApplicationViewModel> _logger;
+        ILogger<IHostViewModel> _hostVMlog;
+
+        public ApplicationViewModel(IAppSettingService appService, 
+            ILogger<IApplicationViewModel> log, 
+            ILogger<IHostViewModel> hostVMlog)
         {
             _hostsCollection = new ObservableCollection<HostViewModel>();
+            _logger = log;
+            _hostVMlog = hostVMlog;
+
             // init object class  
             _appSettingService = appService;
-
             UpdateCollectionHistoryHostInCombobox();
         }
 
@@ -97,23 +106,24 @@ namespace WinObserver.ViewModel
                 return _addNewHost ??
                  (_addNewHost = new DelegateCommand((obj) =>
                  {
+                     
                      string adjustedHostname = ValidationConditionsAndCorrections.RemovingSpaces(_hostname);
                      bool result = ValidationConditionsAndCorrections.ValidationCheck(adjustedHostname);
 
                      if (!result)
                      {
-                         ErrorValidationTextAndAnimation();
+                         ErrorValidationTextAndAnimation(_hostname);
                          return;
                      }
 
-                     HostsCollection.Add(new HostViewModel()
-                     {
-                         HostnameView = adjustedHostname
-                     });
-
+                     HostViewModel newObject = new HostViewModel(_hostVMlog) { HostnameView = adjustedHostname };
+                     HostsCollection.Add(newObject);
+                    
                      _appSettingService.AddHostInHistory(adjustedHostname);
                      UpdateCollectionHistoryHostInCombobox();
                      RemoveInfoinTextBoxPanel();
+
+                     _logger.LogWarning($"Create new Hostname {adjustedHostname} | ID:{newObject.PublicId}");
                      OnPropertyChanged();
 
                  }));
@@ -130,7 +140,11 @@ namespace WinObserver.ViewModel
                 (obj) =>
                 {
                     HostViewModel? deleteObject = obj as HostViewModel;
-                    if (deleteObject != null) HostsCollection.Remove(deleteObject!);
+                    if (deleteObject != null)
+                    { 
+                        HostsCollection.Remove(deleteObject!);
+                        _logger.LogWarning($"Delete object tracert {deleteObject.HostnameView} | ID:{deleteObject.PublicId}");
+                    }
                 }));
             }
         }
@@ -146,6 +160,7 @@ namespace WinObserver.ViewModel
                 {
                     _appSettingService.ClearAllCollectionHistoryHost();
                     UpdateCollectionHistoryHostInCombobox();
+                    _logger.LogWarning($"Clear all collection history");
                 }));
             }
         }
@@ -162,7 +177,11 @@ namespace WinObserver.ViewModel
                     string deleteObject = obj as string;
 
                     bool removeResult = _appSettingService.DeleteOneHostnameFromHistoryCollection(deleteObject);
-                    if (removeResult) UpdateCollectionHistoryHostInCombobox();
+                    if (removeResult)
+                    {
+                        _logger.LogWarning($"Remove {deleteObject} from collection history hostname");
+                        UpdateCollectionHistoryHostInCombobox();
+                    }
                 }));
             }
         }
@@ -186,10 +205,12 @@ namespace WinObserver.ViewModel
         }
 
 
-        public void ErrorValidationTextAndAnimation()
+        private void ErrorValidationTextAndAnimation(string errorHostname)
         {
+            _logger.LogError($"invalid hostname: '{errorHostname}'");
+
             Task.Factory.StartNew(() =>
-            {
+            {   
                 TextBlockGeneralError = "Hostname not valid";
                 BorderTextBox = "Red";
 
