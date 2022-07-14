@@ -3,7 +3,7 @@ using System.Text.RegularExpressions;
 
 namespace Apparat.Helpers
 {
-    public static class ValidationConditionsAndCorrections
+    public static partial class ValidationParseHelper
     {
         public static bool ValidationCheck(string newHostname)
         {
@@ -26,12 +26,6 @@ namespace Apparat.Helpers
             }
         }
 
-        public static string RemovingSpaces(string oldHostname)
-        {   
-            if(oldHostname is null) return oldHostname;
-
-            string newHostname = oldHostname.Replace(" ", "");
-            return newHostname;
-        }
+       
     }
 }
