@@ -21,9 +21,9 @@ namespace Apparat.ViewModel.Interfaces
 
         event PropertyChangedEventHandler? PropertyChanged;
 
-        void ErrorNameHostname();
-        void ManagementEnableGeneralControlBtn(bool obj);
-        void WorkingProggresbarInListBoxHostanme(bool boolValue);
+        //void ErrorNameHostname();
+        //void ManagementEnableGeneralControlBtn(bool obj);
+        //void WorkingProggresbarInListBoxHostname(bool boolValue);
         void OnPropertyChanged([CallerMemberName] string prop = "");
     }
 }

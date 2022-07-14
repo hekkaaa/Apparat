@@ -1,4 +1,5 @@
 ﻿using Apparat.Commands;
+using Apparat.Configuration.Events;
 using Apparat.Helpers;
 using Apparat.Services.Interfaces;
 using Apparat.ViewModel.Interfaces;
@@ -19,7 +20,8 @@ namespace Apparat.ViewModel
         private bool _statusWorkDataGrid = false;
         public ReadOnlyObservableCollection<TracertModel>? TracertObject { get; set; }
         private string? _hostnameView;
-        ILogger<IHostViewModel> _logger;
+        private IHostViewModelEvents _HostViewModelEvents = new HostViewModelEvents();
+        private ILogger<IHostViewModel> _logger;
 
 
         public string? HostnameView
@@ -30,11 +32,15 @@ namespace Apparat.ViewModel
 
         public HostViewModel(ILogger<IHostViewModel> log)
         {
-            //test.LogInformation("HosView");
             _logger = log;
             _tracerService = new TracertService();
             TracertObject = _tracerService.GetActualCollectionTracertValue();
             _publicId = Guid.NewGuid().ToString("N");
+
+            // Add Events
+            _HostViewModelEvents.ErrorNameHostnameEvent += ErrorNameHostname;
+            _HostViewModelEvents.ManagementEnableGeneralControlBtnEvent += ManagementEnableGeneralControlBtn;
+            _HostViewModelEvents.WorkingProggresbarInListBoxHostnameEvent += WorkingProggresbarInListBoxHostname;
         }
 
         private DelegateCommand? _startCommand { get; }
@@ -56,7 +62,7 @@ namespace Apparat.ViewModel
                         _logger.LogWarning($"Start traceroute {HostnameView}| ID:{PublicId}");
                         ControlBtnHost = IconeMap.Stop;
                         ControlDatatime();
-                        _tracerService!.StartStreamTracerouteHost(HostnameView!, this);
+                        _tracerService!.StartStreamTracerouteHost(HostnameView!, _HostViewModelEvents);
                         _statusWorkDataGrid = true;
                     }
                     OnPropertyChanged();
@@ -132,42 +138,7 @@ namespace Apparat.ViewModel
             set { _visibleDatatimeTextBlock = value; OnPropertyChanged(); }
         }
 
-        public void ErrorNameHostname()
-        {
-            ControlBtnHost = IconeMap.Start;
-            StartDatatime = "Error";
-            ValueVisibleProgressBar = "Collapsed";
-            ErrorHostnameVisibleIcon = "Visible";
-            SettingIsEnableControlBtn = "False";
-            SettingOpacityControlBtn = "0.5";
-        }
-
-
-        public void WorkingProggresbarInListBoxHostanme(bool boolValue)
-        {
-            if (boolValue)
-            {
-                ValueVisibleProgressBar = "Visible";
-            }
-            else
-            {
-                ValueVisibleProgressBar = "Hidden";
-            }
-        }
-
-        public void ManagementEnableGeneralControlBtn(bool obj)
-        {
-            if (obj)
-            {
-                SettingIsEnableControlBtn = "True";
-                SettingOpacityControlBtn = "1";
-            }
-            else
-            {
-                SettingIsEnableControlBtn = "False";
-                SettingOpacityControlBtn = "0.5";
-            }
-        }
+        
 
         public event PropertyChangedEventHandler? PropertyChanged;
         public void OnPropertyChanged([CallerMemberName] string prop = "")
@@ -183,6 +154,43 @@ namespace Apparat.ViewModel
             sb.Append(dt.ToString("T"));
             StartDatatime = sb.ToString();
             VisibleDatatimeTextBlock = "Visible";
+        }
+
+        private void ErrorNameHostname()
+        {
+            ControlBtnHost = IconeMap.Start;
+            StartDatatime = "Error";
+            ValueVisibleProgressBar = "Collapsed";
+            ErrorHostnameVisibleIcon = "Visible";
+            SettingIsEnableControlBtn = "False";
+            SettingOpacityControlBtn = "0.5";
+        }
+
+        // Events
+        private void WorkingProggresbarInListBoxHostname(bool boolValue)
+        {
+            if (boolValue)
+            {
+                ValueVisibleProgressBar = "Visible";
+            }
+            else
+            {
+                ValueVisibleProgressBar = "Hidden";
+            }
+        }
+
+        private void ManagementEnableGeneralControlBtn(bool boolValue)
+        {
+            if (boolValue)
+            {
+                SettingIsEnableControlBtn = "True";
+                SettingOpacityControlBtn = "1";
+            }
+            else
+            {
+                SettingIsEnableControlBtn = "False";
+                SettingOpacityControlBtn = "0.5";
+            }
         }
     }
 }

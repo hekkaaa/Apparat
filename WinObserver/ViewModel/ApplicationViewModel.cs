@@ -14,7 +14,7 @@ namespace WinObserver.ViewModel
 {
     public class ApplicationViewModel : INotifyPropertyChanged, IApplicationViewModel
     {
-        const string VERSION_APP = "Version: 0.1.13 - Alpha | Tester build";
+        const string VERSION_APP = "Version: 0.1.13 - Alpha";
         private string _hostname = String.Empty;
         private string _textBlockGeneralError = String.Empty;
         private string _borderTextBox = "#FFABADB3";
@@ -106,9 +106,8 @@ namespace WinObserver.ViewModel
                 return _addNewHost ??
                  (_addNewHost = new DelegateCommand((obj) =>
                  {
-                     
-                     string adjustedHostname = ValidationConditionsAndCorrections.RemovingSpaces(_hostname);
-                     bool result = ValidationConditionsAndCorrections.ValidationCheck(adjustedHostname);
+                     string editedHostname = ValidationParseHelper.RemovingSpacesFromText(_hostname);
+                     bool result = ValidationParseHelper.ValidationCheck(_hostname);
 
                      if (!result)
                      {
@@ -116,14 +115,14 @@ namespace WinObserver.ViewModel
                          return;
                      }
 
-                     HostViewModel newObject = new HostViewModel(_hostVMlog) { HostnameView = adjustedHostname };
+                     HostViewModel newObject = new HostViewModel(_hostVMlog) { HostnameView = editedHostname };
                      HostsCollection.Add(newObject);
                     
-                     _appSettingService.AddHostInHistory(adjustedHostname);
+                     _appSettingService.AddHostInHistory(editedHostname);
                      UpdateCollectionHistoryHostInCombobox();
                      RemoveInfoinTextBoxPanel();
 
-                     _logger.LogWarning($"Create new Hostname {adjustedHostname} | ID:{newObject.PublicId}");
+                     _logger.LogWarning($"Create new Hostname {editedHostname} | ID:{newObject.PublicId}");
                      OnPropertyChanged();
 
                  }));

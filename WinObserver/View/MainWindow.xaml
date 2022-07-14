@@ -207,7 +207,7 @@
                     <DataTemplate>
                         <DataGrid ItemsSource="{Binding TracertObject, UpdateSourceTrigger=PropertyChanged}" 
                                   AutoGenerateColumns="False" RowBackground="GhostWhite" 
-                                  AlternatingRowBackground ="LightGray" GridLinesVisibility="None" 
+                                  AlternatingRowBackground ="LightGray" GridLinesVisibility="Vertical" 
                                   IsReadOnly="True" FontSize="16" CanUserAddRows="False">
                                 <DataGrid.Columns>
                                     <DataGridTextColumn Header="№" Binding="{Binding NumberHostname}" Width="auto"/>
