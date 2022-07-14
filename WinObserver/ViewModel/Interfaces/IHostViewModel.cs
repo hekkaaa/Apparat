@@ -8,6 +8,7 @@ namespace Apparat.ViewModel.Interfaces
 {
     public interface IHostViewModel
     {
+        string PublicId { get;}
         string ControlBtnHost { get; set; }
         string ControlBtnName { get; set; }
         string ErrorHostnameVisibleIcon { get; set; }
@@ -20,10 +21,9 @@ namespace Apparat.ViewModel.Interfaces
 
         event PropertyChangedEventHandler? PropertyChanged;
 
-        void ControlStopStream();
-        void ErrorNameHostname();
-        void ManagementEnableGeneralControlBtn(bool obj);
-        void WorkingProggresbarInListBoxHostanme(bool boolValue);
+        //void ErrorNameHostname();
+        //void ManagementEnableGeneralControlBtn(bool obj);
+        //void WorkingProggresbarInListBoxHostname(bool boolValue);
         void OnPropertyChanged([CallerMemberName] string prop = "");
     }
 }

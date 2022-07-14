@@ -1,11 +1,10 @@
 ﻿using Apparat.Commands;
-using Apparat.Services;
+using Apparat.Helpers;
 using Apparat.Services.Interfaces;
 using Apparat.ViewModel;
-using Data.Connect;
-using Data.Repositories;
+using Apparat.ViewModel.Interfaces;
+using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
@@ -13,9 +12,9 @@ using System.Threading.Tasks;
 
 namespace WinObserver.ViewModel
 {
-    public class ApplicationViewModel : INotifyPropertyChanged
+    public class ApplicationViewModel : INotifyPropertyChanged, IApplicationViewModel
     {
-        const string VERSION_APP = "Version: 0.1.12 - Beta";
+        const string VERSION_APP = "Version: 0.1.13 - Alpha";
         private string _hostname = String.Empty;
         private string _textBlockGeneralError = String.Empty;
         private string _borderTextBox = "#FFABADB3";
@@ -23,12 +22,19 @@ namespace WinObserver.ViewModel
         private ObservableCollection<HostViewModel> _hostsCollection;
         private readonly IAppSettingService _appSettingService;
 
-        public ApplicationViewModel()
+        ILogger<IApplicationViewModel> _logger;
+        ILogger<IHostViewModel> _hostVMlog;
+
+        public ApplicationViewModel(IAppSettingService appService,
+            ILogger<IApplicationViewModel> log,
+            ILogger<IHostViewModel> hostVMlog)
         {
             _hostsCollection = new ObservableCollection<HostViewModel>();
-            // init object class
-            _appSettingService = new AppSettingService(new AppSettingRepository(new ApplicationSettingContext()));
+            _logger = log;
+            _hostVMlog = hostVMlog;
 
+            // init object class  
+            _appSettingService = appService;
             UpdateCollectionHistoryHostInCombobox();
         }
 
@@ -71,8 +77,8 @@ namespace WinObserver.ViewModel
         }
 
 
-        private List<string> _collectionRecentHost = null!;
-        public List<string> CollectionRecentHost
+        private ObservableCollection<string> _collectionRecentHost = null!;
+        public ObservableCollection<string> CollectionRecentHost
         {
             get
             {
@@ -100,25 +106,23 @@ namespace WinObserver.ViewModel
                 return _addNewHost ??
                  (_addNewHost = new DelegateCommand((obj) =>
                  {
-                     if (String.IsNullOrWhiteSpace(_hostname))
+                     string editedHostname = ValidationParseHelper.RemovingSpacesFromText(_hostname);
+                     bool result = ValidationParseHelper.ValidationCheck(_hostname);
+
+                     if (!result)
                      {
-                         ErrorValidationTextAndAnimation();
-                         return;
-                     }
-                     if(_hostname.Length <= 3)
-                     {
-                         ErrorValidationTextAndAnimation();
+                         ErrorValidationTextAndAnimation(_hostname);
                          return;
                      }
 
-                     HostsCollection.Add(new HostViewModel()
-                     {
-                         HostnameView = _hostname
-                     });
-
-                     _appSettingService.AddHostInHistory(_hostname);
+                     HostViewModel newObject = new HostViewModel(_hostVMlog) { HostnameView = editedHostname };
+                     HostsCollection.Add(newObject);
+                    
+                     _appSettingService.AddHostInHistory(editedHostname);
                      UpdateCollectionHistoryHostInCombobox();
                      RemoveInfoinTextBoxPanel();
+
+                     _logger.LogWarning($"Create new Hostname {editedHostname} | ID:{newObject.PublicId}");
                      OnPropertyChanged();
 
                  }));
@@ -135,8 +139,11 @@ namespace WinObserver.ViewModel
                 (obj) =>
                 {
                     HostViewModel? deleteObject = obj as HostViewModel;
-                    deleteObject.ControlStopStream();
-                    if (deleteObject != null) HostsCollection.Remove(deleteObject!);
+                    if (deleteObject != null)
+                    { 
+                        HostsCollection.Remove(deleteObject!);
+                        _logger.LogWarning($"Delete object tracert {deleteObject.HostnameView} | ID:{deleteObject.PublicId}");
+                    }
                 }));
             }
         }
@@ -152,6 +159,28 @@ namespace WinObserver.ViewModel
                 {
                     _appSettingService.ClearAllCollectionHistoryHost();
                     UpdateCollectionHistoryHostInCombobox();
+                    _logger.LogWarning($"Clear all collection history");
+                }));
+            }
+        }
+
+        private DelegateCommand _deleteOneItemHistoryHostname = null!;
+        public DelegateCommand DeleteOneItemHistoryHostname
+        {
+            get
+            {
+                return _deleteOneItemHistoryHostname
+                ?? (_deleteOneItemHistoryHostname = new DelegateCommand(
+                (obj) =>
+                {
+                    string deleteObject = obj as string;
+
+                    bool removeResult = _appSettingService.DeleteOneHostnameFromHistoryCollection(deleteObject);
+                    if (removeResult)
+                    {
+                        _logger.LogWarning($"Remove {deleteObject} from collection history hostname");
+                        UpdateCollectionHistoryHostInCombobox();
+                    }
                 }));
             }
         }
@@ -175,10 +204,12 @@ namespace WinObserver.ViewModel
         }
 
 
-        public void ErrorValidationTextAndAnimation()
+        private void ErrorValidationTextAndAnimation(string errorHostname)
         {
+            _logger.LogError($"invalid hostname: '{errorHostname}'");
+
             Task.Factory.StartNew(() =>
-            {
+            {   
                 TextBlockGeneralError = "Hostname not valid";
                 BorderTextBox = "Red";
 

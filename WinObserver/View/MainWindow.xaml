@@ -14,7 +14,7 @@
         FontWeight="DemiBold"
         FontSize="14"
         TextElement.FontSize="14"
-        FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto">
+        FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto" Closed="Window_Closed">
     
     <Grid>
         <Grid.RowDefinitions>
@@ -78,6 +78,27 @@
                         <ComboBox.InputBindings>
                             <KeyBinding Command="{Binding AddNewHost}" Key="Enter"/>
                         </ComboBox.InputBindings>
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <ItemsControl>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition/>
+                                            <ColumnDefinition/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Text="{Binding}" Grid.Column="0"/>
+                                        <Button Command="{Binding DataContext.DeleteOneItemHistoryHostname,RelativeSource={RelativeSource AncestorType={x:Type Window}}}" 
+                                                CommandParameter="{Binding}" VerticalAlignment="Center" 
+                                                Style="{StaticResource MaterialDesignIconForegroundButton}"
+                                                ToolTip="Delete Hostname"
+                                                Height="24" Width="24"
+                                                Grid.Column="1" HorizontalAlignment="Right">
+                                            <materialDesign:PackIcon Kind="DeleteOffOutline" Width="20" Height="20"/>
+                                        </Button>
+                                    </Grid>
+                                </ItemsControl>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
                     </ComboBox>
 
                     <Grid x:Name="StubElement" Margin="0,5,0,7"/>
@@ -120,7 +141,7 @@
                                             Height="24" Width="24"    
                                             IsEnabled="{Binding SettingIsEnableControlBtn}" Opacity="{ Binding SettingOpacityControlBtn}"
                                             Margin="15,0,7,0">
-                                            <materialDesign:PackIcon Kind="{Binding ControlBtnHost}" />
+                                    <materialDesign:PackIcon Kind="{Binding ControlBtnHost}" Width="25" Height="25"/>
                                     </Button>
                                    
                                     <!--Delete button-->
@@ -167,8 +188,8 @@
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal" Cursor="Hand">
                                 <!-- Text hostname tab -->
-                                <TextBlock Text="{Binding HostnameView}" />
-                            
+                                <TextBlock Text="{Binding HostnameView}"/>
+
                                 <!-- Close btn -->
                                 <Button Command="{Binding DataContext.CloseTabCommand,RelativeSource={RelativeSource AncestorType={x:Type Window}}}" 
                                         CommandParameter="{Binding}"
@@ -186,20 +207,20 @@
                     <DataTemplate>
                         <DataGrid ItemsSource="{Binding TracertObject, UpdateSourceTrigger=PropertyChanged}" 
                                   AutoGenerateColumns="False" RowBackground="GhostWhite" 
-                                  AlternatingRowBackground ="LightGray" GridLinesVisibility="None" 
+                                  AlternatingRowBackground ="LightGray" GridLinesVisibility="Vertical" 
                                   IsReadOnly="True" FontSize="16" CanUserAddRows="False">
-                            <DataGrid.Columns>
-                                <DataGridTextColumn Header="№" Binding="{Binding NumberHostname}" Width="auto"/>
-                                <DataGridTextColumn Header="Hostname" Binding="{Binding Hostname}" Width="auto"/>
-                                <DataGridTextColumn Header="Loss %" Binding="{Binding PercentLossPacket}" Width="*"/>
-                                <DataGridTextColumn Header="Last Delay" Binding="{Binding LastDelay}" Width="*"/>
-                                <DataGridTextColumn Header="Minimal" Binding="{Binding MinPing}" Width="*"/>
-                                <DataGridTextColumn Header="Middle" Binding="{Binding MiddlePing}" Width="*"/>
-                                <DataGridTextColumn Header="Maximum" Binding="{Binding MaxPing}" Width="*"/>
-                                <DataGridTextColumn Header="All Packet" Binding="{Binding CounterPacket}" Width="*"/>
-                                <DataGridTextColumn Header="Loss Packet" Binding="{Binding CounterLossPacket}" Width="auto"/>
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="№" Binding="{Binding NumberHostname}" Width="auto"/>
+                                    <DataGridTextColumn Header="Hostname" Binding="{Binding Hostname}" Width="auto"/>
+                                    <DataGridTextColumn Header="Loss %" Binding="{Binding PercentLossPacket}" Width="auto"/>
+                                    <DataGridTextColumn Header="Last Delay" Binding="{Binding LastDelay}" Width="*"/>
+                                    <DataGridTextColumn Header="Minimal" Binding="{Binding MinPing}" Width="*"/>
+                                    <DataGridTextColumn Header="Middle" Binding="{Binding MiddlePing}" Width="*"/>
+                                    <DataGridTextColumn Header="Maximum" Binding="{Binding MaxPing}" Width="*"/>
+                                    <DataGridTextColumn Header="All Packet" Binding="{Binding CounterPacket}" Width="*"/>
+                                    <DataGridTextColumn Header="Loss Packet" Binding="{Binding CounterLossPacket}" Width="auto"/>
                             </DataGrid.Columns>
-                        </DataGrid>
+                            </DataGrid>
                     </DataTemplate>
                 </TabControl.ContentTemplate>
             </TabControl>

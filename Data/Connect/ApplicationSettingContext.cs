@@ -14,7 +14,7 @@ namespace Data.Connect
 
         public ApplicationSettingContext(DbContextOptions<ApplicationSettingContext> options) : base(options)
         {
-
+            Database.EnsureCreated();
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -22,7 +22,7 @@ namespace Data.Connect
             if (!optionsBuilder.IsConfigured)
             {
                 optionsBuilder.UseSqlite(
-                     "Data Source=SettingDb.db");
+                     @"Data Source=Files\database\SettingDb.db");
                 optionsBuilder.UseLazyLoadingProxies();
             }
         }

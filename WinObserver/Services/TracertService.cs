@@ -1,7 +1,7 @@
-﻿using Apparat.Helpers;
+﻿using Apparat.Configuration.Events;
+using Apparat.Helpers;
 using Apparat.Helpers.Interfaces;
 using Apparat.Services.Interfaces;
-using Apparat.ViewModel.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -32,21 +32,21 @@ namespace WinObserver.Service
             _token = _cancellationTokenSource!.Token;
         }
 
-        public void StartStreamTracerouteHost(string hostname, IHostViewModel appViewModel)
+        public void StartStreamTracerouteHost(string hostname, IHostViewModelEvents hostViewEvent)
         {
             ThreadPool.QueueUserWorkItem(new WaitCallback(obj =>
             {
                 try
                 {
-                    appViewModel.WorkingProggresbarInListBoxHostanme(true);
-                    appViewModel.ManagementEnableGeneralControlBtn(false);
-                   
-                   
+                    hostViewEvent.WorkingProggresbarInListBoxHostnameEvent(true);
+                    hostViewEvent.ManagementEnableGeneralControlBtnEvent(false);
+
+
                     ClearOldTable();
                     IEnumerable<string> createNewRouteList = _hostRouteHelper.CreateNewRouteCollection(hostname);
                     _hostRouteHelper.FillingNewRoute(ref _innerCollectionTracerouteValue, createNewRouteList);
-                    
-                    appViewModel.ManagementEnableGeneralControlBtn(true);
+
+                    hostViewEvent.ManagementEnableGeneralControlBtnEvent(true);
 
                     while (true)
                     {
@@ -54,11 +54,11 @@ namespace WinObserver.Service
                         _innerCollectionTracerouteValue = _updateInfoStatistic.Update(_innerCollectionTracerouteValue);
                         if (_token.IsCancellationRequested)
                         {
-                            appViewModel.WorkingProggresbarInListBoxHostanme(false);
-                            appViewModel.ManagementEnableGeneralControlBtn(false);
+                            hostViewEvent.WorkingProggresbarInListBoxHostnameEvent(false);
+                            hostViewEvent.ManagementEnableGeneralControlBtnEvent(false);
                             _cancellationTokenSource!.Dispose();
                             RestartToken();
-                            appViewModel.ManagementEnableGeneralControlBtn(true);
+                            hostViewEvent.ManagementEnableGeneralControlBtnEvent(true);
                             break;
                         }
                     }
@@ -67,15 +67,15 @@ namespace WinObserver.Service
                 {
                     _cancellationTokenSource!.Cancel();
                     _cancellationTokenSource.Dispose();
-                    appViewModel.WorkingProggresbarInListBoxHostanme(false);
-                    appViewModel.ErrorNameHostname();
+                    hostViewEvent.WorkingProggresbarInListBoxHostnameEvent(false);
+                    hostViewEvent.ErrorNameHostnameEvent();
                 }
                 catch (Exception)
                 {
                     _cancellationTokenSource!.Cancel();
                     _cancellationTokenSource.Dispose();
-                    appViewModel.WorkingProggresbarInListBoxHostanme(false);
-                    appViewModel.ErrorNameHostname();
+                    hostViewEvent.WorkingProggresbarInListBoxHostnameEvent(false);
+                    hostViewEvent.ErrorNameHostnameEvent();
                 }
 
             }), _token);

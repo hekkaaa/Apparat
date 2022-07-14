@@ -5,26 +5,35 @@
     <TargetFramework>net6.0-windows</TargetFramework>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
-    <Version>0.0.24</Version>
+    <Version>0.1.12</Version>
     <PackageId>Apparat</PackageId>
     <Authors>Alexander Pototsky</Authors>
     <Company>Alexander Pototsky</Company>
     <Product>Apparat</Product>
-    <Description>Data trace tracking</Description>
+    <Description>Monitoring the traceroute</Description>
     <PackageProjectUrl>https://github.com/hekkaaa/WinObserver</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/hekkaaa/WinObserver</RepositoryUrl>
+    <RepositoryUrl>https://github.com/hekkaaa/Apparat</RepositoryUrl>
     <PackageTags>Traceroute; Tracert; Icmp; Network; Monitoring;</PackageTags>
     <PackageReleaseNotes>pre-alpha</PackageReleaseNotes>
     <PackageIcon>testnew.png</PackageIcon>
     <AssemblyName>Apparat</AssemblyName>
     <ApplicationIcon>Resources\AppIcon.ico</ApplicationIcon>
+    <Copyright>Belongs to Alexander Pototsky</Copyright>
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Files\database\init_database_file.txt" />
+    <None Remove="Files\log\initlog.txt" />
     <None Remove="Resources\icons8-error.png" />
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="Files\database\init_database_file.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Files\log\initlog.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Resources\AppIcon.ico" />
     <Content Include="Resources\icons8-error.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -34,7 +43,12 @@
   <ItemGroup>
     <PackageReference Include="MaterialDesignThemes" Version="4.5.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="6.0.0" />
     <PackageReference Include="NetObserver.Helper" Version="1.1.2" />
+    <PackageReference Include="Serilog" Version="2.11.0" />
+    <PackageReference Include="Serilog.Extensions.Hosting" Version="5.0.0" />
+    <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
   </ItemGroup>
 
   <ItemGroup>

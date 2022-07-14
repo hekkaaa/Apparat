@@ -1,7 +1,9 @@
 ﻿using Apparat.Commands;
+using Apparat.Configuration.Events;
 using Apparat.Helpers;
 using Apparat.Services.Interfaces;
 using Apparat.ViewModel.Interfaces;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -18,6 +20,9 @@ namespace Apparat.ViewModel
         private bool _statusWorkDataGrid = false;
         public ReadOnlyObservableCollection<TracertModel>? TracertObject { get; set; }
         private string? _hostnameView;
+        private IHostViewModelEvents _HostViewModelEvents = new HostViewModelEvents();
+        private ILogger<IHostViewModel> _logger;
+
 
         public string? HostnameView
         {
@@ -25,10 +30,17 @@ namespace Apparat.ViewModel
             set { _hostnameView = value; OnPropertyChanged(); }
         }
 
-        public HostViewModel()
+        public HostViewModel(ILogger<IHostViewModel> log)
         {
+            _logger = log;
             _tracerService = new TracertService();
             TracertObject = _tracerService.GetActualCollectionTracertValue();
+            _publicId = Guid.NewGuid().ToString("N");
+
+            // Add Events
+            _HostViewModelEvents.ErrorNameHostnameEvent += ErrorNameHostname;
+            _HostViewModelEvents.ManagementEnableGeneralControlBtnEvent += ManagementEnableGeneralControlBtn;
+            _HostViewModelEvents.WorkingProggresbarInListBoxHostnameEvent += WorkingProggresbarInListBoxHostname;
         }
 
         private DelegateCommand? _startCommand { get; }
@@ -40,16 +52,18 @@ namespace Apparat.ViewModel
                 {
                     if (_statusWorkDataGrid)
                     {
-                        ControlStopStream();
+                        _logger.LogWarning($"Stop traceroute {HostnameView}| ID:{PublicId}");
+                        ControlBtnHost = IconeMap.Restart;
+                        _tracerService!.StopStreamTracerouteHost();
+                        _statusWorkDataGrid = false;
                     }
                     else
                     {
-                        //RestartInfoInDataGrid();
+                        _logger.LogWarning($"Start traceroute {HostnameView}| ID:{PublicId}");
                         ControlBtnHost = IconeMap.Stop;
                         ControlDatatime();
-                        _tracerService!.StartStreamTracerouteHost(HostnameView!, this);
+                        _tracerService!.StartStreamTracerouteHost(HostnameView!, _HostViewModelEvents);
                         _statusWorkDataGrid = true;
-                        //RemoveInfoinTextBoxPanel();
                     }
                     OnPropertyChanged();
                 });
@@ -61,6 +75,12 @@ namespace Apparat.ViewModel
         {
             get { return _generalPanelModel!.NameControlBtn; }
             set { _generalPanelModel!.NameControlBtn = value; OnPropertyChanged(); }
+        }
+
+        private string _publicId = string.Empty;
+        public string PublicId
+        {
+            get { return _publicId; }
         }
 
         private string _TextErrorToolTip = "The hostname is entered incorrectly";
@@ -117,16 +137,26 @@ namespace Apparat.ViewModel
             get { return _visibleDatatimeTextBlock; }
             set { _visibleDatatimeTextBlock = value; OnPropertyChanged(); }
         }
+
         
 
-        public void ControlStopStream()
+        public event PropertyChangedEventHandler? PropertyChanged;
+        public void OnPropertyChanged([CallerMemberName] string prop = "")
         {
-            ControlBtnHost = IconeMap.Restart;
-            _tracerService!.StopStreamTracerouteHost();
-            _statusWorkDataGrid = false;
+            if (PropertyChanged != null)
+                PropertyChanged(this, new PropertyChangedEventArgs(prop));
         }
 
-        public void ErrorNameHostname()
+        private void ControlDatatime()
+        {
+            DateTime dt = DateTime.Now;
+            StringBuilder sb = new StringBuilder("Start Time: ");
+            sb.Append(dt.ToString("T"));
+            StartDatatime = sb.ToString();
+            VisibleDatatimeTextBlock = "Visible";
+        }
+
+        private void ErrorNameHostname()
         {
             ControlBtnHost = IconeMap.Start;
             StartDatatime = "Error";
@@ -136,8 +166,8 @@ namespace Apparat.ViewModel
             SettingOpacityControlBtn = "0.5";
         }
 
-
-        public void WorkingProggresbarInListBoxHostanme(bool boolValue)
+        // Events
+        private void WorkingProggresbarInListBoxHostname(bool boolValue)
         {
             if (boolValue)
             {
@@ -149,9 +179,9 @@ namespace Apparat.ViewModel
             }
         }
 
-        public void ManagementEnableGeneralControlBtn(bool obj)
+        private void ManagementEnableGeneralControlBtn(bool boolValue)
         {
-            if (obj)
+            if (boolValue)
             {
                 SettingIsEnableControlBtn = "True";
                 SettingOpacityControlBtn = "1";
@@ -161,22 +191,6 @@ namespace Apparat.ViewModel
                 SettingIsEnableControlBtn = "False";
                 SettingOpacityControlBtn = "0.5";
             }
-        }
-
-        public event PropertyChangedEventHandler? PropertyChanged;
-        public void OnPropertyChanged([CallerMemberName] string prop = "")
-        {
-            if (PropertyChanged != null)
-                PropertyChanged(this, new PropertyChangedEventArgs(prop));
-        }
-
-        private void ControlDatatime()
-        {   
-            DateTime dt = DateTime.Now;
-            StringBuilder sb = new StringBuilder("Start Time: ");
-            sb.Append(dt.ToString("T"));
-            StartDatatime = sb.ToString();
-            VisibleDatatimeTextBlock = "Visible";
         }
     }
 }
