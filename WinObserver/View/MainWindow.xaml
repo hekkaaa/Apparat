@@ -73,8 +73,8 @@
                               materialDesign:HintAssist.HelperText ="{Binding TextBlockGeneralError}"
                               materialDesign:HintAssist.HelperTextFontSize="12"
                               IsEditable="True"
-                              ShouldPreserveUserEnteredPrefix ="False"
-                              ToolTipService.InitialShowDelay="200" ToolTip="Example: google.com">
+                              ToolTipService.InitialShowDelay="200" ToolTip="Example: google.com" 
+                              KeyDown="KeyEvents">
                         <ComboBox.InputBindings>
                             <KeyBinding Command="{Binding AddNewHost}" Key="Enter"/>
                         </ComboBox.InputBindings>
