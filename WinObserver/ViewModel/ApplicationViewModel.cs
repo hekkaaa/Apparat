@@ -14,7 +14,7 @@ namespace WinObserver.ViewModel
 {
     public class ApplicationViewModel : INotifyPropertyChanged, IApplicationViewModel
     {
-        const string VERSION_APP = "Version: 0.1.13 - Alpha";
+        const string VERSION_APP = "Version: 1.0.0 - pre-Alpha";
         private string _hostname = String.Empty;
         private string _textBlockGeneralError = String.Empty;
         private string _borderTextBox = "#FFABADB3";

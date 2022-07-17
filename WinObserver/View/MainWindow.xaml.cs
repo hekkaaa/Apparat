@@ -1,6 +1,8 @@
 ﻿using Microsoft.Extensions.Logging;
 using System.Diagnostics;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Navigation;
 using WinObserver.ViewModel;
 
@@ -38,6 +40,12 @@ namespace WinObserver
         private void Window_Closed(object sender, System.EventArgs e)
         {
             _logger.LogWarning("Application is closed! Goodbye!");
+        }
+
+        private void KeyEvents(object sender, KeyEventArgs e)
+        { // Drop Collection History Combobox.
+            var s = sender as ComboBox;
+            s.IsDropDownOpen = false;
         }
     }
 }
