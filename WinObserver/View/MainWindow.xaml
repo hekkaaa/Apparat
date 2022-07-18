@@ -111,10 +111,55 @@
                 <TreeView ItemsSource="{Binding ExplorersCollection}">
                     <TreeView.ItemTemplate>
                         <HierarchicalDataTemplate ItemsSource="{Binding FolderCollection}">
-                            <Label Content="{Binding FolderName}"/>
+                            <StackPanel Orientation="Horizontal">
+                                <materialDesign:PackIcon Kind="FolderCogOutline" Width="20" Height="20"/>
+                                <Label Content="{Binding FolderName}"/>
+                            </StackPanel>
+                            
                             <HierarchicalDataTemplate.ItemTemplate>
                                 <DataTemplate>
-                                    <Label Content="{Binding HostnameView}"/>
+                                    <StackPanel Margin="5" Orientation="Horizontal" Width="auto" Height="auto" VerticalAlignment="Center">
+
+                                        <Image Source="\Resources\icons8-error.png" Visibility="{Binding ErrorHostnameVisibleIcon}" 
+                                                Width="20" Height="20" VerticalAlignment="Center"
+                                                Margin="5,0,5,0"
+                                                ToolTipService.InitialShowDelay="200" ToolTip="{Binding TextErrorToolTip}">
+                                        </Image>
+
+                                        <ProgressBar  
+                                        Style="{StaticResource MaterialDesignCircularProgressBar}"
+                                        Value="0"
+                                        IsIndeterminate="True" Margin="5,0,5,0"
+                                        ToolTipService.InitialShowDelay="200"
+                                        ToolTip="In work" Foreground="LightSeaGreen" 
+                                        Visibility="{Binding ValueVisibleProgressBar}">
+                                        </ProgressBar>
+
+                                        <StackPanel Margin="5,5,0,0">
+                                            <TextBlock Text="{Binding HostnameView}" FontWeight="Bold" />
+                                            <TextBlock Text="{Binding StartDatatime}" Visibility="{Binding VisibleDatatimeTextBlock}" FontSize="10" Foreground="LightSlateGray"/>
+                                        </StackPanel>
+
+                                        <!--Start\Stop\Restart btn-->
+                                        <Button x:Name="ControlBtn" Command="{Binding StartCommand}" 
+                                            VerticalAlignment="Center"
+                                            Style="{StaticResource MaterialDesignIconForegroundButton}"
+                                            ToolTip="MaterialDesignIconForegroundButton"
+                                            Height="24" Width="24"    
+                                            IsEnabled="{Binding SettingIsEnableControlBtn}" Opacity="{ Binding SettingOpacityControlBtn}"
+                                            Margin="15,0,7,0">
+                                            <materialDesign:PackIcon Kind="{Binding ControlBtnHost}" Width="25" Height="25"/>
+                                        </Button>
+
+                                        <!--Delete button-->
+                                        <Button Command="{Binding DataContext.CloseTabCommand,RelativeSource={RelativeSource AncestorType={x:Type Window}}}" 
+                                            CommandParameter="{Binding}" VerticalAlignment="Center" 
+                                            Style="{StaticResource MaterialDesignIconForegroundButton}"
+                                            ToolTip="Delete Hostname"
+                                            Height="24" Width="24">
+                                            <materialDesign:PackIcon Kind="Delete" Width="20" Height="20"/>
+                                        </Button>
+                                    </StackPanel>
                                 </DataTemplate>
                             </HierarchicalDataTemplate.ItemTemplate>
                         </HierarchicalDataTemplate>
