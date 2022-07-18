@@ -105,9 +105,25 @@
 
                 </StackPanel>
             </Grid>
-            
-            <!--Left List Hostname-->
+
+            <!--NEW CONCEPT Left Collection -->
             <Grid Grid.Row="1" Background="WhiteSmoke">
+                <TreeView ItemsSource="{Binding ExplorersCollection}">
+                    <TreeView.ItemTemplate>
+                        <HierarchicalDataTemplate ItemsSource="{Binding FolderCollection}">
+                            <Label Content="{Binding FolderName}"/>
+                            <HierarchicalDataTemplate.ItemTemplate>
+                                <DataTemplate>
+                                    <Label Content="{Binding HostnameView}"/>
+                                </DataTemplate>
+                            </HierarchicalDataTemplate.ItemTemplate>
+                        </HierarchicalDataTemplate>
+                    </TreeView.ItemTemplate>
+                </TreeView>
+            </Grid>
+
+            <!--Left List Hostname-->
+            <!--<Grid Grid.Row="1" Background="WhiteSmoke">
                 <ListBox ItemsSource="{Binding HostsCollection}" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
@@ -133,7 +149,7 @@
                                         <TextBlock Text="{Binding StartDatatime}" Visibility="{Binding VisibleDatatimeTextBlock}" FontSize="10" Foreground="LightSlateGray"/>
                                     </StackPanel>
                                     
-                                    <!--Start\Stop\Restart btn-->
+                                    --><!--Start\Stop\Restart btn--><!--
                                     <Button x:Name="ControlBtn" Command="{Binding StartCommand}" 
                                             VerticalAlignment="Center"
                                             Style="{StaticResource MaterialDesignIconForegroundButton}"
@@ -144,7 +160,7 @@
                                     <materialDesign:PackIcon Kind="{Binding ControlBtnHost}" Width="25" Height="25"/>
                                     </Button>
                                    
-                                    <!--Delete button-->
+                                    --><!--Delete button--><!--
                                     <Button Command="{Binding DataContext.CloseTabCommand,RelativeSource={RelativeSource AncestorType={x:Type Window}}}" 
                                             CommandParameter="{Binding}" VerticalAlignment="Center" 
                                             Style="{StaticResource MaterialDesignIconForegroundButton}"
@@ -157,7 +173,7 @@
                     </ListBox.ItemTemplate>
                     <ListBox.ItemContainerStyle>
                         <Style TargetType="{x:Type ListBoxItem}">
-                            <!--<Setter Property="Background" Value="White"/>-->
+                            --><!--<Setter Property="Background" Value="White"/>--><!--
                             <Setter Property="Foreground" Value="DarkSlateGray"/>
                             <Style.Triggers>
                                 <Trigger Property="IsSelected" Value="True">
@@ -172,7 +188,7 @@
                         </Style>
                     </ListBox.ItemContainerStyle>
                 </ListBox>
-            </Grid>
+            </Grid>-->
         </Grid>
         
         <!--Splitte between Left panel host and DataGrid-->
