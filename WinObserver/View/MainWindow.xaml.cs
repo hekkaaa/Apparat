@@ -1,9 +1,12 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Apparat.ViewModel;
+using Microsoft.Extensions.Logging;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Navigation;
+using WinObserver.Model;
 using WinObserver.ViewModel;
 
 namespace WinObserver
@@ -46,6 +49,27 @@ namespace WinObserver
         { // Drop Collection History Combobox.
             var s = sender as ComboBox;
             s.IsDropDownOpen = false;
+        }
+
+
+        private void TreeView_OnSelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+        {
+            _logger.LogWarning($"User select item is TreeView: {e.NewValue}");
+            try
+            {
+                HostViewModel obj = (HostViewModel)e.NewValue;
+                if (obj != null)
+                {
+                    _logger.LogWarning($"User select hostname: {obj.HostnameView} | ID: {obj.PublicId}");
+                    ApplicationViewModel s1 = DataContext as ApplicationViewModel;
+                    s1.SelectedGroup = obj.TracertObject;
+                }
+            }
+            catch (System.InvalidCastException ex)
+            {
+                _logger.LogError($"Error castObject: HostViewModel {ex.Message}");
+            }
+
         }
     }
 }

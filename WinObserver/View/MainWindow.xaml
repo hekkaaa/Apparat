@@ -108,14 +108,14 @@
 
             <!--NEW CONCEPT Left Collection -->
             <Grid Grid.Row="1" Background="WhiteSmoke">
-                <TreeView ItemsSource="{Binding ExplorersCollection}">
+                <TreeView ItemsSource="{Binding ExplorersCollection}" SelectedItemChanged="TreeView_OnSelectedItemChanged">
                     <TreeView.ItemTemplate>
                         <HierarchicalDataTemplate ItemsSource="{Binding FolderCollection}">
                             <StackPanel Orientation="Horizontal">
-                                <materialDesign:PackIcon Kind="FolderCogOutline" Width="20" Height="20"/>
+                                <materialDesign:PackIcon Kind="FolderCogOutline" Width="18" Height="18" Margin="0,1.4,0,0"/>
                                 <Label Content="{Binding FolderName}"/>
                             </StackPanel>
-                            
+
                             <HierarchicalDataTemplate.ItemTemplate>
                                 <DataTemplate>
                                     <StackPanel Margin="5" Orientation="Horizontal" Width="auto" Height="auto" VerticalAlignment="Center">
@@ -166,128 +166,48 @@
                     </TreeView.ItemTemplate>
                 </TreeView>
             </Grid>
-
-            <!--Left List Hostname-->
-            <!--<Grid Grid.Row="1" Background="WhiteSmoke">
-                <ListBox ItemsSource="{Binding HostsCollection}" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
-                    <ListBox.ItemTemplate>
-                        <DataTemplate>
-                               <StackPanel Margin="5" Orientation="Horizontal" Width="auto" Height="auto" VerticalAlignment="Center">
-                                    
-                                   <Image Source="\Resources\icons8-error.png" Visibility="{Binding ErrorHostnameVisibleIcon}" 
-                                                Width="20" Height="20" VerticalAlignment="Center"
-                                                Margin="5,0,5,0"
-                                                ToolTipService.InitialShowDelay="200" ToolTip="{Binding TextErrorToolTip}">
-                                    </Image>
-
-                                    <ProgressBar  
-                                        Style="{StaticResource MaterialDesignCircularProgressBar}"
-                                        Value="0"
-                                        IsIndeterminate="True" Margin="5,0,5,0"
-                                        ToolTipService.InitialShowDelay="200"
-                                        ToolTip="In work" Foreground="LightSeaGreen" 
-                                        Visibility="{Binding ValueVisibleProgressBar}">
-                                    </ProgressBar>
-
-                                    <StackPanel Margin="5,5,0,0">
-                                        <TextBlock Text="{Binding HostnameView}" FontWeight="Bold" />          
-                                        <TextBlock Text="{Binding StartDatatime}" Visibility="{Binding VisibleDatatimeTextBlock}" FontSize="10" Foreground="LightSlateGray"/>
-                                    </StackPanel>
-                                    
-                                    --><!--Start\Stop\Restart btn--><!--
-                                    <Button x:Name="ControlBtn" Command="{Binding StartCommand}" 
-                                            VerticalAlignment="Center"
-                                            Style="{StaticResource MaterialDesignIconForegroundButton}"
-                                            ToolTip="MaterialDesignIconForegroundButton"
-                                            Height="24" Width="24"    
-                                            IsEnabled="{Binding SettingIsEnableControlBtn}" Opacity="{ Binding SettingOpacityControlBtn}"
-                                            Margin="15,0,7,0">
-                                    <materialDesign:PackIcon Kind="{Binding ControlBtnHost}" Width="25" Height="25"/>
-                                    </Button>
-                                   
-                                    --><!--Delete button--><!--
-                                    <Button Command="{Binding DataContext.CloseTabCommand,RelativeSource={RelativeSource AncestorType={x:Type Window}}}" 
-                                            CommandParameter="{Binding}" VerticalAlignment="Center" 
-                                            Style="{StaticResource MaterialDesignIconForegroundButton}"
-                                            ToolTip="Delete Hostname"
-                                            Height="24" Width="24">  
-                                        <materialDesign:PackIcon Kind="Delete" Width="20" Height="20"/>
-                                    </Button>
-                            </StackPanel>
-                        </DataTemplate>
-                    </ListBox.ItemTemplate>
-                    <ListBox.ItemContainerStyle>
-                        <Style TargetType="{x:Type ListBoxItem}">
-                            --><!--<Setter Property="Background" Value="White"/>--><!--
-                            <Setter Property="Foreground" Value="DarkSlateGray"/>
-                            <Style.Triggers>
-                                <Trigger Property="IsSelected" Value="True">
-                                    <Setter Property="Foreground" Value="Black"/>
-                                    <Setter Property="BorderThickness" Value="1"/>
-                                    <Setter Property="BorderBrush" Value="Black"/>
-                                </Trigger>
-                                <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter Property="BorderThickness" Value="1"/>
-                                </Trigger>
-                            </Style.Triggers>
-                        </Style>
-                    </ListBox.ItemContainerStyle>
-                </ListBox>
-            </Grid>-->
         </Grid>
         
         <!--Splitte between Left panel host and DataGrid-->
         <GridSplitter Grid.Column="1" Grid.Row="1" ShowsPreview="False" Width="3"
         HorizontalAlignment="Center" BorderThickness="0"/>
 
-        <!-- Datagrid in TabControl -->
+        <!-- NEW CONCEPT GeneralPaner TabControl -->
         <Grid Grid.Row="1" Grid.Column="2">
             <materialDesign:Card>
-                <TabControl DockPanel.Dock="Right" Grid.Row="1" Name="TabMain" ItemsSource="{Binding HostsCollection,UpdateSourceTrigger=PropertyChanged}" 
+                <TabControl DockPanel.Dock="Right" Grid.Row="1" Name="TabMain" 
                             materialDesign:ColorZoneAssist.Mode="Light" HorizontalContentAlignment="Left">
-                <TabControl.ItemTemplate>
-                    <DataTemplate>
-                        <StackPanel Orientation="Horizontal" Cursor="Hand">
-                                <!-- Text hostname tab -->
-                                <TextBlock Text="{Binding HostnameView}"/>
-
-                                <!-- Close btn -->
-                                <Button Command="{Binding DataContext.CloseTabCommand,RelativeSource={RelativeSource AncestorType={x:Type Window}}}" 
-                                        CommandParameter="{Binding}"
-                                         DockPanel.Dock="Right" Focusable="False" Margin="10,0,0,7" 
-                                         BorderThickness="0" Width="auto" Height="auto"
-                                         Style="{StaticResource MaterialDesignIconForegroundButton}"
-                                         ToolTipService.InitialShowDelay="300"
-                                         ToolTip="Delete Ping">
-                                   <materialDesign:PackIcon Kind="Close" Width="auto" Height="auto"/>
-                                </Button>
-                            </StackPanel>
-                    </DataTemplate>
-                </TabControl.ItemTemplate>
-                <TabControl.ContentTemplate>
-                    <DataTemplate>
-                        <DataGrid ItemsSource="{Binding TracertObject, UpdateSourceTrigger=PropertyChanged}" 
-                                  AutoGenerateColumns="False" RowBackground="GhostWhite" 
-                                  AlternatingRowBackground ="LightGray" GridLinesVisibility="Vertical" 
-                                  IsReadOnly="True" FontSize="16" CanUserAddRows="False">
-                                <DataGrid.Columns>
-                                    <DataGridTextColumn Header="№" Binding="{Binding NumberHostname}" Width="auto"/>
-                                    <DataGridTextColumn Header="Hostname" Binding="{Binding Hostname}" Width="auto"/>
-                                    <DataGridTextColumn Header="Loss %" Binding="{Binding PercentLossPacket}" Width="auto"/>
-                                    <DataGridTextColumn Header="Last Delay" Binding="{Binding LastDelay}" Width="*"/>
-                                    <DataGridTextColumn Header="Minimal" Binding="{Binding MinPing}" Width="*"/>
-                                    <DataGridTextColumn Header="Middle" Binding="{Binding MiddlePing}" Width="*"/>
-                                    <DataGridTextColumn Header="Maximum" Binding="{Binding MaxPing}" Width="*"/>
-                                    <DataGridTextColumn Header="All Packet" Binding="{Binding CounterPacket}" Width="*"/>
-                                    <DataGridTextColumn Header="Loss Packet" Binding="{Binding CounterLossPacket}" Width="auto"/>
+                    <TabItem
+                  Header="Table">
+                        <DataGrid ItemsSource="{Binding SelectedGroup, UpdateSourceTrigger=PropertyChanged}"
+                                   AutoGenerateColumns="False" RowBackground="GhostWhite" 
+                                   AlternatingRowBackground ="LightGray" GridLinesVisibility="Vertical" 
+                                   IsReadOnly="True" FontSize="16" CanUserAddRows="False">  
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="№" Binding="{Binding NumberHostname}" Width="auto"/>
+                                <DataGridTextColumn Header="Hostname" Binding="{Binding Hostname}" Width="auto"/>
+                                <DataGridTextColumn Header="Loss %" Binding="{Binding PercentLossPacket}" Width="auto"/>
+                                <DataGridTextColumn Header="Last Delay" Binding="{Binding LastDelay}" Width="*"/>
+                                <DataGridTextColumn Header="Minimal" Binding="{Binding MinPing}" Width="*"/>
+                                <DataGridTextColumn Header="Middle" Binding="{Binding MiddlePing}" Width="*"/>
+                                <DataGridTextColumn Header="Maximum" Binding="{Binding MaxPing}" Width="*"/>
+                                <DataGridTextColumn Header="All Packet" Binding="{Binding CounterPacket}" Width="*"/>
+                                <DataGridTextColumn Header="Loss Packet" Binding="{Binding CounterLossPacket}" Width="auto"/>
                             </DataGrid.Columns>
-                            </DataGrid>
-                    </DataTemplate>
-                </TabControl.ContentTemplate>
-            </TabControl>
+                        </DataGrid>
+                    </TabItem>
+                    <TabItem
+                        Header="Statistic">
+                        <TextBlock Margin="8" Text="Statistics will be displayed here soon" />
+                    </TabItem>
+                    <TabItem
+                        Header="Graph" IsEnabled="False">
+                        <TextBlock Margin="8" Text="The graph will be in the next version" />
+                    </TabItem>
+                </TabControl>
             </materialDesign:Card>
         </Grid>
-        
+
         <!--Footer -->
         <Border BorderBrush="Black" BorderThickness="0.5" Grid.ColumnSpan="3" Grid.Row="3">
         <Grid Background="PowderBlue">

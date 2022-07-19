@@ -10,6 +10,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using WinObserver.Model;
 
 namespace WinObserver.ViewModel
 {
@@ -35,6 +36,7 @@ namespace WinObserver.ViewModel
             _logger = log;
             _hostVMlog = hostVMlog;
 
+            // Test Start Info
             _explorers = new ObservableCollection<ExplorerViewModel>() {
                 new ExplorerViewModel() {
                     FolderName = "Default",
@@ -93,6 +95,13 @@ namespace WinObserver.ViewModel
                 _borderTextBox = value;
                 OnPropertyChanged();
             }
+        }
+
+        ReadOnlyObservableCollection<TracertModel> _selectedGroup;
+        public ReadOnlyObservableCollection<TracertModel> SelectedGroup
+        {
+            get { return _selectedGroup;}
+            set { _selectedGroup = value; OnPropertyChanged(); }
         }
 
 
