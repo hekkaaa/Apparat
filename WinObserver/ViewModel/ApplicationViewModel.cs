@@ -7,8 +7,10 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using WinObserver.Model;
 
 namespace WinObserver.ViewModel
 {
@@ -19,6 +21,7 @@ namespace WinObserver.ViewModel
         private string _textBlockGeneralError = String.Empty;
         private string _borderTextBox = "#FFABADB3";
 
+        private ObservableCollection<ExplorerViewModel> _explorers;
         private ObservableCollection<HostViewModel> _hostsCollection;
         private readonly IAppSettingService _appSettingService;
 
@@ -32,6 +35,24 @@ namespace WinObserver.ViewModel
             _hostsCollection = new ObservableCollection<HostViewModel>();
             _logger = log;
             _hostVMlog = hostVMlog;
+
+            // Test Start Info
+            _explorers = new ObservableCollection<ExplorerViewModel>() {
+                new ExplorerViewModel() {
+                    FolderName = "Default",
+                    FolderCollection = new ObservableCollection<HostViewModel>() {
+                        new HostViewModel(_hostVMlog){ HostnameView = "144.42.80.2"},
+                    new HostViewModel(_hostVMlog){ HostnameView = "9.44.81.90"}},
+
+                },
+                new ExplorerViewModel(){
+                    FolderName = "ИП Усатый",
+                    FolderCollection = new ObservableCollection<HostViewModel>() {
+                        new HostViewModel(_hostVMlog){ HostnameView = "22.4.22.76"},
+                    new HostViewModel(_hostVMlog){ HostnameView = "7.99.154.14"},
+                    new HostViewModel(_hostVMlog){ HostnameView = "Monro.ru"},}
+                }
+            };
 
             // init object class  
             _appSettingService = appService;
@@ -76,6 +97,26 @@ namespace WinObserver.ViewModel
             }
         }
 
+        ReadOnlyObservableCollection<TracertModel> _selectedGroup;
+        public ReadOnlyObservableCollection<TracertModel> SelectedGroup
+        {
+            get { return _selectedGroup;}
+            set { _selectedGroup = value; OnPropertyChanged(); }
+        }
+
+
+        public ObservableCollection<ExplorerViewModel> ExplorersCollection
+        {
+            get
+            {
+                return _explorers;
+            }
+            set
+            {
+                _explorers = value;
+                OnPropertyChanged();
+            }
+        }
 
         private ObservableCollection<string> _collectionRecentHost = null!;
         public ObservableCollection<string> CollectionRecentHost
@@ -116,7 +157,10 @@ namespace WinObserver.ViewModel
                      }
 
                      HostViewModel newObject = new HostViewModel(_hostVMlog) { HostnameView = editedHostname };
-                     HostsCollection.Add(newObject);
+                     
+                     // Add new hostname in default folder View.
+                     ExplorersCollection.First().FolderCollection.Add(newObject);
+                     //HostsCollection.Add(newObject);
                     
                      _appSettingService.AddHostInHistory(editedHostname);
                      UpdateCollectionHistoryHostInCombobox();
@@ -140,8 +184,17 @@ namespace WinObserver.ViewModel
                 {
                     HostViewModel? deleteObject = obj as HostViewModel;
                     if (deleteObject != null)
-                    { 
-                        HostsCollection.Remove(deleteObject!);
+                    {   
+                        foreach(var item in ExplorersCollection)
+                        {
+                            HostViewModel res = item.FolderCollection.FirstOrDefault(x=>x.PublicId == deleteObject.PublicId)!;
+                            if (res != null) 
+                            {
+                                item.FolderCollection.Remove(deleteObject);
+                                break;
+                            } 
+                        }
+                        //HostsCollection.Remove(deleteObject!);
                         _logger.LogWarning($"Delete object tracert {deleteObject.HostnameView} | ID:{deleteObject.PublicId}");
                     }
                 }));

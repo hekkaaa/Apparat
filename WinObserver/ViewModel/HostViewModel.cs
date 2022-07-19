@@ -35,6 +35,7 @@ namespace Apparat.ViewModel
             _logger = log;
             _tracerService = new TracertService();
             TracertObject = _tracerService.GetActualCollectionTracertValue();
+            // Generate unique id
             _publicId = Guid.NewGuid().ToString("N");
 
             // Add Events
