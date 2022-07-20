@@ -133,6 +133,13 @@ namespace Apparat.ViewModel
             set { _visibleDatatimeTextBlock = value; OnPropertyChanged(); }
         }
 
+        private string _textinToolTipsFromControlBtn = "Start traceroute";
+        public string TextinToolTipsFromControlBtn
+        {
+            get { return _textinToolTipsFromControlBtn; }
+            set { _textinToolTipsFromControlBtn = value; OnPropertyChanged(); }
+        }
+
         public bool StopStream()
         {
             try
@@ -143,7 +150,7 @@ namespace Apparat.ViewModel
                 }
 
                 _logger.LogWarning($"Stop traceroute {HostnameView}| ID:{PublicId}");
-                ControlBtnHost = IconeMap.Restart;
+                VisaulChangeAtStopStream();
                 _tracerService!.StopStreamTracerouteHost();
                 _statusWorkDataGrid = false;
                 return true;
@@ -165,7 +172,7 @@ namespace Apparat.ViewModel
                 }
 
                 _logger.LogWarning($"Start traceroute {HostnameView}| ID:{PublicId}");
-                ControlBtnHost = IconeMap.Stop;
+                VisaulChangeAtStartupStream();
                 ControlDatatime();
                 _tracerService!.StartStreamTracerouteHost(HostnameView!, _HostViewModelEvents);
                 _statusWorkDataGrid = true;
@@ -204,6 +211,20 @@ namespace Apparat.ViewModel
             ErrorHostnameVisibleIcon = "Visible";
             SettingIsEnableControlBtn = "False";
             SettingOpacityControlBtn = "0.5";
+        }
+
+        // Visual changes during events 
+
+        private void VisaulChangeAtStartupStream()
+        {
+            TextinToolTipsFromControlBtn = "Stop traceroute";
+            ControlBtnHost = IconeMap.Stop;
+        }
+
+        private void VisaulChangeAtStopStream()
+        {
+            TextinToolTipsFromControlBtn = "Restart traceroute";
+            ControlBtnHost = IconeMap.Restart;
         }
 
         // Events

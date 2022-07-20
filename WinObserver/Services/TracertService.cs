@@ -41,7 +41,6 @@ namespace WinObserver.Service
                     hostViewEvent.WorkingProggresbarInListBoxHostnameEvent(true);
                     hostViewEvent.ManagementEnableGeneralControlBtnEvent(false);
 
-
                     ClearOldTable();
                     IEnumerable<string> createNewRouteList = _hostRouteHelper.CreateNewRouteCollection(hostname);
                     _hostRouteHelper.FillingNewRoute(ref _innerCollectionTracerouteValue, createNewRouteList);
