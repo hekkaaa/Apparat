@@ -20,10 +20,8 @@ namespace Apparat.ViewModel.Interfaces
         ReadOnlyObservableCollection<TracertModel>? TracertObject { get; set; }
 
         event PropertyChangedEventHandler? PropertyChanged;
-
-        //void ErrorNameHostname();
-        //void ManagementEnableGeneralControlBtn(bool obj);
-        //void WorkingProggresbarInListBoxHostname(bool boolValue);
+        bool StopStream();
+        bool StartStream();
         void OnPropertyChanged([CallerMemberName] string prop = "");
     }
 }

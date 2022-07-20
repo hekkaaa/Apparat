@@ -144,7 +144,7 @@
                                         <Button x:Name="ControlBtn" Command="{Binding StartCommand}" 
                                             VerticalAlignment="Center"
                                             Style="{StaticResource MaterialDesignIconForegroundButton}"
-                                            ToolTip="MaterialDesignIconForegroundButton"
+                                            ToolTip="{Binding TextinToolTipsFromControlBtn}"
                                             Height="24" Width="24"    
                                             IsEnabled="{Binding SettingIsEnableControlBtn}" Opacity="{ Binding SettingOpacityControlBtn}"
                                             Margin="15,0,7,0">
