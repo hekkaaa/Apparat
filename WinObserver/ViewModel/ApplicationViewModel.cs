@@ -97,8 +97,8 @@ namespace WinObserver.ViewModel
             }
         }
 
-        ReadOnlyObservableCollection<TracertModel> _selectedGroup;
-        public ReadOnlyObservableCollection<TracertModel> SelectedGroup
+        HostViewModel _selectedGroup = null;
+        public HostViewModel SelectedGroup
         {
             get { return _selectedGroup;}
             set { _selectedGroup = value; OnPropertyChanged(); }

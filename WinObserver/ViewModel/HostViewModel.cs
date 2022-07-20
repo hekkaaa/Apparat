@@ -35,12 +35,14 @@ namespace Apparat.ViewModel
             _logger = log;
             _tracerService = new TracertService();
             TracertObject = _tracerService.GetActualCollectionTracertValue();
+
             // Generate unique id
-            _publicId = Guid.NewGuid().ToString("N");
+            GeneradeUniqueIdInPublicIdPropetry();
 
             // Add Events
             _HostViewModelEvents.ErrorNameHostnameEvent += ErrorNameHostname;
-            _HostViewModelEvents.ManagementEnableGeneralControlBtnEvent += ManagementEnableGeneralControlBtn;
+            _HostViewModelEvents.ManagementEnableGeneralControlBtnEventAndPreloaderVisible += ManagementEnableGeneralControlBtn;
+            _HostViewModelEvents.ManagementEnableGeneralControlBtnEventAndPreloaderVisible += VisibleDatagridOrPreloaderInGeneralPanerTabControl;
             _HostViewModelEvents.WorkingProggresbarInListBoxHostnameEvent += WorkingProggresbarInListBoxHostname;
         }
 
@@ -133,6 +135,20 @@ namespace Apparat.ViewModel
             set { _visibleDatatimeTextBlock = value; OnPropertyChanged(); }
         }
 
+        private string _visibleDataGridTable = "Collapsed";
+        public string VisibleDataGridTable
+        {
+            get { return _visibleDataGridTable; }
+            set { _visibleDataGridTable = value; OnPropertyChanged(); }
+        }
+
+        private string _visiblePrealoaderGrid = "Collapsed";
+        public string VisiblePrealoaderGrid
+        {
+            get { return _visiblePrealoaderGrid; }
+            set { _visiblePrealoaderGrid = value; OnPropertyChanged(); }
+        }
+
         private string _textinToolTipsFromControlBtn = "Start traceroute";
         public string TextinToolTipsFromControlBtn
         {
@@ -213,12 +229,18 @@ namespace Apparat.ViewModel
             SettingOpacityControlBtn = "0.5";
         }
 
+        private void GeneradeUniqueIdInPublicIdPropetry()
+        {
+            _publicId = Guid.NewGuid().ToString("N");
+        }
+
         // Visual changes during events 
 
         private void VisaulChangeAtStartupStream()
         {
             TextinToolTipsFromControlBtn = "Stop traceroute";
             ControlBtnHost = IconeMap.Stop;
+            
         }
 
         private void VisaulChangeAtStopStream()
@@ -237,6 +259,20 @@ namespace Apparat.ViewModel
             else
             {
                 ValueVisibleProgressBar = "Hidden";
+            }
+        }
+
+        private void VisibleDatagridOrPreloaderInGeneralPanerTabControl(bool boolValue)
+        {
+            if (boolValue)
+            {
+                VisiblePrealoaderGrid = "Collapsed";
+                VisibleDataGridTable = "Visible";
+            }
+            else
+            {
+                VisiblePrealoaderGrid = "Visible";
+                VisibleDataGridTable = "Collapsed";
             }
         }
 

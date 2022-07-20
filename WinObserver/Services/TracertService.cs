@@ -39,13 +39,13 @@ namespace WinObserver.Service
                 try
                 {
                     hostViewEvent.WorkingProggresbarInListBoxHostnameEvent(true);
-                    hostViewEvent.ManagementEnableGeneralControlBtnEvent(false);
+                    hostViewEvent.ManagementEnableGeneralControlBtnEventAndPreloaderVisible(false);
 
                     ClearOldTable();
                     IEnumerable<string> createNewRouteList = _hostRouteHelper.CreateNewRouteCollection(hostname);
                     _hostRouteHelper.FillingNewRoute(ref _innerCollectionTracerouteValue, createNewRouteList);
 
-                    hostViewEvent.ManagementEnableGeneralControlBtnEvent(true);
+                    hostViewEvent.ManagementEnableGeneralControlBtnEventAndPreloaderVisible(true);
 
                     while (true)
                     {
@@ -54,10 +54,10 @@ namespace WinObserver.Service
                         if (_token.IsCancellationRequested)
                         {
                             hostViewEvent.WorkingProggresbarInListBoxHostnameEvent(false);
-                            hostViewEvent.ManagementEnableGeneralControlBtnEvent(false);
+                            hostViewEvent.ManagementEnableGeneralControlBtnEventAndPreloaderVisible(false);
                             _cancellationTokenSource!.Dispose();
                             RestartToken();
-                            hostViewEvent.ManagementEnableGeneralControlBtnEvent(true);
+                            hostViewEvent.ManagementEnableGeneralControlBtnEventAndPreloaderVisible(true);
                             break;
                         }
                     }
