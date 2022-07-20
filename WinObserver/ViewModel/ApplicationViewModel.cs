@@ -190,11 +190,17 @@ namespace WinObserver.ViewModel
                             HostViewModel res = item.FolderCollection.FirstOrDefault(x=>x.PublicId == deleteObject.PublicId)!;
                             if (res != null) 
                             {
-                                item.FolderCollection.Remove(deleteObject);
-                                break;
+                                if (res.StopStream())
+                                {
+                                    item.FolderCollection.Remove(deleteObject);
+                                    break;
+                                }
+                                else
+                                {
+                                    break;
+                                }
                             } 
                         }
-                        //HostsCollection.Remove(deleteObject!);
                         _logger.LogWarning($"Delete object tracert {deleteObject.HostnameView} | ID:{deleteObject.PublicId}");
                     }
                 }));
