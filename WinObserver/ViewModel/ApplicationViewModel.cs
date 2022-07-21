@@ -10,7 +10,6 @@ using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
-using WinObserver.Model;
 
 namespace WinObserver.ViewModel
 {
@@ -41,15 +40,15 @@ namespace WinObserver.ViewModel
                 new ExplorerViewModel() {
                     FolderName = "Default",
                     FolderCollection = new ObservableCollection<HostViewModel>() {
-                        new HostViewModel(_hostVMlog){ HostnameView = "144.42.80.2"},
-                    new HostViewModel(_hostVMlog){ HostnameView = "9.44.81.90"}},
+                        new HostViewModel(_hostVMlog){ HostnameView = "vk.com"},
+                    new HostViewModel(_hostVMlog){ HostnameView = "ya.ru"}},
 
                 },
                 new ExplorerViewModel(){
                     FolderName = "ИП Усатый",
                     FolderCollection = new ObservableCollection<HostViewModel>() {
-                        new HostViewModel(_hostVMlog){ HostnameView = "22.4.22.76"},
-                    new HostViewModel(_hostVMlog){ HostnameView = "7.99.154.14"},
+                        new HostViewModel(_hostVMlog){ HostnameView = "metanit.com"},
+                    new HostViewModel(_hostVMlog){ HostnameView = "github.com"},
                     new HostViewModel(_hostVMlog){ HostnameView = "Monro.ru"},}
                 }
             };
@@ -97,10 +96,10 @@ namespace WinObserver.ViewModel
             }
         }
 
-        HostViewModel _selectedGroup = null;
+        HostViewModel _selectedGroup = null!;
         public HostViewModel SelectedGroup
         {
-            get { return _selectedGroup;}
+            get { return _selectedGroup; }
             set { _selectedGroup = value; OnPropertyChanged(); }
         }
 
@@ -157,11 +156,11 @@ namespace WinObserver.ViewModel
                      }
 
                      HostViewModel newObject = new HostViewModel(_hostVMlog) { HostnameView = editedHostname };
-                     
+
                      // Add new hostname in default folder View.
                      ExplorersCollection.First().FolderCollection.Add(newObject);
                      //HostsCollection.Add(newObject);
-                    
+
                      _appSettingService.AddHostInHistory(editedHostname);
                      UpdateCollectionHistoryHostInCombobox();
                      RemoveInfoinTextBoxPanel();
@@ -184,11 +183,11 @@ namespace WinObserver.ViewModel
                 {
                     HostViewModel? deleteObject = obj as HostViewModel;
                     if (deleteObject != null)
-                    {   
-                        foreach(var item in ExplorersCollection)
+                    {
+                        foreach (var item in ExplorersCollection)
                         {
-                            HostViewModel res = item.FolderCollection.FirstOrDefault(x=>x.PublicId == deleteObject.PublicId)!;
-                            if (res != null) 
+                            HostViewModel res = item.FolderCollection.FirstOrDefault(x => x.PublicId == deleteObject.PublicId)!;
+                            if (res != null)
                             {
                                 if (res.StopStream())
                                 {
@@ -199,7 +198,7 @@ namespace WinObserver.ViewModel
                                 {
                                     break;
                                 }
-                            } 
+                            }
                         }
                         _logger.LogWarning($"Delete object tracert {deleteObject.HostnameView} | ID:{deleteObject.PublicId}");
                     }
@@ -268,7 +267,7 @@ namespace WinObserver.ViewModel
             _logger.LogError($"invalid hostname: '{errorHostname}'");
 
             Task.Factory.StartNew(() =>
-            {   
+            {
                 TextBlockGeneralError = "Hostname not valid";
                 BorderTextBox = "Red";
 

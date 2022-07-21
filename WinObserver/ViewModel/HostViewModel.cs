@@ -149,6 +149,13 @@ namespace Apparat.ViewModel
             set { _visiblePrealoaderGrid = value; OnPropertyChanged(); }
         }
 
+        private string _visibleStupGrid = "Visible";
+        public string VisibleStupGrid
+        {
+            get { return _visibleStupGrid; }
+            set { _visibleStupGrid = value; OnPropertyChanged(); }
+        }
+
         private string _textinToolTipsFromControlBtn = "Start traceroute";
         public string TextinToolTipsFromControlBtn
         {
@@ -271,6 +278,7 @@ namespace Apparat.ViewModel
             }
             else
             {
+                VisibleStupGrid = "Collapsed";
                 VisiblePrealoaderGrid = "Visible";
                 VisibleDataGridTable = "Collapsed";
             }

@@ -201,45 +201,34 @@
                         </DataGrid>
 
                             <!--Preloader-->
-                            <Grid VerticalAlignment="Center" Visibility="{Binding SelectedGroup.VisiblePrealoaderGrid}">
+                            <Grid VerticalAlignment="Center" 
+                                  Visibility="{Binding SelectedGroup.VisiblePrealoaderGrid}">
                             <Grid.RowDefinitions>
                                 <RowDefinition/>
                                 <RowDefinition/>
                             </Grid.RowDefinitions>
                             <ProgressBar Grid.Row="0"
-                          Style="{StaticResource MaterialDesignCircularProgressBar}"
-                          Value="0"
-                          Height="128"
-                          Width="128"
-                          IsIndeterminate="True" />
-                            <TextBlock Grid.Row="1" 
-                           Text="Please wait." 
-                           FontSize="18" 
-                           Margin="0,15,0,0"
-                           HorizontalAlignment="Center"/>
+                              Style="{StaticResource MaterialDesignCircularProgressBar}"
+                              Value="0"
+                              Height="128"
+                              Width="128"
+                              IsIndeterminate="True" />
+                           <TextBlock Grid.Row="1" FontFamily="consolas"
+                               Text="Please wait." 
+                               FontSize="18" 
+                               Margin="0,15,0,0"
+                               HorizontalAlignment="Center"/>
+                            </Grid>
+                            
+                            <!--Gtub grid-->
+                            <Grid VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="{Binding SelectedGroup.VisibleStupGrid}">
+                                <TextBlock FontSize="18" FontFamily="Consolas">
+                                    Your data will be here soon
+                                    <materialDesign:PackIcon Kind="AlienOutline" />
+                                </TextBlock>
+
+                            </Grid>
                         </Grid>
-
-                        </Grid>
-
-
-                        <!--Preloader-->
-                        <!--<Grid VerticalAlignment="Center" Visibility="{Binding SelectedGroup.VisiblePrealoaderGrid}">
-                            <Grid.RowDefinitions>
-                                <RowDefinition/>
-                                <RowDefinition/>
-                            </Grid.RowDefinitions>
-                            <ProgressBar Grid.Row="0"
-                          Style="{StaticResource MaterialDesignCircularProgressBar}"
-                          Value="0"
-                          Height="128"
-                          Width="128"
-                          IsIndeterminate="True" />
-                            <TextBlock Grid.Row="1" 
-                           Text="Please wait." 
-                           FontSize="18" 
-                           Margin="0,15,0,0"
-                           HorizontalAlignment="Center"/>
-                        </Grid>-->
                     </TabItem>
                     
                     <TabItem
@@ -254,28 +243,6 @@
             </materialDesign:Card>
         </Grid>
         
-        <!--Preloader--> 
-        <!--<Grid Grid.Row="1" Grid.Column="2">
-            <Grid VerticalAlignment="Center" Visibility="{Binding VisiblePrealoaderGrid}">
-                <Grid.RowDefinitions>
-                    <RowDefinition/>
-                    <RowDefinition/>
-                </Grid.RowDefinitions>
-                <ProgressBar Grid.Row="0"
-                          Style="{StaticResource MaterialDesignCircularProgressBar}"
-                          Value="0"
-                          Height="128"
-                          Width="128"
-                          IsIndeterminate="True" />
-                <TextBlock Grid.Row="1" 
-                           Text="Please wait." 
-                           FontSize="18" 
-                           Margin="0,15,0,0"
-                           HorizontalAlignment="Center"/>
-            </Grid>
-            
-        </Grid>-->
-
         <!--Footer -->
         <Border BorderBrush="Black" BorderThickness="0.5" Grid.ColumnSpan="3" Grid.Row="3">
         <Grid Background="PowderBlue">
