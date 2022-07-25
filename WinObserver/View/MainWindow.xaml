@@ -102,6 +102,46 @@
                     </ComboBox>
 
                     <Grid x:Name="StubElement" Margin="0,5,0,7"/>
+                        
+                    <Grid Margin="0,5,0,7">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid Grid.Column="0">
+                            <TextBlock Text="Explorer" Margin="10,1,0,0" FontSize="15"/>
+                        </Grid>
+                        <Grid Grid.Column="1">
+                            <!--Stub Grid-->
+                        </Grid>
+
+                        <!--Add Folder Button-->
+                        <Grid Grid.Column="2">
+                                <Button Command="{Binding DataContext.CloseTabCommand,RelativeSource={RelativeSource AncestorType={x:Type Window}}}" 
+                                            CommandParameter="{Binding}" VerticalAlignment="Center" 
+                                            Style="{StaticResource MaterialDesignIconForegroundButton}"
+                                            ToolTip="Add a folder"
+                                            Height="20" Width="20">
+                                    <materialDesign:PackIcon Kind="FolderPlusOutline" Width="20" Height="20"/>
+                                </Button>
+                        </Grid>
+                        
+                        <!--Pull up Folder Button-->
+                        <Grid Grid.Column="3">
+                            <Button Command="{Binding DataContext.CloseTabCommand,RelativeSource={RelativeSource AncestorType={x:Type Window}}}" 
+                                            CommandParameter="{Binding}" VerticalAlignment="Center" 
+                                            Style="{StaticResource MaterialDesignIconForegroundButton}"
+                                            ToolTip="Collapse folders in Explorer"
+                                            Height="20" Width="20"
+                                            Margin="4,0,7,0" IsEnabled="False">
+                                <materialDesign:PackIcon Kind="ArrowCollapseVertical" Width="20" Height="20"/>
+                            </Button>
+                        </Grid>
+                    </Grid>
+                       
+                  
 
                 </StackPanel>
             </Grid>
@@ -230,8 +270,9 @@
                             <!--Error Stub grid-->
                             <Grid VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="{Binding SelectedGroup.VisibleErrorStupGrid}">
                                     
-                            <materialDesign:PackIcon Kind="Alert" Width="100" Height="100"
-                                      VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,0,40"/>
+                                <materialDesign:PackIcon Kind="Alert" Width="100" Height="100"
+                                                     VerticalAlignment="Center" HorizontalAlignment="Center" 
+                                                     Margin="0,0,0,40"/>
 
                                 <TextBlock FontSize="18" FontFamily="Consolas"
                                            VerticalAlignment="Bottom" HorizontalAlignment="Center" 
@@ -242,13 +283,18 @@
                         </Grid>
                     </TabItem>
                     
+                    <!--Text Statistic-->
                     <TabItem
                         Header="Statistic">
-                        <TextBlock Margin="8" Text="Statistics will be displayed here soon" />
+                        <TextBlock Margin="8" Text="Statistics will be displayed here soon" 
+                                   VerticalAlignment="Center" HorizontalAlignment="Center"
+                                   FontSize="18" FontFamily="Consolas"/>
                     </TabItem>
+                    
+                    <!--Graph Statistic-->
                     <TabItem
                         Header="Graph" IsEnabled="False">
-                        <TextBlock Margin="8" Text="The graph will be in the next version" />
+                        <TextBlock Margin="8" Text="The graph will be in the next version"/>
                     </TabItem>
                 </TabControl>
             </materialDesign:Card>
