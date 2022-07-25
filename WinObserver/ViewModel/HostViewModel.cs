@@ -35,12 +35,14 @@ namespace Apparat.ViewModel
             _logger = log;
             _tracerService = new TracertService();
             TracertObject = _tracerService.GetActualCollectionTracertValue();
+
             // Generate unique id
-            _publicId = Guid.NewGuid().ToString("N");
+            GeneradeUniqueIdInPublicIdPropetry();
 
             // Add Events
             _HostViewModelEvents.ErrorNameHostnameEvent += ErrorNameHostname;
-            _HostViewModelEvents.ManagementEnableGeneralControlBtnEvent += ManagementEnableGeneralControlBtn;
+            _HostViewModelEvents.ManagementEnableGeneralControlBtnEventAndPreloaderVisible += ManagementEnableGeneralControlBtn;
+            _HostViewModelEvents.ManagementEnableGeneralControlBtnEventAndPreloaderVisible += VisibleDatagridOrPreloaderOrStubGridInGeneralPanerTabControl;
             _HostViewModelEvents.WorkingProggresbarInListBoxHostnameEvent += WorkingProggresbarInListBoxHostname;
         }
 
@@ -133,6 +135,34 @@ namespace Apparat.ViewModel
             set { _visibleDatatimeTextBlock = value; OnPropertyChanged(); }
         }
 
+        private string _visibleDataGridTable = "Collapsed";
+        public string VisibleDataGridTable
+        {
+            get { return _visibleDataGridTable; }
+            set { _visibleDataGridTable = value; OnPropertyChanged(); }
+        }
+
+        private string _visiblePrealoaderGrid = "Collapsed";
+        public string VisiblePrealoaderGrid
+        {
+            get { return _visiblePrealoaderGrid; }
+            set { _visiblePrealoaderGrid = value; OnPropertyChanged(); }
+        }
+
+        private string _visibleStupGrid = "Visible";
+        public string VisibleStupGrid
+        {
+            get { return _visibleStupGrid; }
+            set { _visibleStupGrid = value; OnPropertyChanged(); }
+        }
+
+        private string _visibleErrorStupGrid = "Collapsed";
+        public string VisibleErrorStupGrid
+        {
+            get { return _visibleErrorStupGrid; }
+            set { _visibleErrorStupGrid = value; OnPropertyChanged(); }
+        }
+
         private string _textinToolTipsFromControlBtn = "Start traceroute";
         public string TextinToolTipsFromControlBtn
         {
@@ -211,6 +241,16 @@ namespace Apparat.ViewModel
             ErrorHostnameVisibleIcon = "Visible";
             SettingIsEnableControlBtn = "False";
             SettingOpacityControlBtn = "0.5";
+
+            VisibleStupGrid = "Collapsed";
+            VisiblePrealoaderGrid = "Collapsed";
+            VisibleDataGridTable = "Collapsed";
+            VisibleErrorStupGrid = "Visible";
+        }
+
+        private void GeneradeUniqueIdInPublicIdPropetry()
+        {
+            _publicId = Guid.NewGuid().ToString("N");
         }
 
         // Visual changes during events 
@@ -219,6 +259,7 @@ namespace Apparat.ViewModel
         {
             TextinToolTipsFromControlBtn = "Stop traceroute";
             ControlBtnHost = IconeMap.Stop;
+            
         }
 
         private void VisaulChangeAtStopStream()
@@ -237,6 +278,21 @@ namespace Apparat.ViewModel
             else
             {
                 ValueVisibleProgressBar = "Hidden";
+            }
+        }
+
+        private void VisibleDatagridOrPreloaderOrStubGridInGeneralPanerTabControl(bool boolValue)
+        {
+            if (boolValue)
+            {
+                VisiblePrealoaderGrid = "Collapsed";
+                VisibleDataGridTable = "Visible";
+            }
+            else
+            {
+                VisibleStupGrid = "Collapsed";
+                VisiblePrealoaderGrid = "Visible";
+                VisibleDataGridTable = "Collapsed";
             }
         }
 

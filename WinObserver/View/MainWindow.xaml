@@ -173,16 +173,18 @@
         HorizontalAlignment="Center" BorderThickness="0"/>
 
         <!-- NEW CONCEPT GeneralPaner TabControl -->
-        <Grid Grid.Row="1" Grid.Column="2">
+        <Grid x:Name="GeneralWindow" Grid.Row="1" Grid.Column="2" Visibility="{Binding StartValueInVisibleWithGeneralWindowsApp}">
             <materialDesign:Card>
-                <TabControl DockPanel.Dock="Right" Grid.Row="1" Name="TabMain" 
+                <TabControl x:Name="GeneralPanerTabControl" DockPanel.Dock="Right" Grid.Row="1"
                             materialDesign:ColorZoneAssist.Mode="Light" HorizontalContentAlignment="Left">
-                    <TabItem
-                  Header="Table">
-                        <DataGrid ItemsSource="{Binding SelectedGroup, UpdateSourceTrigger=PropertyChanged}"
+                    <TabItem Header="Table">
+                        <Grid>
+                        
+                        <DataGrid ItemsSource="{Binding SelectedGroup.TracertObject, UpdateSourceTrigger=PropertyChanged}"
                                    AutoGenerateColumns="False" RowBackground="GhostWhite" 
                                    AlternatingRowBackground ="LightGray" GridLinesVisibility="Vertical" 
-                                   IsReadOnly="True" FontSize="16" CanUserAddRows="False">  
+                                   IsReadOnly="True" FontSize="16" CanUserAddRows="False" 
+                                   Visibility="{Binding SelectedGroup.VisibleDataGridTable}">  
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="№" Binding="{Binding NumberHostname}" Width="auto"/>
                                 <DataGridTextColumn Header="Hostname" Binding="{Binding Hostname}" Width="auto"/>
@@ -194,8 +196,52 @@
                                 <DataGridTextColumn Header="All Packet" Binding="{Binding CounterPacket}" Width="*"/>
                                 <DataGridTextColumn Header="Loss Packet" Binding="{Binding CounterLossPacket}" Width="auto"/>
                             </DataGrid.Columns>
+                            
                         </DataGrid>
+
+                            <!--Preloader-->
+                            <Grid VerticalAlignment="Center" 
+                                  Visibility="{Binding SelectedGroup.VisiblePrealoaderGrid}">
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+                            <ProgressBar Grid.Row="0"
+                              Style="{StaticResource MaterialDesignCircularProgressBar}"
+                              Value="0"
+                              Height="128"
+                              Width="128"
+                              IsIndeterminate="True" />
+                           <TextBlock Grid.Row="1" FontFamily="consolas"
+                               Text="Please wait." 
+                               FontSize="18" 
+                               Margin="0,15,0,0"
+                               HorizontalAlignment="Center"/>
+                            </Grid>
+                            
+                            <!--Gtub grid-->
+                            <Grid VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="{Binding SelectedGroup.VisibleStupGrid}">
+                                <TextBlock FontSize="18" FontFamily="Consolas">
+                                    Your data will be here soon
+                                    <materialDesign:PackIcon Kind="AlienOutline" />
+                                </TextBlock>
+                            </Grid>
+
+                            <!--Error Stub grid-->
+                            <Grid VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="{Binding SelectedGroup.VisibleErrorStupGrid}">
+                                    
+                            <materialDesign:PackIcon Kind="Alert" Width="100" Height="100"
+                                      VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,0,40"/>
+
+                                <TextBlock FontSize="18" FontFamily="Consolas"
+                                           VerticalAlignment="Bottom" HorizontalAlignment="Center" 
+                                           Text="{Binding SelectedGroup.TextErrorToolTip}">
+                                </TextBlock>
+                            </Grid>
+
+                        </Grid>
                     </TabItem>
+                    
                     <TabItem
                         Header="Statistic">
                         <TextBlock Margin="8" Text="Statistics will be displayed here soon" />
@@ -207,7 +253,7 @@
                 </TabControl>
             </materialDesign:Card>
         </Grid>
-
+        
         <!--Footer -->
         <Border BorderBrush="Black" BorderThickness="0.5" Grid.ColumnSpan="3" Grid.Row="3">
         <Grid Background="PowderBlue">

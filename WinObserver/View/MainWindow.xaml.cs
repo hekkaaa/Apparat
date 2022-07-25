@@ -61,8 +61,9 @@ namespace WinObserver
                 if (obj != null)
                 {
                     _logger.LogWarning($"User select hostname: {obj.HostnameView} | ID: {obj.PublicId}");
-                    ApplicationViewModel s1 = DataContext as ApplicationViewModel;
-                    s1.SelectedGroup = obj.TracertObject;
+                    ApplicationViewModel? ObjectAppVM = DataContext as ApplicationViewModel;
+                    ObjectAppVM.SelectedGroup = obj;
+                    ObjectAppVM.StartValueInVisibleWithGeneralWindowsApp = "Visible";
                 }
             }
             catch (System.InvalidCastException ex)
