@@ -42,7 +42,7 @@ namespace Apparat.ViewModel
             // Add Events
             _HostViewModelEvents.ErrorNameHostnameEvent += ErrorNameHostname;
             _HostViewModelEvents.ManagementEnableGeneralControlBtnEventAndPreloaderVisible += ManagementEnableGeneralControlBtn;
-            _HostViewModelEvents.ManagementEnableGeneralControlBtnEventAndPreloaderVisible += VisibleDatagridOrPreloaderInGeneralPanerTabControl;
+            _HostViewModelEvents.ManagementEnableGeneralControlBtnEventAndPreloaderVisible += VisibleDatagridOrPreloaderOrStubGridInGeneralPanerTabControl;
             _HostViewModelEvents.WorkingProggresbarInListBoxHostnameEvent += WorkingProggresbarInListBoxHostname;
         }
 
@@ -156,6 +156,13 @@ namespace Apparat.ViewModel
             set { _visibleStupGrid = value; OnPropertyChanged(); }
         }
 
+        private string _visibleErrorStupGrid = "Collapsed";
+        public string VisibleErrorStupGrid
+        {
+            get { return _visibleErrorStupGrid; }
+            set { _visibleErrorStupGrid = value; OnPropertyChanged(); }
+        }
+
         private string _textinToolTipsFromControlBtn = "Start traceroute";
         public string TextinToolTipsFromControlBtn
         {
@@ -234,6 +241,11 @@ namespace Apparat.ViewModel
             ErrorHostnameVisibleIcon = "Visible";
             SettingIsEnableControlBtn = "False";
             SettingOpacityControlBtn = "0.5";
+
+            VisibleStupGrid = "Collapsed";
+            VisiblePrealoaderGrid = "Collapsed";
+            VisibleDataGridTable = "Collapsed";
+            VisibleErrorStupGrid = "Visible";
         }
 
         private void GeneradeUniqueIdInPublicIdPropetry()
@@ -269,7 +281,7 @@ namespace Apparat.ViewModel
             }
         }
 
-        private void VisibleDatagridOrPreloaderInGeneralPanerTabControl(bool boolValue)
+        private void VisibleDatagridOrPreloaderOrStubGridInGeneralPanerTabControl(bool boolValue)
         {
             if (boolValue)
             {

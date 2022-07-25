@@ -175,11 +175,10 @@
         <!-- NEW CONCEPT GeneralPaner TabControl -->
         <Grid x:Name="GeneralWindow" Grid.Row="1" Grid.Column="2" Visibility="{Binding StartValueInVisibleWithGeneralWindowsApp}">
             <materialDesign:Card>
-                <TabControl DockPanel.Dock="Right" Grid.Row="1" Name="TabMain" 
+                <TabControl x:Name="GeneralPanerTabControl" DockPanel.Dock="Right" Grid.Row="1"
                             materialDesign:ColorZoneAssist.Mode="Light" HorizontalContentAlignment="Left">
                     <TabItem Header="Table">
                         <Grid>
-                            
                         
                         <DataGrid ItemsSource="{Binding SelectedGroup.TracertObject, UpdateSourceTrigger=PropertyChanged}"
                                    AutoGenerateColumns="False" RowBackground="GhostWhite" 
@@ -226,8 +225,20 @@
                                     Your data will be here soon
                                     <materialDesign:PackIcon Kind="AlienOutline" />
                                 </TextBlock>
-
                             </Grid>
+
+                            <!--Error Stub grid-->
+                            <Grid VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="{Binding SelectedGroup.VisibleErrorStupGrid}">
+                                    
+                            <materialDesign:PackIcon Kind="Alert" Width="100" Height="100"
+                                      VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,0,40"/>
+
+                                <TextBlock FontSize="18" FontFamily="Consolas"
+                                           VerticalAlignment="Bottom" HorizontalAlignment="Center" 
+                                           Text="{Binding SelectedGroup.TextErrorToolTip}">
+                                </TextBlock>
+                            </Grid>
+
                         </Grid>
                     </TabItem>
                     

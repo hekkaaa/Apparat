@@ -199,6 +199,7 @@ namespace WinObserver.ViewModel
                                 if (res.StopStream())
                                 {
                                     item.FolderCollection.Remove(deleteObject);
+                                    StartValueInVisibleWithGeneralWindowsApp = "Collapsed";
                                     break;
                                 }
                                 else
