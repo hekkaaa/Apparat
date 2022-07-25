@@ -137,6 +137,13 @@ namespace WinObserver.ViewModel
             set { _hostsCollection = value; OnPropertyChanged(); }
         }
 
+        private string _StartValueInVisibleWithGeneralWindowsApp = "Collapsed";
+        public string StartValueInVisibleWithGeneralWindowsApp
+        {
+            get { return _StartValueInVisibleWithGeneralWindowsApp; }
+            set { _StartValueInVisibleWithGeneralWindowsApp = value; OnPropertyChanged(); }
+        }
+
 
         private DelegateCommand _addNewHost = null!;
         public DelegateCommand AddNewHost

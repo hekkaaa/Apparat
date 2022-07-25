@@ -173,7 +173,7 @@
         HorizontalAlignment="Center" BorderThickness="0"/>
 
         <!-- NEW CONCEPT GeneralPaner TabControl -->
-        <Grid Grid.Row="1" Grid.Column="2">
+        <Grid x:Name="GeneralWindow" Grid.Row="1" Grid.Column="2" Visibility="{Binding StartValueInVisibleWithGeneralWindowsApp}">
             <materialDesign:Card>
                 <TabControl DockPanel.Dock="Right" Grid.Row="1" Name="TabMain" 
                             materialDesign:ColorZoneAssist.Mode="Light" HorizontalContentAlignment="Left">
