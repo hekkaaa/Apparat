@@ -1,18 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Apparat.Commands;
+using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Apparat.ViewModel
 {
-    public class ExplorerViewModel
+    public class ExplorerViewModel : INotifyPropertyChanged
     {
-        private string _folderName = "NewFolder";
-        private ObservableCollection<HostViewModel> _folderCollection;
+        private const string defaultSize = "18";
+        private const string defaultBorderBrush = "DeepSkyBlue";
+        private const string defaultBorderBrushError = "Red";
+        
+        public bool IsNewCreateObj { get; set; } = true;
+
+        private string _folderName = String.Empty;
+        private ObservableCollection<HostViewModel>? _HostVMCollection;
 
         public string FolderName
         {
@@ -23,10 +26,86 @@ namespace Apparat.ViewModel
             }
         }
 
-        public ObservableCollection<HostViewModel> FolderCollection
+        public ObservableCollection<HostViewModel> HostVMCollection
         {
-            get { return _folderCollection; }
-            set { _folderCollection = value; OnPropertyChanged("FolderCollection"); }
+            get { return _HostVMCollection!; }
+            set { _HostVMCollection = value; OnPropertyChanged("FolderCollection"); }
+        }
+
+        private string _visibleTextBoxNameFolder = "Collapsed";
+        public string VisibleTextBoxNameFolder
+        {
+            get { return _visibleTextBoxNameFolder; }
+            set { _visibleTextBoxNameFolder = value; OnPropertyChanged(); }
+        }
+
+        private string _visibleLabelNameFolder = "Visible";
+        public string VisibleLabelNameFolder
+        {
+            get { return _visibleLabelNameFolder; }
+            set { _visibleLabelNameFolder = value; OnPropertyChanged(); }
+        }
+
+
+        private string _borderBrushColor = defaultBorderBrush;
+        public string BorderBrushColor
+        {
+            get { return _borderBrushColor; }
+            set { _borderBrushColor = value; OnPropertyChanged(); }
+        }
+
+        private string _sizeElement = defaultSize;
+        public string SizeElement
+        {
+            get { return _sizeElement; }
+            set { _sizeElement = value; OnPropertyChanged(); }
+        }
+
+        private string _textErrorFolderValidation = string.Empty;
+        public string TextErrorFolderValidation
+        {
+            get { return _textErrorFolderValidation; }
+            set { _textErrorFolderValidation = value; OnPropertyChanged(); }
+        }
+        
+
+        private DelegateCommand _Test552 = null!;
+        public DelegateCommand Test552
+        {
+            get
+            {
+                return _Test552
+                ?? (_Test552 = new DelegateCommand(
+                (obj) =>
+                {   
+                    if(obj is null)
+                    {
+                        return;
+                    }
+                    else
+                    {
+                        ExplorerViewModel folderObj = (ExplorerViewModel)obj;
+
+                        if(String.IsNullOrWhiteSpace(folderObj.FolderName))
+                        {
+                            TextErrorFolderValidation = "You must specify the folder name.";
+                            BorderBrushColor = defaultBorderBrushError;
+                            return;
+                        }
+
+                        FinallyCreating();
+                        OnPropertyChanged();
+                    }
+                }));
+            }
+        }
+
+        public void FinallyCreating()
+        {
+            SizeElement = defaultSize;
+            this.VisibleTextBoxNameFolder = "Collapsed";
+            this.VisibleLabelNameFolder = "Visible";
+            IsNewCreateObj = false;
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;
