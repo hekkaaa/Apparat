@@ -24,7 +24,7 @@
             <RowDefinition Height="auto"></RowDefinition>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="1.1*"/>
+            <ColumnDefinition Width="1.3*"/>
             <ColumnDefinition Width="auto"/>
             <ColumnDefinition Width="4*"/>
         </Grid.ColumnDefinitions>
@@ -111,7 +111,7 @@
                             <ColumnDefinition Width="auto"/>
                         </Grid.ColumnDefinitions>
                         <Grid Grid.Column="0">
-                            <TextBlock Text="Explorer" Margin="10,1,0,0" FontSize="15"/>
+                            <TextBlock Text="Explorer" Margin="13,1,0,0" FontSize="15" FontWeight="ExtraBold"/>
                         </Grid>
                         <Grid Grid.Column="1">
                             <!--Stub Grid-->
@@ -119,8 +119,7 @@
 
                         <!--Add Folder Button-->
                         <Grid Grid.Column="2">
-                                <Button Command="{Binding DataContext.CloseTabCommand,RelativeSource={RelativeSource AncestorType={x:Type Window}}}" 
-                                            CommandParameter="{Binding}" VerticalAlignment="Center" 
+                                <Button Command="{Binding AddNewFolderBtn}"
                                             Style="{StaticResource MaterialDesignIconForegroundButton}"
                                             ToolTip="Add a folder"
                                             Height="20" Width="20">
@@ -140,25 +139,29 @@
                             </Button>
                         </Grid>
                     </Grid>
-                       
-                  
-
                 </StackPanel>
             </Grid>
 
             <!--NEW CONCEPT Left Collection -->
             <Grid Grid.Row="1" Background="WhiteSmoke">
-                <TreeView ItemsSource="{Binding ExplorersCollection}" SelectedItemChanged="TreeView_OnSelectedItemChanged">
+                <TreeView ItemsSource="{Binding CollectionFoldersInExplorer}" SelectedItemChanged="TreeView_OnSelectedItemChanged">
                     <TreeView.ItemTemplate>
                         <HierarchicalDataTemplate ItemsSource="{Binding FolderCollection}">
                             <StackPanel Orientation="Horizontal">
                                 <materialDesign:PackIcon Kind="FolderCogOutline" Width="18" Height="18" Margin="0,1.4,0,0"/>
-                                <Label Content="{Binding FolderName}"/>
+                                <TextBox Background="WhiteSmoke" Width="180" Height="23" Margin="15,0,0,0" 
+                                         BorderThickness="1" BorderBrush="DeepSkyBlue" FontSize="12"
+                                         Visibility="{Binding VisibleTextBoxNameFolder}" Text="{Binding FolderName}">
+                                    <TextBox.InputBindings>
+                                        <KeyBinding Command="{Binding SelectedGroupExplorerVM.Test55}" Key="Enter"/>
+                                    </TextBox.InputBindings>
+                                </TextBox>
+                                <Label Content="{Binding FolderName}" Visibility="{Binding VisibleLabelNameFolder}"/>
                             </StackPanel>
 
                             <HierarchicalDataTemplate.ItemTemplate>
                                 <DataTemplate>
-                                    <StackPanel Margin="5" Orientation="Horizontal" Width="auto" Height="auto" VerticalAlignment="Center">
+                                    <StackPanel Margin="-5" Orientation="Horizontal" Width="auto" Height="auto" VerticalAlignment="Center">
 
                                         <Image Source="\Resources\icons8-error.png" Visibility="{Binding ErrorHostnameVisibleIcon}" 
                                                 Width="20" Height="20" VerticalAlignment="Center"
@@ -207,7 +210,7 @@
                 </TreeView>
             </Grid>
         </Grid>
-        
+       
         <!--Splitte between Left panel host and DataGrid-->
         <GridSplitter Grid.Column="1" Grid.Row="1" ShowsPreview="False" Width="3"
         HorizontalAlignment="Center" BorderThickness="0"/>

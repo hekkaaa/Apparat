@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Apparat.Commands;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -27,6 +28,37 @@ namespace Apparat.ViewModel
         {
             get { return _folderCollection; }
             set { _folderCollection = value; OnPropertyChanged("FolderCollection"); }
+        }
+
+        private string _visibleTextBoxNameFolder = "Collapsed";
+        public string VisibleTextBoxNameFolder
+        {
+            get { return _visibleTextBoxNameFolder; }
+            set { _visibleTextBoxNameFolder = value; OnPropertyChanged(); }
+        }
+
+        private string _visibleLabelNameFolder = "Visible";
+        public string VisibleLabelNameFolder
+        {
+            get { return _visibleLabelNameFolder; }
+            set { _visibleLabelNameFolder = value; OnPropertyChanged(); }
+        }
+
+        private DelegateCommand _Test55 = null!;
+        public DelegateCommand Test55
+        {
+            get
+            {
+                return _Test55
+                ?? (_Test55 = new DelegateCommand(
+                (obj) =>
+                {
+                    var yy = obj as ExplorerViewModel;
+                    yy.FolderName = "Витя Покров";
+                    yy.VisibleTextBoxNameFolder = "Collapsed";
+                    yy.VisibleLabelNameFolder = "Visible";
+                }));
+            }
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;

@@ -1,5 +1,6 @@
 ﻿using Apparat.ViewModel;
 using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Windows;
@@ -51,6 +52,12 @@ namespace WinObserver
             s.IsDropDownOpen = false;
         }
 
+        //private void KeyEnterInTextNameNewFolderEvents(object sender, KeyEventArgs e)
+        //{ // Drop Collection History Combobox.
+        //    var s = sender as ComboBox;
+        //    s.IsDropDownOpen = false;
+        //}
+
 
         private void TreeView_OnSelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
@@ -63,12 +70,27 @@ namespace WinObserver
                     _logger.LogWarning($"User select hostname: {obj.HostnameView} | ID: {obj.PublicId}");
                     ApplicationViewModel? ObjectAppVM = DataContext as ApplicationViewModel;
                     ObjectAppVM.SelectedGroup = obj;
-                    ObjectAppVM.StartValueInVisibleWithGeneralWindowsApp = "Visible";
+
+                    if(ObjectAppVM.StartValueInVisibleWithGeneralWindowsApp.ToString() != "Visible")
+                    {
+                        ObjectAppVM.StartValueInVisibleWithGeneralWindowsApp = "Visible";
+                    }
                 }
             }
-            catch (System.InvalidCastException ex)
+            catch (System.InvalidCastException)
             {
-                _logger.LogError($"Error castObject: HostViewModel {ex.Message}");
+                try
+                {
+                    ExplorerViewModel obj = (ExplorerViewModel)e.NewValue;
+                    _logger.LogWarning($"User select hostname: {obj.FolderName}");
+                    ApplicationViewModel? ObjectAppVM = DataContext as ApplicationViewModel;
+                    ObjectAppVM.SelectedGroupExplorerVM = obj;
+                }
+                catch(Exception ex)
+                {
+                    _logger.LogError($"Error castObject: {ex.Message}");
+                }
+               
             }
 
         }

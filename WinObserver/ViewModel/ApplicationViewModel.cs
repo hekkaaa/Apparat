@@ -20,7 +20,7 @@ namespace WinObserver.ViewModel
         private string _textBlockGeneralError = String.Empty;
         private string _borderTextBox = "#FFABADB3";
 
-        private ObservableCollection<ExplorerViewModel> _explorers;
+        private ObservableCollection<ExplorerViewModel> _collectionFoldersInExplorer;
         private ObservableCollection<HostViewModel> _hostsCollection;
         private readonly IAppSettingService _appSettingService;
 
@@ -36,7 +36,7 @@ namespace WinObserver.ViewModel
             _hostVMlog = hostVMlog;
 
             // Test Start Info
-            _explorers = new ObservableCollection<ExplorerViewModel>() {
+            _collectionFoldersInExplorer = new ObservableCollection<ExplorerViewModel>() {
                 new ExplorerViewModel() {
                     FolderName = "Default",
                     FolderCollection = new ObservableCollection<HostViewModel>() {
@@ -103,16 +103,23 @@ namespace WinObserver.ViewModel
             set { _selectedGroup = value; OnPropertyChanged(); }
         }
 
+        ExplorerViewModel _selectedGroupExplorerVM = null!;
+        public ExplorerViewModel SelectedGroupExplorerVM
+        {
+            get { return _selectedGroupExplorerVM; }
+            set { _selectedGroupExplorerVM = value; OnPropertyChanged(); }
+        }
 
-        public ObservableCollection<ExplorerViewModel> ExplorersCollection
+
+        public ObservableCollection<ExplorerViewModel> CollectionFoldersInExplorer
         {
             get
             {
-                return _explorers;
+                return _collectionFoldersInExplorer;
             }
             set
             {
-                _explorers = value;
+                _collectionFoldersInExplorer = value;
                 OnPropertyChanged();
             }
         }
@@ -165,8 +172,7 @@ namespace WinObserver.ViewModel
                      HostViewModel newObject = new HostViewModel(_hostVMlog) { HostnameView = editedHostname };
 
                      // Add new hostname in default folder View.
-                     ExplorersCollection.First().FolderCollection.Add(newObject);
-                     //HostsCollection.Add(newObject);
+                     CollectionFoldersInExplorer.First().FolderCollection.Add(newObject);
 
                      _appSettingService.AddHostInHistory(editedHostname);
                      UpdateCollectionHistoryHostInCombobox();
@@ -191,7 +197,7 @@ namespace WinObserver.ViewModel
                     HostViewModel? deleteObject = obj as HostViewModel;
                     if (deleteObject != null)
                     {
-                        foreach (var item in ExplorersCollection)
+                        foreach (var item in CollectionFoldersInExplorer)
                         {
                             HostViewModel res = item.FolderCollection.FirstOrDefault(x => x.PublicId == deleteObject.PublicId)!;
                             if (res != null)
@@ -247,6 +253,27 @@ namespace WinObserver.ViewModel
                         _logger.LogWarning($"Remove {deleteObject} from collection history hostname");
                         UpdateCollectionHistoryHostInCombobox();
                     }
+                }));
+            }
+        }
+
+        private DelegateCommand _addNewFolderBtn = null!;
+        public DelegateCommand AddNewFolderBtn
+        {
+            get
+            {
+                return _addNewFolderBtn
+                ?? (_addNewFolderBtn = new DelegateCommand(
+                (obj) =>
+                {
+                    _collectionFoldersInExplorer.Add(new ExplorerViewModel()
+                    {
+                        FolderName = "",
+                        VisibleLabelNameFolder = "Collapsed",
+                        VisibleTextBoxNameFolder = "Visible",
+                        FolderCollection = new ObservableCollection<HostViewModel>()
+                    }); 
+
                 }));
             }
         }
