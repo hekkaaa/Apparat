@@ -101,9 +101,18 @@ namespace WinObserver
         {
             try
             {   
-                ApplicationViewModel q = DataContext as ApplicationViewModel;
-                ExplorerViewModel res = q.CollectionFoldersInExplorer.First(x => x.IsNewCreateObj == true);
-                q.CollectionFoldersInExplorer.Remove(res);
+                ApplicationViewModel appContext = DataContext as ApplicationViewModel;
+                ExplorerViewModel objVM = appContext.CollectionFoldersInExplorer.First(x => x.IsNewCreateObj == true);
+                
+                if (String.IsNullOrEmpty(objVM.FolderName))
+                {
+                    appContext.CollectionFoldersInExplorer.Remove(objVM);
+                }
+                else
+                {
+                    objVM.FinallyCreating();
+                }
+                
             }
             catch (System.InvalidOperationException)
             {   

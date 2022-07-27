@@ -1,13 +1,8 @@
 ﻿using Apparat.Commands;
-using MaterialDesignThemes.Wpf;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Apparat.ViewModel
 {
@@ -93,28 +88,24 @@ namespace Apparat.ViewModel
 
                         if(String.IsNullOrWhiteSpace(folderObj.FolderName))
                         {
-                            
                             TextErrorFolderValidation = "You must specify the folder name.";
                             BorderBrushColor = defaultBorderBrushError;
                             return;
-                           
                         }
-                      
-                        SizeElement = defaultSize;
-                        folderObj.VisibleTextBoxNameFolder = "Collapsed";
-                        folderObj.VisibleLabelNameFolder = "Visible";
-                        IsNewCreateObj = false;
+
+                        FinallyCreating();
                         OnPropertyChanged();
                     }
                 }));
             }
         }
 
-        public void DefaultValuesStyleInTextBoxElement()
+        public void FinallyCreating()
         {
             SizeElement = defaultSize;
-            BorderBrushColor = defaultBorderBrush;
-            TextErrorFolderValidation = string.Empty;
+            this.VisibleTextBoxNameFolder = "Collapsed";
+            this.VisibleLabelNameFolder = "Visible";
+            IsNewCreateObj = false;
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;
