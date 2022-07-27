@@ -39,14 +39,16 @@ namespace WinObserver.ViewModel
             _collectionFoldersInExplorer = new ObservableCollection<ExplorerViewModel>() {
                 new ExplorerViewModel() {
                     FolderName = "Default",
-                    FolderCollection = new ObservableCollection<HostViewModel>() {
+                    IsNewCreateObj = false,
+                    HostVMCollection = new ObservableCollection<HostViewModel>() {
                         new HostViewModel(_hostVMlog){ HostnameView = "vk.com"},
                     new HostViewModel(_hostVMlog){ HostnameView = "ya.ru"}},
 
                 },
                 new ExplorerViewModel(){
                     FolderName = "ИП Усатый",
-                    FolderCollection = new ObservableCollection<HostViewModel>() {
+                    IsNewCreateObj = false,
+                    HostVMCollection = new ObservableCollection<HostViewModel>() {
                         new HostViewModel(_hostVMlog){ HostnameView = "metanit.com"},
                     new HostViewModel(_hostVMlog){ HostnameView = "github.com"},
                     new HostViewModel(_hostVMlog){ HostnameView = "Monro.ru"},}
@@ -172,7 +174,7 @@ namespace WinObserver.ViewModel
                      HostViewModel newObject = new HostViewModel(_hostVMlog) { HostnameView = editedHostname };
 
                      // Add new hostname in default folder View.
-                     CollectionFoldersInExplorer.First().FolderCollection.Add(newObject);
+                     CollectionFoldersInExplorer.First().HostVMCollection.Add(newObject);
 
                      _appSettingService.AddHostInHistory(editedHostname);
                      UpdateCollectionHistoryHostInCombobox();
@@ -199,12 +201,12 @@ namespace WinObserver.ViewModel
                     {
                         foreach (var item in CollectionFoldersInExplorer)
                         {
-                            HostViewModel res = item.FolderCollection.FirstOrDefault(x => x.PublicId == deleteObject.PublicId)!;
+                            HostViewModel res = item.HostVMCollection.FirstOrDefault(x => x.PublicId == deleteObject.PublicId)!;
                             if (res != null)
                             {
                                 if (res.StopStream())
                                 {
-                                    item.FolderCollection.Remove(deleteObject);
+                                    item.HostVMCollection.Remove(deleteObject);
                                     StartValueInVisibleWithGeneralWindowsApp = "Collapsed";
                                     break;
                                 }
@@ -266,13 +268,23 @@ namespace WinObserver.ViewModel
                 ?? (_addNewFolderBtn = new DelegateCommand(
                 (obj) =>
                 {
-                    _collectionFoldersInExplorer.Add(new ExplorerViewModel()
+                    var checkOpenNewFolderWindow = _collectionFoldersInExplorer.Where(x => x.IsNewCreateObj == true).ToList();
+                    if (checkOpenNewFolderWindow.Count == 0)
                     {
-                        FolderName = "",
-                        VisibleLabelNameFolder = "Collapsed",
-                        VisibleTextBoxNameFolder = "Visible",
-                        FolderCollection = new ObservableCollection<HostViewModel>()
-                    }); 
+                        _collectionFoldersInExplorer.Add(new ExplorerViewModel()
+                        {
+                            FolderName = "",
+                            SizeElement = "43",
+                            VisibleLabelNameFolder = "Collapsed",
+                            VisibleTextBoxNameFolder = "Visible",
+                            HostVMCollection = new ObservableCollection<HostViewModel>()
+                        });
+                    }
+                    else
+                    {
+                        return;
+                    }
+                   
 
                 }));
             }

@@ -3,7 +3,9 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:WinObserver" xmlns:viewmodel="clr-namespace:WinObserver.ViewModel" xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:local="clr-namespace:WinObserver" 
+        xmlns:viewmodel="clr-namespace:WinObserver.ViewModel" 
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d"
         Title="Apparat" MinHeight="700" MinWidth="940" Height="568" Width="1024" Loaded="Window_Loaded"
         WindowStartupLocation="CenterScreen"
@@ -15,7 +17,7 @@
         FontSize="14"
         TextElement.FontSize="14"
         FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto" Closed="Window_Closed">
-    
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="50"></RowDefinition>
@@ -144,21 +146,31 @@
 
             <!--NEW CONCEPT Left Collection -->
             <Grid Grid.Row="1" Background="WhiteSmoke">
-                <TreeView ItemsSource="{Binding CollectionFoldersInExplorer}" SelectedItemChanged="TreeView_OnSelectedItemChanged">
+                <TreeView ItemsSource="{Binding CollectionFoldersInExplorer}" SelectedItemChanged="TreeView_OnSelectedItemChanged" >
                     <TreeView.ItemTemplate>
-                        <HierarchicalDataTemplate ItemsSource="{Binding FolderCollection}">
-                            <StackPanel Orientation="Horizontal">
-                                <materialDesign:PackIcon Kind="FolderCogOutline" Width="18" Height="18" Margin="0,1.4,0,0"/>
-                                <TextBox Background="WhiteSmoke" Width="180" Height="23" Margin="15,0,0,0" 
-                                         BorderThickness="1" BorderBrush="DeepSkyBlue" FontSize="12"
-                                         Visibility="{Binding VisibleTextBoxNameFolder}" Text="{Binding FolderName}">
+                        <HierarchicalDataTemplate ItemsSource="{Binding HostVMCollection}">
+                            <StackPanel Orientation="Horizontal" >
+                                <materialDesign:PackIcon Kind="FolderCogOutline" Width="18" Height="{Binding SizeElement}" Margin="0,1.4,0,0"/>
+
+                                <TextBox Background="WhiteSmoke" Width="220" Height="23" Margin="15,0,0,0" 
+                                         BorderThickness="1" BorderBrush="{Binding BorderBrushColor}" FontSize="12"
+                                         Visibility="{Binding VisibleTextBoxNameFolder}" 
+                                         Text="{Binding FolderName, Mode=TwoWay, 
+                                         UpdateSourceTrigger=PropertyChanged}"
+                                         materialDesign:HintAssist.Hint="Enter name Folder"
+                                         materialDesign:HintAssist.HelperText ="{Binding TextErrorFolderValidation}"
+                                         materialDesign:HintAssist.HelperTextFontSize="12"
+                                         MaxLength="50" LostFocus="TextBox_LostFocus" >
+                                    
                                     <TextBox.InputBindings>
-                                        <KeyBinding Command="{Binding SelectedGroupExplorerVM.Test55}" Key="Enter"/>
+                                        <KeyBinding Command="{Binding Test552}" 
+                                                CommandParameter="{Binding}" Key="Enter"/>
                                     </TextBox.InputBindings>
                                 </TextBox>
+                                
                                 <Label Content="{Binding FolderName}" Visibility="{Binding VisibleLabelNameFolder}"/>
                             </StackPanel>
-
+                            
                             <HierarchicalDataTemplate.ItemTemplate>
                                 <DataTemplate>
                                     <StackPanel Margin="-5" Orientation="Horizontal" Width="auto" Height="auto" VerticalAlignment="Center">

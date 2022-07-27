@@ -1,4 +1,5 @@
 ﻿using Apparat.Commands;
+using MaterialDesignThemes.Wpf;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -10,10 +11,16 @@ using System.Threading.Tasks;
 
 namespace Apparat.ViewModel
 {
-    public class ExplorerViewModel
+    public class ExplorerViewModel : INotifyPropertyChanged
     {
-        private string _folderName = "NewFolder";
-        private ObservableCollection<HostViewModel> _folderCollection;
+        private const string defaultSize = "18";
+        private const string defaultBorderBrush = "DeepSkyBlue";
+        private const string defaultBorderBrushError = "Red";
+        
+        public bool IsNewCreateObj { get; set; } = true;
+
+        private string _folderName = String.Empty;
+        private ObservableCollection<HostViewModel>? _HostVMCollection;
 
         public string FolderName
         {
@@ -24,10 +31,10 @@ namespace Apparat.ViewModel
             }
         }
 
-        public ObservableCollection<HostViewModel> FolderCollection
+        public ObservableCollection<HostViewModel> HostVMCollection
         {
-            get { return _folderCollection; }
-            set { _folderCollection = value; OnPropertyChanged("FolderCollection"); }
+            get { return _HostVMCollection!; }
+            set { _HostVMCollection = value; OnPropertyChanged("FolderCollection"); }
         }
 
         private string _visibleTextBoxNameFolder = "Collapsed";
@@ -44,21 +51,70 @@ namespace Apparat.ViewModel
             set { _visibleLabelNameFolder = value; OnPropertyChanged(); }
         }
 
-        private DelegateCommand _Test55 = null!;
-        public DelegateCommand Test55
+
+        private string _borderBrushColor = defaultBorderBrush;
+        public string BorderBrushColor
+        {
+            get { return _borderBrushColor; }
+            set { _borderBrushColor = value; OnPropertyChanged(); }
+        }
+
+        private string _sizeElement = defaultSize;
+        public string SizeElement
+        {
+            get { return _sizeElement; }
+            set { _sizeElement = value; OnPropertyChanged(); }
+        }
+
+        private string _textErrorFolderValidation = string.Empty;
+        public string TextErrorFolderValidation
+        {
+            get { return _textErrorFolderValidation; }
+            set { _textErrorFolderValidation = value; OnPropertyChanged(); }
+        }
+        
+
+        private DelegateCommand _Test552 = null!;
+        public DelegateCommand Test552
         {
             get
             {
-                return _Test55
-                ?? (_Test55 = new DelegateCommand(
+                return _Test552
+                ?? (_Test552 = new DelegateCommand(
                 (obj) =>
-                {
-                    var yy = obj as ExplorerViewModel;
-                    yy.FolderName = "Витя Покров";
-                    yy.VisibleTextBoxNameFolder = "Collapsed";
-                    yy.VisibleLabelNameFolder = "Visible";
+                {   
+                    if(obj is null)
+                    {
+                        return;
+                    }
+                    else
+                    {
+                        ExplorerViewModel folderObj = (ExplorerViewModel)obj;
+
+                        if(String.IsNullOrWhiteSpace(folderObj.FolderName))
+                        {
+                            
+                            TextErrorFolderValidation = "You must specify the folder name.";
+                            BorderBrushColor = defaultBorderBrushError;
+                            return;
+                           
+                        }
+                      
+                        SizeElement = defaultSize;
+                        folderObj.VisibleTextBoxNameFolder = "Collapsed";
+                        folderObj.VisibleLabelNameFolder = "Visible";
+                        IsNewCreateObj = false;
+                        OnPropertyChanged();
+                    }
                 }));
             }
+        }
+
+        public void DefaultValuesStyleInTextBoxElement()
+        {
+            SizeElement = defaultSize;
+            BorderBrushColor = defaultBorderBrush;
+            TextErrorFolderValidation = string.Empty;
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;

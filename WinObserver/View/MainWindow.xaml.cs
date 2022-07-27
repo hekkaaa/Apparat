@@ -1,8 +1,10 @@
 ﻿using Apparat.ViewModel;
+using MaterialDesignThemes.Wpf;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -48,8 +50,8 @@ namespace WinObserver
 
         private void KeyEvents(object sender, KeyEventArgs e)
         { // Drop Collection History Combobox.
-            var s = sender as ComboBox;
-            s.IsDropDownOpen = false;
+            ComboBox obj = sender as ComboBox;
+            obj.IsDropDownOpen = false;
         }
 
         //private void KeyEnterInTextNameNewFolderEvents(object sender, KeyEventArgs e)
@@ -93,6 +95,13 @@ namespace WinObserver
                
             }
 
+        }
+
+        private void TextBox_LostFocus(object sender, RoutedEventArgs e)
+        {
+            ApplicationViewModel q = DataContext as ApplicationViewModel;
+            ExplorerViewModel res = q.CollectionFoldersInExplorer.First(x => x.IsNewCreateObj == true);
+            q.CollectionFoldersInExplorer.Remove(res);
         }
     }
 }
