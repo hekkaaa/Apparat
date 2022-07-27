@@ -97,11 +97,20 @@ namespace WinObserver
 
         }
 
-        private void TextBox_LostFocus(object sender, RoutedEventArgs e)
+        private void TextBox_LostFocusEvent(object sender, RoutedEventArgs e)
         {
-            ApplicationViewModel q = DataContext as ApplicationViewModel;
-            ExplorerViewModel res = q.CollectionFoldersInExplorer.First(x => x.IsNewCreateObj == true);
-            q.CollectionFoldersInExplorer.Remove(res);
+            try
+            {   
+                ApplicationViewModel q = DataContext as ApplicationViewModel;
+                ExplorerViewModel res = q.CollectionFoldersInExplorer.First(x => x.IsNewCreateObj == true);
+                q.CollectionFoldersInExplorer.Remove(res);
+            }
+            catch (System.InvalidOperationException)
+            {   
+                // Normal reaction in LostFocus for Down Enter with textbox is not null.
+                return;
+            }
+           
         }
     }
 }

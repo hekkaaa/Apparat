@@ -44,7 +44,7 @@
             
             <!--Btn and Combobox enter hostname-->
             <Grid Grid.Row="0" Background="WhiteSmoke">
-                <StackPanel>
+                <StackPanel >
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition />
@@ -143,16 +143,17 @@
                     </Grid>
                 </StackPanel>
             </Grid>
-
+    
             <!--NEW CONCEPT Left Collection -->
             <Grid Grid.Row="1" Background="WhiteSmoke">
                 <TreeView ItemsSource="{Binding CollectionFoldersInExplorer}" SelectedItemChanged="TreeView_OnSelectedItemChanged" >
                     <TreeView.ItemTemplate>
                         <HierarchicalDataTemplate ItemsSource="{Binding HostVMCollection}">
-                            <StackPanel Orientation="Horizontal" >
+                            <StackPanel Orientation="Horizontal" FocusManager.FocusedElement="{Binding ElementName=NewFolderTextBox}">
                                 <materialDesign:PackIcon Kind="FolderCogOutline" Width="18" Height="{Binding SizeElement}" Margin="0,1.4,0,0"/>
 
-                                <TextBox Background="WhiteSmoke" Width="220" Height="23" Margin="15,0,0,0" 
+                                <TextBox x:Name="NewFolderTextBox"
+                                         Background="WhiteSmoke" Width="220" Height="23" Margin="15,0,0,0" 
                                          BorderThickness="1" BorderBrush="{Binding BorderBrushColor}" FontSize="12"
                                          Visibility="{Binding VisibleTextBoxNameFolder}" 
                                          Text="{Binding FolderName, Mode=TwoWay, 
@@ -160,7 +161,7 @@
                                          materialDesign:HintAssist.Hint="Enter name Folder"
                                          materialDesign:HintAssist.HelperText ="{Binding TextErrorFolderValidation}"
                                          materialDesign:HintAssist.HelperTextFontSize="12"
-                                         MaxLength="50" LostFocus="TextBox_LostFocus" >
+                                         MaxLength="50" LostFocus="TextBox_LostFocusEvent" >
                                     
                                     <TextBox.InputBindings>
                                         <KeyBinding Command="{Binding Test552}" 

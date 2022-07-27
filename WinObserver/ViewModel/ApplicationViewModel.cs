@@ -284,8 +284,6 @@ namespace WinObserver.ViewModel
                     {
                         return;
                     }
-                   
-
                 }));
             }
         }
