@@ -69,13 +69,13 @@ namespace Apparat.ViewModel
         }
         
 
-        private DelegateCommand _Test552 = null!;
-        public DelegateCommand Test552
+        private DelegateCommand _creatingNewFolderDownEnterEvent = null!;
+        public DelegateCommand CreatingNewFolderDownEnterEvent
         {
             get
             {
-                return _Test552
-                ?? (_Test552 = new DelegateCommand(
+                return _creatingNewFolderDownEnterEvent
+                ?? (_creatingNewFolderDownEnterEvent = new DelegateCommand(
                 (obj) =>
                 {   
                     if(obj is null)
@@ -96,6 +96,22 @@ namespace Apparat.ViewModel
                         FinallyCreating();
                         OnPropertyChanged();
                     }
+                }));
+            }
+        }
+
+
+        private DelegateCommand _test111 = null!;
+        public DelegateCommand Test111
+        {
+            get
+            {
+                return _test111
+                ?? (_test111 = new DelegateCommand(
+                (obj) =>
+                {
+                    var sss = obj;
+                    var sss111 = "1232";
                 }));
             }
         }

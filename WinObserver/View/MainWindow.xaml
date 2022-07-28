@@ -161,15 +161,34 @@
                                          materialDesign:HintAssist.Hint="Enter name Folder"
                                          materialDesign:HintAssist.HelperText ="{Binding TextErrorFolderValidation}"
                                          materialDesign:HintAssist.HelperTextFontSize="12"
-                                         MaxLength="50" LostFocus="TextBox_LostFocusEvent" >
+                                         MaxLength="50" LostFocus="TextBox_CreateorDeleteFolderWithLostFocusEvent">
                                     
                                     <TextBox.InputBindings>
-                                        <KeyBinding Command="{Binding Test552}" 
+                                        <KeyBinding Command="{Binding CreatingNewFolderDownEnterEvent}" 
                                                 CommandParameter="{Binding}" Key="Enter"/>
                                     </TextBox.InputBindings>
                                 </TextBox>
                                 
                                 <Label Content="{Binding FolderName}" Visibility="{Binding VisibleLabelNameFolder}"/>
+
+                                <materialDesign:PopupBox
+                                      DockPanel.Dock="Right"
+                                      ToolTip="View more action"
+                                      StaysOpen ="True"
+                                      PlacementMode="BottomAndAlignRightEdges"
+                                      Margin="7,0,0,0">
+
+                                    <materialDesign:PopupBox.ToggleContent>
+                                        <materialDesign:PackIcon Kind="DotsHorizontal"/>
+                                    </materialDesign:PopupBox.ToggleContent>
+                                    <ListBox >
+                                        <ListBoxItem
+                                            Content="Rename" MouseUp="ListBoxItem_MouseUpRenameFolder"/>
+                                        <ListBoxItem
+                                            Content="Delete" MouseUp="ListBoxItem_MouseUpDeleteFolder"/>
+                                    </ListBox>
+                                </materialDesign:PopupBox>
+
                             </StackPanel>
                             
                             <HierarchicalDataTemplate.ItemTemplate>
