@@ -100,6 +100,22 @@ namespace Apparat.ViewModel
             }
         }
 
+
+        private DelegateCommand _test111 = null!;
+        public DelegateCommand Test111
+        {
+            get
+            {
+                return _test111
+                ?? (_test111 = new DelegateCommand(
+                (obj) =>
+                {
+                    var sss = obj;
+                    var sss111 = "1232";
+                }));
+            }
+        }
+
         public void FinallyCreating()
         {
             SizeElement = defaultSize;

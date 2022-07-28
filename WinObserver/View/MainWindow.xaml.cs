@@ -54,13 +54,6 @@ namespace WinObserver
             obj.IsDropDownOpen = false;
         }
 
-        //private void KeyEnterInTextNameNewFolderEvents(object sender, KeyEventArgs e)
-        //{ // Drop Collection History Combobox.
-        //    var s = sender as ComboBox;
-        //    s.IsDropDownOpen = false;
-        //}
-
-
         private void TreeView_OnSelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
             _logger.LogWarning($"User select item is TreeView: {e.NewValue}");
@@ -92,18 +85,16 @@ namespace WinObserver
                 {
                     _logger.LogError($"Error castObject: {ex.Message}");
                 }
-               
             }
-
         }
 
-        private void TextBox_LostFocusEvent(object sender, RoutedEventArgs e)
+        private void TextBox_CreateorDeleteFolderWithLostFocusEvent(object sender, RoutedEventArgs e)
         {
             try
             {   
                 ApplicationViewModel appContext = DataContext as ApplicationViewModel;
                 ExplorerViewModel objVM = appContext.CollectionFoldersInExplorer.First(x => x.IsNewCreateObj == true);
-                
+                    
                 if (String.IsNullOrEmpty(objVM.FolderName))
                 {
                     appContext.CollectionFoldersInExplorer.Remove(objVM);
@@ -120,6 +111,34 @@ namespace WinObserver
                 return;
             }
            
+        }
+
+        private void ListBoxItem_MouseUpRenameFolder(object sender, RoutedEventArgs e)
+        {
+            var obj = sender as ListBoxItem;
+            ExplorerViewModel objContextVM = (ExplorerViewModel)obj.DataContext;
+            if (objContextVM != null)
+            {
+                _logger.LogWarning($"User is trying to change the folder name: '{objContextVM.FolderName}' ");
+                objContextVM.VisibleTextBoxNameFolder = "Visible";
+                objContextVM.VisibleLabelNameFolder = "Collapsed";
+                return;
+            }
+            else return;
+        }
+
+        private void ListBoxItem_MouseUpDeleteFolder(object sender, MouseButtonEventArgs e)
+        {
+            var obj = sender as ListBoxItem;
+            ExplorerViewModel objContextVM = (ExplorerViewModel)obj.DataContext;
+            if (objContextVM != null)
+            {   
+                _logger.LogWarning($"User is trying to delete the folder: '{objContextVM.FolderName}' ");
+                ApplicationViewModel appContext = DataContext as ApplicationViewModel;
+                appContext.DeleteFolder(objContextVM);
+                return;
+            }
+            else return;
         }
     }
 }

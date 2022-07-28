@@ -288,6 +288,12 @@ namespace WinObserver.ViewModel
             }
         }
 
+        public void DeleteFolder(ExplorerViewModel obj)
+        {
+            _logger.LogWarning($"User is Delete folder: {obj.FolderName}");
+            _collectionFoldersInExplorer.Remove(obj);
+        }
+
         public event PropertyChangedEventHandler? PropertyChanged;
         public void OnPropertyChanged([CallerMemberName] string prop = "")
         {

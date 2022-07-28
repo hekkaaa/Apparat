@@ -161,7 +161,7 @@
                                          materialDesign:HintAssist.Hint="Enter name Folder"
                                          materialDesign:HintAssist.HelperText ="{Binding TextErrorFolderValidation}"
                                          materialDesign:HintAssist.HelperTextFontSize="12"
-                                         MaxLength="50" LostFocus="TextBox_LostFocusEvent" >
+                                         MaxLength="50" LostFocus="TextBox_CreateorDeleteFolderWithLostFocusEvent">
                                     
                                     <TextBox.InputBindings>
                                         <KeyBinding Command="{Binding CreatingNewFolderDownEnterEvent}" 
@@ -176,15 +176,16 @@
                                       ToolTip="View more action"
                                       StaysOpen ="True"
                                       PlacementMode="BottomAndAlignRightEdges"
-                                      Margin="10,0,0,0">
+                                      Margin="7,0,0,0">
+
                                     <materialDesign:PopupBox.ToggleContent>
                                         <materialDesign:PackIcon Kind="DotsHorizontal"/>
                                     </materialDesign:PopupBox.ToggleContent>
-                                    <ListBox>
+                                    <ListBox >
                                         <ListBoxItem
-                                            Content="Rename" />
+                                            Content="Rename" MouseUp="ListBoxItem_MouseUpRenameFolder"/>
                                         <ListBoxItem
-                                            Content="Delete" />
+                                            Content="Delete" MouseUp="ListBoxItem_MouseUpDeleteFolder"/>
                                     </ListBox>
                                 </materialDesign:PopupBox>
 
