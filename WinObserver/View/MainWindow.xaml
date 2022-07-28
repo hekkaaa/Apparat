@@ -164,12 +164,30 @@
                                          MaxLength="50" LostFocus="TextBox_LostFocusEvent" >
                                     
                                     <TextBox.InputBindings>
-                                        <KeyBinding Command="{Binding Test552}" 
+                                        <KeyBinding Command="{Binding CreatingNewFolderDownEnterEvent}" 
                                                 CommandParameter="{Binding}" Key="Enter"/>
                                     </TextBox.InputBindings>
                                 </TextBox>
                                 
                                 <Label Content="{Binding FolderName}" Visibility="{Binding VisibleLabelNameFolder}"/>
+
+                                <materialDesign:PopupBox
+                                      DockPanel.Dock="Right"
+                                      ToolTip="View more action"
+                                      StaysOpen ="True"
+                                      PlacementMode="BottomAndAlignRightEdges"
+                                      Margin="10,0,0,0">
+                                    <materialDesign:PopupBox.ToggleContent>
+                                        <materialDesign:PackIcon Kind="DotsHorizontal"/>
+                                    </materialDesign:PopupBox.ToggleContent>
+                                    <ListBox>
+                                        <ListBoxItem
+                                            Content="Rename" />
+                                        <ListBoxItem
+                                            Content="Delete" />
+                                    </ListBox>
+                                </materialDesign:PopupBox>
+
                             </StackPanel>
                             
                             <HierarchicalDataTemplate.ItemTemplate>
