@@ -11,7 +11,9 @@ namespace Apparat.ViewModel
         private const string defaultSize = "18";
         private const string defaultBorderBrush = "DeepSkyBlue";
         private const string defaultBorderBrushError = "Red";
-        
+        private const string defaultIdGeneralFolder = "ffffx001";
+        private readonly bool systemFolder = false;
+
         public bool IsNewCreateObj { get; set; } = true;
 
         private string _folderName = String.Empty;
@@ -67,7 +69,24 @@ namespace Apparat.ViewModel
             get { return _textErrorFolderValidation; }
             set { _textErrorFolderValidation = value; OnPropertyChanged(); }
         }
-        
+
+        private string _publicId = string.Empty;
+        public string PublicId
+        {
+            get { return _publicId; }
+        }
+
+
+        public ExplorerViewModel()
+        {
+            GeneradeUniqueIdInPublicIdPropetry();
+        }
+
+        public ExplorerViewModel(bool values)
+        {
+            systemFolder = values;
+            GeneradeUniqueIdInPublicIdPropetry();
+        }
 
         private DelegateCommand _creatingNewFolderDownEnterEvent = null!;
         public DelegateCommand CreatingNewFolderDownEnterEvent
@@ -100,22 +119,6 @@ namespace Apparat.ViewModel
             }
         }
 
-
-        private DelegateCommand _test111 = null!;
-        public DelegateCommand Test111
-        {
-            get
-            {
-                return _test111
-                ?? (_test111 = new DelegateCommand(
-                (obj) =>
-                {
-                    var sss = obj;
-                    var sss111 = "1232";
-                }));
-            }
-        }
-
         public void FinallyCreating()
         {
             SizeElement = defaultSize;
@@ -129,6 +132,18 @@ namespace Apparat.ViewModel
         {
             if (PropertyChanged != null)
                 PropertyChanged(this, new PropertyChangedEventArgs(prop));
+        }
+
+        private void GeneradeUniqueIdInPublicIdPropetry()
+        {   
+            if(systemFolder == true)
+            {
+                _publicId = defaultIdGeneralFolder;
+            }
+            else
+            {
+                _publicId = Guid.NewGuid().ToString("N");
+            }
         }
     }
 }

@@ -56,7 +56,7 @@ namespace WinObserver
 
         private void TreeView_OnSelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
-            _logger.LogWarning($"User select item is TreeView: {e.NewValue}");
+            _logger.LogWarning($"User select code item is TreeView: {e.NewValue}");
             try
             {
                 HostViewModel obj = (HostViewModel)e.NewValue;
@@ -77,13 +77,13 @@ namespace WinObserver
                 try
                 {
                     ExplorerViewModel obj = (ExplorerViewModel)e.NewValue;
-                    _logger.LogWarning($"User select hostname: {obj.FolderName}");
-                    ApplicationViewModel? ObjectAppVM = DataContext as ApplicationViewModel;
-                    ObjectAppVM.SelectedGroupExplorerVM = obj;
+                    _logger.LogWarning($"User select folder: {obj.FolderName}");
+                    return;
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     _logger.LogError($"Error castObject: {ex.Message}");
+                    return;
                 }
             }
         }

@@ -37,7 +37,7 @@ namespace WinObserver.ViewModel
 
             // Test Start Info
             _collectionFoldersInExplorer = new ObservableCollection<ExplorerViewModel>() {
-                new ExplorerViewModel() {
+                new ExplorerViewModel(true) {
                     FolderName = "Default",
                     IsNewCreateObj = false,
                     HostVMCollection = new ObservableCollection<HostViewModel>() {
@@ -104,14 +104,6 @@ namespace WinObserver.ViewModel
             get { return _selectedGroup; }
             set { _selectedGroup = value; OnPropertyChanged(); }
         }
-
-        ExplorerViewModel _selectedGroupExplorerVM = null!;
-        public ExplorerViewModel SelectedGroupExplorerVM
-        {
-            get { return _selectedGroupExplorerVM; }
-            set { _selectedGroupExplorerVM = value; OnPropertyChanged(); }
-        }
-
 
         public ObservableCollection<ExplorerViewModel> CollectionFoldersInExplorer
         {
