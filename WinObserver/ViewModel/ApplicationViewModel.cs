@@ -16,6 +16,7 @@ namespace WinObserver.ViewModel
     public class ApplicationViewModel : INotifyPropertyChanged, IApplicationViewModel
     {
         const string VERSION_APP = "Version: 1.0.0 - pre-Alpha";
+        private const string defaultIdGeneralFolder = "ffffx001";
         private string _hostname = String.Empty;
         private string _textBlockGeneralError = String.Empty;
         private string _borderTextBox = "#FFABADB3";
@@ -41,13 +42,14 @@ namespace WinObserver.ViewModel
                     FolderName = "Default",
                     IsNewCreateObj = false,
                     HostVMCollection = new ObservableCollection<HostViewModel>() {
-                        new HostViewModel(_hostVMlog){ HostnameView = "vk.com"},
+                    new HostViewModel(_hostVMlog){ HostnameView = "vk.com"},
                     new HostViewModel(_hostVMlog){ HostnameView = "ya.ru"}},
 
                 },
                 new ExplorerViewModel(){
                     FolderName = "ИП Усатый",
                     IsNewCreateObj = false,
+                    VisibleIconMoreAction =  "Visible",
                     HostVMCollection = new ObservableCollection<HostViewModel>() {
                         new HostViewModel(_hostVMlog){ HostnameView = "metanit.com"},
                     new HostViewModel(_hostVMlog){ HostnameView = "github.com"},
@@ -166,7 +168,7 @@ namespace WinObserver.ViewModel
                      HostViewModel newObject = new HostViewModel(_hostVMlog) { HostnameView = editedHostname };
 
                      // Add new hostname in default folder View.
-                     CollectionFoldersInExplorer.First().HostVMCollection.Add(newObject);
+                     CollectionFoldersInExplorer.Where(x=>x.PublicId == defaultIdGeneralFolder).First().HostVMCollection.Add(newObject);
 
                      _appSettingService.AddHostInHistory(editedHostname);
                      UpdateCollectionHistoryHostInCombobox();
@@ -271,11 +273,9 @@ namespace WinObserver.ViewModel
                             VisibleTextBoxNameFolder = "Visible",
                             HostVMCollection = new ObservableCollection<HostViewModel>()
                         });
-                    }
-                    else
-                    {
                         return;
                     }
+                    return;
                 }));
             }
         }
@@ -283,7 +283,15 @@ namespace WinObserver.ViewModel
         public void DeleteFolder(ExplorerViewModel obj)
         {
             _logger.LogWarning($"User is Delete folder: {obj.FolderName}");
+
+            foreach(HostViewModel item in obj.HostVMCollection)
+            {
+                 item.StopStream();
+            }
+            obj.HostVMCollection.Clear();
+            StartValueInVisibleWithGeneralWindowsApp = "Collapsed";
             _collectionFoldersInExplorer.Remove(obj);
+
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;
@@ -298,12 +306,10 @@ namespace WinObserver.ViewModel
             CollectionRecentHost = _appSettingService.GetLastFiveHistoryHost();
         }
 
-
         private void RemoveInfoinTextBoxPanel()
         {
             TextBoxHostname = null!;
         }
-
 
         private void ErrorValidationTextAndAnimation(string errorHostname)
         {

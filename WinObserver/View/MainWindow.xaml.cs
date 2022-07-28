@@ -1,15 +1,12 @@
 ﻿using Apparat.ViewModel;
-using MaterialDesignThemes.Wpf;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Navigation;
-using WinObserver.Model;
 using WinObserver.ViewModel;
 
 namespace WinObserver
@@ -66,7 +63,7 @@ namespace WinObserver
                     ApplicationViewModel? ObjectAppVM = DataContext as ApplicationViewModel;
                     ObjectAppVM.SelectedGroup = obj;
 
-                    if(ObjectAppVM.StartValueInVisibleWithGeneralWindowsApp.ToString() != "Visible")
+                    if (ObjectAppVM.StartValueInVisibleWithGeneralWindowsApp.ToString() != "Visible")
                     {
                         ObjectAppVM.StartValueInVisibleWithGeneralWindowsApp = "Visible";
                     }
@@ -91,10 +88,10 @@ namespace WinObserver
         private void TextBox_CreateorDeleteFolderWithLostFocusEvent(object sender, RoutedEventArgs e)
         {
             try
-            {   
+            {
                 ApplicationViewModel appContext = DataContext as ApplicationViewModel;
                 ExplorerViewModel objVM = appContext.CollectionFoldersInExplorer.First(x => x.IsNewCreateObj == true);
-                    
+
                 if (String.IsNullOrEmpty(objVM.FolderName))
                 {
                     appContext.CollectionFoldersInExplorer.Remove(objVM);
@@ -103,14 +100,14 @@ namespace WinObserver
                 {
                     objVM.FinallyCreating();
                 }
-                
+
             }
             catch (System.InvalidOperationException)
-            {   
+            {
                 // Normal reaction in LostFocus for Down Enter with textbox is not null.
                 return;
             }
-           
+
         }
 
         private void ListBoxItem_MouseUpRenameFolder(object sender, RoutedEventArgs e)
@@ -132,7 +129,7 @@ namespace WinObserver
             var obj = sender as ListBoxItem;
             ExplorerViewModel objContextVM = (ExplorerViewModel)obj.DataContext;
             if (objContextVM != null)
-            {   
+            {
                 _logger.LogWarning($"User is trying to delete the folder: '{objContextVM.FolderName}' ");
                 ApplicationViewModel appContext = DataContext as ApplicationViewModel;
                 appContext.DeleteFolder(objContextVM);

@@ -48,6 +48,12 @@ namespace Apparat.ViewModel
             set { _visibleLabelNameFolder = value; OnPropertyChanged(); }
         }
 
+        private string _visibleIconMoreAction = "Collapsed";
+        public string VisibleIconMoreAction
+        {
+            get { return _visibleIconMoreAction; }
+            set { _visibleIconMoreAction = value; OnPropertyChanged(); }
+        }
 
         private string _borderBrushColor = defaultBorderBrush;
         public string BorderBrushColor
@@ -85,6 +91,7 @@ namespace Apparat.ViewModel
         public ExplorerViewModel(bool values)
         {
             systemFolder = values;
+            VisibleIconMoreAction = "Collapsed";
             GeneradeUniqueIdInPublicIdPropetry();
         }
 
@@ -124,6 +131,7 @@ namespace Apparat.ViewModel
             SizeElement = defaultSize;
             this.VisibleTextBoxNameFolder = "Collapsed";
             this.VisibleLabelNameFolder = "Visible";
+            this.VisibleIconMoreAction = "Visible";
             IsNewCreateObj = false;
         }
 
@@ -139,11 +147,9 @@ namespace Apparat.ViewModel
             if(systemFolder == true)
             {
                 _publicId = defaultIdGeneralFolder;
+                return;
             }
-            else
-            {
-                _publicId = Guid.NewGuid().ToString("N");
-            }
+            _publicId = Guid.NewGuid().ToString("N");
         }
     }
 }
