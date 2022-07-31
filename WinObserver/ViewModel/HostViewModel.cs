@@ -9,6 +9,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Threading.Tasks;
 using WinObserver.Model;
 using WinObserver.Service;
 
@@ -55,7 +56,7 @@ namespace Apparat.ViewModel
                 return _startCommand ?? new DelegateCommand((obj) =>
                 {
                     if (_statusWorkDataGrid)
-                    {
+                    {   
                         StopStream();
                     }
                     else
@@ -264,6 +265,7 @@ namespace Apparat.ViewModel
 
         private void VisaulChangeAtStopStream()
         {
+            ManagementEnableGeneralControlBtn(false);
             TextinToolTipsFromControlBtn = "Restart traceroute";
             ControlBtnHost = IconeMap.Restart;
         }
