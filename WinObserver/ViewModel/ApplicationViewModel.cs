@@ -5,6 +5,7 @@ using Apparat.ViewModel;
 using Apparat.ViewModel.Interfaces;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
@@ -277,6 +278,15 @@ namespace WinObserver.ViewModel
                     }
                     return;
                 }));
+            }
+        }
+
+        private List<string> _test1111 = new List<string>() { "qwe", "jjss", "lss" };
+        public List<string> ListTest23
+        {
+            get
+            {
+                return _test1111;
             }
         }
 

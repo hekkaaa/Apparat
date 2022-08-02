@@ -5,6 +5,7 @@ using Apparat.Services.Interfaces;
 using Apparat.ViewModel.Interfaces;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
@@ -49,14 +50,14 @@ namespace Apparat.ViewModel
 
         private DelegateCommand? _startCommand { get; }
         public DelegateCommand StartCommand
-        {   
+        {
             // Start - Stop
             get
             {
                 return _startCommand ?? new DelegateCommand((obj) =>
                 {
                     if (_statusWorkDataGrid)
-                    {   
+                    {
                         StopStream();
                     }
                     else
@@ -209,14 +210,22 @@ namespace Apparat.ViewModel
                 _statusWorkDataGrid = true;
                 return true;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 _logger.LogError($"Error Start Stream Traceroute {HostnameView} | ID: {PublicId}");
                 return false;
             }
-            
+
         }
-        
+        //private List<string> _test1111 = new List<string>() { "qwe", "jjss", "lss" };
+        //public List<string> ListTest23
+        //{
+        //    get
+        //    {
+        //        return _test1111;
+        //    }
+        //}
+
 
         public event PropertyChangedEventHandler? PropertyChanged;
         public void OnPropertyChanged([CallerMemberName] string prop = "")

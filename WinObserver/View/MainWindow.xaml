@@ -9,7 +9,7 @@
         mc:Ignorable="d"
         Title="Apparat" MinHeight="700" MinWidth="940" Height="568" Width="1024" Loaded="Window_Loaded"
         WindowStartupLocation="CenterScreen"
-        
+        x:Name="UC"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
         Background="{DynamicResource MaterialDesignPaper}"
         TextElement.FontWeight="DemiBold"
@@ -146,12 +146,12 @@
     
             <!--NEW CONCEPT Left Collection -->
             <Grid Grid.Row="1" Background="WhiteSmoke">
-                <TreeView ItemsSource="{Binding CollectionFoldersInExplorer}" SelectedItemChanged="TreeView_OnSelectedItemChanged" >
+                <TreeView x:Name="Tes3" ItemsSource="{Binding CollectionFoldersInExplorer}" SelectedItemChanged="TreeView_OnSelectedItemChanged">
                     <TreeView.ItemTemplate>
                         <HierarchicalDataTemplate ItemsSource="{Binding HostVMCollection}">
+                            <!--Folders-->
                             <StackPanel Orientation="Horizontal" FocusManager.FocusedElement="{Binding ElementName=NewFolderTextBox}">
                                 <materialDesign:PackIcon Kind="FolderCogOutline" Width="18" Height="{Binding SizeElement}" Margin="0,1.4,0,0"/>
-
                                 <TextBox x:Name="NewFolderTextBox"
                                          Background="WhiteSmoke" Width="220" Height="23" Margin="15,0,0,0" 
                                          BorderThickness="1" BorderBrush="{Binding BorderBrushColor}" FontSize="12"
@@ -188,13 +188,24 @@
                                             Content="Delete" MouseUp="ListBoxItem_MouseUpDeleteFolder"/>
                                     </ListBox>
                                 </materialDesign:PopupBox>
-
                             </StackPanel>
-                            
+                            <!--Hostname-->
                             <HierarchicalDataTemplate.ItemTemplate>
                                 <DataTemplate>
                                     <StackPanel Margin="-5" Orientation="Horizontal" Width="auto" Height="auto" VerticalAlignment="Center">
-
+                                        <StackPanel.ContextMenu>
+                                            <ContextMenu>
+                                                <MenuItem Header="Move to folder..." ItemsSource= "{Binding Source={x:Reference UC}, Path=DataContext.CollectionFoldersInExplorer}">
+                                                    <MenuItem.ItemTemplate>
+                                                        <DataTemplate>
+                                                            <Label Content="{Binding FolderName}"/>
+                                                        </DataTemplate>
+                                                    </MenuItem.ItemTemplate>
+                                                </MenuItem>
+                                                <Separator/>
+                                                <MenuItem Header="Remove"></MenuItem>
+                                            </ContextMenu>
+                                        </StackPanel.ContextMenu>
                                         <Image Source="\Resources\icons8-error.png" Visibility="{Binding ErrorHostnameVisibleIcon}" 
                                                 Width="20" Height="20" VerticalAlignment="Center"
                                                 Margin="5,0,5,0"
