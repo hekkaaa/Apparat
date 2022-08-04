@@ -6,10 +6,10 @@
         xmlns:local="clr-namespace:WinObserver" 
         xmlns:viewmodel="clr-namespace:WinObserver.ViewModel" 
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:dd="clr-namespace:GongSolutions.Wpf.DragDrop;assembly=GongSolutions.Wpf.DragDrop"
         mc:Ignorable="d"
         Title="Apparat" MinHeight="700" MinWidth="940" Height="568" Width="1024" Loaded="Window_Loaded"
         WindowStartupLocation="CenterScreen"
-        
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
         Background="{DynamicResource MaterialDesignPaper}"
         TextElement.FontWeight="DemiBold"
@@ -34,14 +34,14 @@
         <!--Top-->
         <Grid Grid.Column="0" Grid.Row="0" Background="White" Grid.ColumnSpan="3">
         </Grid>
-        
+
         <!--Control panel-->
         <Grid Grid.Column="0" Grid.Row="1">
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-            
+
             <!--Btn and Combobox enter hostname-->
             <Grid Grid.Row="0" Background="WhiteSmoke">
                 <StackPanel >
@@ -104,7 +104,7 @@
                     </ComboBox>
 
                     <Grid x:Name="StubElement" Margin="0,5,0,7"/>
-                        
+
                     <Grid Margin="0,5,0,7">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="1*"/>
@@ -121,14 +121,14 @@
 
                         <!--Add Folder Button-->
                         <Grid Grid.Column="2">
-                                <Button Command="{Binding AddNewFolderBtn}"
+                            <Button Command="{Binding AddNewFolderBtn}"
                                             Style="{StaticResource MaterialDesignIconForegroundButton}"
                                             ToolTip="Add a folder"
                                             Height="20" Width="20">
-                                    <materialDesign:PackIcon Kind="FolderPlusOutline" Width="20" Height="20"/>
-                                </Button>
+                                <materialDesign:PackIcon Kind="FolderPlusOutline" Width="20" Height="20"/>
+                            </Button>
                         </Grid>
-                        
+
                         <!--Pull up Folder Button-->
                         <Grid Grid.Column="3">
                             <Button Command="{Binding DataContext.CloseTabCommand,RelativeSource={RelativeSource AncestorType={x:Type Window}}}" 
@@ -143,15 +143,17 @@
                     </Grid>
                 </StackPanel>
             </Grid>
-    
+
             <!--NEW CONCEPT Left Collection -->
             <Grid Grid.Row="1" Background="WhiteSmoke">
-                <TreeView ItemsSource="{Binding CollectionFoldersInExplorer}" SelectedItemChanged="TreeView_OnSelectedItemChanged" >
+                <TreeView ItemsSource="{Binding CollectionFoldersInExplorer}" SelectedItemChanged="TreeView_OnSelectedItemChanged"
+                          dd:DragDrop.IsDragSource="True"
+                          dd:DragDrop.IsDropTarget="True"> 
                     <TreeView.ItemTemplate>
                         <HierarchicalDataTemplate ItemsSource="{Binding HostVMCollection}">
+                            <!--Folders-->
                             <StackPanel Orientation="Horizontal" FocusManager.FocusedElement="{Binding ElementName=NewFolderTextBox}">
                                 <materialDesign:PackIcon Kind="FolderCogOutline" Width="18" Height="{Binding SizeElement}" Margin="0,1.4,0,0"/>
-
                                 <TextBox x:Name="NewFolderTextBox"
                                          Background="WhiteSmoke" Width="220" Height="23" Margin="15,0,0,0" 
                                          BorderThickness="1" BorderBrush="{Binding BorderBrushColor}" FontSize="12"
@@ -162,13 +164,13 @@
                                          materialDesign:HintAssist.HelperText ="{Binding TextErrorFolderValidation}"
                                          materialDesign:HintAssist.HelperTextFontSize="12"
                                          MaxLength="50" LostFocus="TextBox_CreateorDeleteFolderWithLostFocusEvent">
-                                    
+
                                     <TextBox.InputBindings>
                                         <KeyBinding Command="{Binding CreatingNewFolderDownEnterEvent}" 
                                                 CommandParameter="{Binding}" Key="Enter"/>
                                     </TextBox.InputBindings>
                                 </TextBox>
-                                
+
                                 <Label Content="{Binding FolderName}" Visibility="{Binding VisibleLabelNameFolder}"/>
 
                                 <materialDesign:PopupBox
@@ -188,13 +190,12 @@
                                             Content="Delete" MouseUp="ListBoxItem_MouseUpDeleteFolder"/>
                                     </ListBox>
                                 </materialDesign:PopupBox>
-
                             </StackPanel>
-                            
+                            <!--Hostname-->
                             <HierarchicalDataTemplate.ItemTemplate>
                                 <DataTemplate>
                                     <StackPanel Margin="-5" Orientation="Horizontal" Width="auto" Height="auto" VerticalAlignment="Center">
-
+                                       
                                         <Image Source="\Resources\icons8-error.png" Visibility="{Binding ErrorHostnameVisibleIcon}" 
                                                 Width="20" Height="20" VerticalAlignment="Center"
                                                 Margin="5,0,5,0"
@@ -242,7 +243,7 @@
                 </TreeView>
             </Grid>
         </Grid>
-       
+
         <!--Splitte between Left panel host and DataGrid-->
         <GridSplitter Grid.Column="1" Grid.Row="1" ShowsPreview="False" Width="3"
         HorizontalAlignment="Center" BorderThickness="0"/>
@@ -254,48 +255,53 @@
                             materialDesign:ColorZoneAssist.Mode="Light" HorizontalContentAlignment="Left">
                     <TabItem Header="Table">
                         <Grid>
-                        
-                        <DataGrid ItemsSource="{Binding SelectedGroup.TracertObject, UpdateSourceTrigger=PropertyChanged}"
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="83*"/>
+                                <RowDefinition Height="3*"/>
+                                <RowDefinition Height="478*"/>
+                            </Grid.RowDefinitions>
+
+                            <DataGrid ItemsSource="{Binding SelectedGroup.TracertObject, UpdateSourceTrigger=PropertyChanged}"
                                    AutoGenerateColumns="False" RowBackground="GhostWhite" 
                                    AlternatingRowBackground ="LightGray" GridLinesVisibility="Vertical" 
                                    IsReadOnly="True" FontSize="16" CanUserAddRows="False" 
-                                   Visibility="{Binding SelectedGroup.VisibleDataGridTable}">  
-                            <DataGrid.Columns>
-                                <DataGridTextColumn Header="№" Binding="{Binding NumberHostname}" Width="auto"/>
-                                <DataGridTextColumn Header="Hostname" Binding="{Binding Hostname}" Width="auto"/>
-                                <DataGridTextColumn Header="Loss %" Binding="{Binding PercentLossPacket}" Width="auto"/>
-                                <DataGridTextColumn Header="Last Delay" Binding="{Binding LastDelay}" Width="*"/>
-                                <DataGridTextColumn Header="Minimal" Binding="{Binding MinPing}" Width="*"/>
-                                <DataGridTextColumn Header="Middle" Binding="{Binding MiddlePing}" Width="*"/>
-                                <DataGridTextColumn Header="Maximum" Binding="{Binding MaxPing}" Width="*"/>
-                                <DataGridTextColumn Header="All Packet" Binding="{Binding CounterPacket}" Width="*"/>
-                                <DataGridTextColumn Header="Loss Packet" Binding="{Binding CounterLossPacket}" Width="auto"/>
-                            </DataGrid.Columns>
-                            
-                        </DataGrid>
+                                   Visibility="{Binding SelectedGroup.VisibleDataGridTable}" Grid.RowSpan="3">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="№" Binding="{Binding NumberHostname}" Width="auto"/>
+                                    <DataGridTextColumn Header="Hostname" Binding="{Binding Hostname}" Width="auto"/>
+                                    <DataGridTextColumn Header="Loss %" Binding="{Binding PercentLossPacket}" Width="auto"/>
+                                    <DataGridTextColumn Header="Last Delay" Binding="{Binding LastDelay}" Width="*"/>
+                                    <DataGridTextColumn Header="Minimal" Binding="{Binding MinPing}" Width="*"/>
+                                    <DataGridTextColumn Header="Middle" Binding="{Binding MiddlePing}" Width="*"/>
+                                    <DataGridTextColumn Header="Maximum" Binding="{Binding MaxPing}" Width="*"/>
+                                    <DataGridTextColumn Header="All Packet" Binding="{Binding CounterPacket}" Width="*"/>
+                                    <DataGridTextColumn Header="Loss Packet" Binding="{Binding CounterLossPacket}" Width="auto"/>
+                                </DataGrid.Columns>
+
+                            </DataGrid>
 
                             <!--Preloader-->
-                            <Grid VerticalAlignment="Center" 
-                                  Visibility="{Binding SelectedGroup.VisiblePrealoaderGrid}">
-                            <Grid.RowDefinitions>
-                                <RowDefinition/>
-                                <RowDefinition/>
-                            </Grid.RowDefinitions>
-                            <ProgressBar Grid.Row="0"
+                            <Grid VerticalAlignment="Top" 
+                                  Visibility="{Binding SelectedGroup.VisiblePrealoaderGrid}" Margin="0,114,0,0" Grid.Row="2">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
+                                <ProgressBar Grid.Row="0"
                               Style="{StaticResource MaterialDesignCircularProgressBar}"
                               Value="0"
                               Height="128"
                               Width="128"
                               IsIndeterminate="True" />
-                           <TextBlock Grid.Row="1" FontFamily="consolas"
+                                <TextBlock Grid.Row="1" FontFamily="consolas"
                                Text="Please wait." 
                                FontSize="18" 
                                Margin="0,15,0,0"
                                HorizontalAlignment="Center"/>
                             </Grid>
-                            
+
                             <!--Gtub grid-->
-                            <Grid VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="{Binding SelectedGroup.VisibleStupGrid}">
+                            <Grid VerticalAlignment="Top" HorizontalAlignment="Center" Visibility="{Binding SelectedGroup.VisibleStupGrid}" Margin="0,186,0,0" Grid.Row="2">
                                 <TextBlock FontSize="18" FontFamily="Consolas">
                                     Your data will be here soon
                                     <materialDesign:PackIcon Kind="AlienOutline" />
@@ -303,8 +309,8 @@
                             </Grid>
 
                             <!--Error Stub grid-->
-                            <Grid VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="{Binding SelectedGroup.VisibleErrorStupGrid}">
-                                    
+                            <Grid VerticalAlignment="Top" HorizontalAlignment="Center" Visibility="{Binding SelectedGroup.VisibleErrorStupGrid}" Margin="0,126,0,0" Grid.Row="2">
+
                                 <materialDesign:PackIcon Kind="Alert" Width="100" Height="100"
                                                      VerticalAlignment="Center" HorizontalAlignment="Center" 
                                                      Margin="0,0,0,40"/>
@@ -317,7 +323,7 @@
 
                         </Grid>
                     </TabItem>
-                    
+
                     <!--Text Statistic-->
                     <TabItem
                         Header="Statistic">
@@ -325,7 +331,7 @@
                                    VerticalAlignment="Center" HorizontalAlignment="Center"
                                    FontSize="18" FontFamily="Consolas"/>
                     </TabItem>
-                    
+
                     <!--Graph Statistic-->
                     <TabItem
                         Header="Graph" IsEnabled="False">
@@ -334,16 +340,16 @@
                 </TabControl>
             </materialDesign:Card>
         </Grid>
-        
+
         <!--Footer -->
         <Border BorderBrush="Black" BorderThickness="0.5" Grid.ColumnSpan="3" Grid.Row="3">
-        <Grid Background="PowderBlue">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="10"/>
-                <ColumnDefinition Width="auto" />
-                <ColumnDefinition/>
-                <ColumnDefinition Width="100" />
-            </Grid.ColumnDefinitions>
+            <Grid Background="PowderBlue">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="10"/>
+                    <ColumnDefinition Width="auto" />
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="100" />
+                </Grid.ColumnDefinitions>
                 <!-- Text Version app -->
                 <TextBlock x:Name ="AppVersion" Text="{Binding VersionProgramm}" Margin="0,4,0,0" TextAlignment="Left" Grid.Column="1" ToolTipService.InitialShowDelay="200" ToolTip="This program is in Beta stage."/>
 
@@ -352,7 +358,7 @@
                 <TextBlock TextAlignment="Center" Grid.Column="3" Margin="0,4,0,0">
                     <Hyperlink RequestNavigate="Hyperlink_RequestNavigate" NavigateUri="https://github.com/hekkaaa/Apparat" ToolTipService.InitialShowDelay="200" ToolTip="Link to the author's github.">GitHub</Hyperlink>
                 </TextBlock>
-        </Grid>
+            </Grid>
         </Border>
     </Grid>
 </Window>

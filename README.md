@@ -2,7 +2,7 @@
 
 **Apparat** - open source software for short-term network connection monitoring.
 
-_The idea of the program was inspired by working with [WinMTR](https://github.com/White-Tiger/WinMTR).
+_The idea of the program was inspired by working with [WinMTR](https://github.com/White-Tiger/WinMTR)._
 
 Designed for **Windows OS** with **.NET 6 SDK** installed
 
@@ -16,6 +16,8 @@ _At the moment, early versions - the program may unexpectedly freeze and give er
 * ~~[LiveCharts2](https://github.com/beto-rodriguez/LiveCharts2) - LiveChartsCore.SkiaSharpView.WPF v2.0.0-beta.300.~~
 * [Material Design In XAML](https://github.com/MaterialDesignInXAML/MaterialDesignInXamlToolkit) - v4.5.0
 * [NetObserver.Helper](https://github.com/hekkaaa/NetObserver) - v1.1.2
+* [gong-wpf-dragdrop](https://github.com/punker76/gong-wpf-dragdrop) - v3.1.1
+
 
 ## Downloads
 **[Download it now](https://github.com/hekkaaa/Apparat/releases/latest)**
