@@ -37,26 +37,8 @@ namespace WinObserver.ViewModel
             _logger = log;
             _hostVMlog = hostVMlog;
 
-            // Test Start Info
-            _collectionFoldersInExplorer = new ObservableCollection<ExplorerViewModel>() {
-                new ExplorerViewModel(true) {
-                    FolderName = "Default",
-                    IsNewCreateObj = false,
-                    HostVMCollection = new ObservableCollection<HostViewModel>() {
-                    new HostViewModel(_hostVMlog){ HostnameView = "vk.com"},
-                    new HostViewModel(_hostVMlog){ HostnameView = "ya.ru"}},
-
-                },
-                new ExplorerViewModel(){
-                    FolderName = "ИП Усатый",
-                    IsNewCreateObj = false,
-                    VisibleIconMoreAction =  "Visible",
-                    HostVMCollection = new ObservableCollection<HostViewModel>() {
-                        new HostViewModel(_hostVMlog){ HostnameView = "metanit.com"},
-                    new HostViewModel(_hostVMlog){ HostnameView = "github.com"},
-                    new HostViewModel(_hostVMlog){ HostnameView = "Monro.ru"},}
-                }
-            };
+            // Load Start Folder
+            _collectionFoldersInExplorer = CreateStartDefaultFolder();
 
             // init object class  
             _appSettingService = appService;
@@ -337,6 +319,19 @@ namespace WinObserver.ViewModel
                 TextBlockGeneralError = string.Empty;
                 BorderTextBox = "#FFABADB3";
             });
+        }
+
+        private ObservableCollection<ExplorerViewModel> CreateStartDefaultFolder()
+        {
+            return new ObservableCollection<ExplorerViewModel>() {
+                new ExplorerViewModel(true) {
+                    FolderName = "Default",
+                    IsNewCreateObj = false,
+                    HostVMCollection = new ObservableCollection<HostViewModel>() {
+                    new HostViewModel(_hostVMlog){ HostnameView = "github.com"}
+                    },
+                },
+            };
         }
     }
 }
