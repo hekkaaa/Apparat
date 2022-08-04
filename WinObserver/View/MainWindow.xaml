@@ -152,10 +152,13 @@
                     <TreeView.ItemTemplate>
                         <HierarchicalDataTemplate ItemsSource="{Binding HostVMCollection}">
                             <!--Folders-->
-                            <StackPanel Orientation="Horizontal" FocusManager.FocusedElement="{Binding ElementName=NewFolderTextBox}">
+                            <StackPanel Orientation="Horizontal" 
+                                        FocusManager.FocusedElement="{Binding ElementName=NewFolderTextBox}" 
+                                        Margin="0,-7,0,-7">
+                                
                                 <materialDesign:PackIcon Kind="FolderCogOutline" Width="18" Height="{Binding SizeElement}" Margin="0,1.4,0,0"/>
                                 <TextBox x:Name="NewFolderTextBox"
-                                         Background="WhiteSmoke" Width="220" Height="23" Margin="15,0,0,0" 
+                                         Background="WhiteSmoke" Width="auto" MinWidth="220" Height="23" Margin="15,0,0,0" 
                                          BorderThickness="1" BorderBrush="{Binding BorderBrushColor}" FontSize="12"
                                          Visibility="{Binding VisibleTextBoxNameFolder}" 
                                          Text="{Binding FolderName, Mode=TwoWay, 
