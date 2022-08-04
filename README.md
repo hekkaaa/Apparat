@@ -10,6 +10,10 @@ Designed for **Windows OS** with **.NET 6 SDK** installed
 
 ![gif01](./screenshots/0SrSoed8vk.gif)
 
+
+<img src="https://user-images.githubusercontent.com/46771781/182908157-32437119-6a6f-42ce-aede-8ad01b11aecf.png" alt="drawing" width="750"/>
+
+
 ### Warning!
 _At the moment, early versions - the program may unexpectedly freeze and give errors._
 
