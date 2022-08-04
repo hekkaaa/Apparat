@@ -79,14 +79,14 @@ namespace WinObserver.Service
                     _cancellationTokenSource.Dispose();
                     hostViewEvent.WorkingProggresbarInListBoxHostnameEvent(false);
                     hostViewEvent.ErrorNameHostnameEvent();
-                    _logger.LogError($"Error Exception in Hostname: {hostname} | ERROR: {ex.Message}");
+                    _logger.LogError($"Error Exception in Hostname: {hostname} | ERROR: {ex.Message}" + $" \n | {ex.InnerException}");
                 }
 
             }), _token);
         }
 
         public void StopStreamTracerouteHost()
-        {
+        {   
             _cancellationTokenSource!.Cancel();
         }
 
