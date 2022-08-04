@@ -2,6 +2,7 @@
 using Apparat.Helpers;
 using Apparat.Helpers.Interfaces;
 using Apparat.Services.Interfaces;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -18,12 +19,14 @@ namespace WinObserver.Service
         public readonly ReadOnlyObservableCollection<TracertModel> _collectionTracerouteValue;
         private readonly IHostRouteHelper _hostRouteHelper;
         private readonly IUpdateStatisticOfTracerouteElementsHelper _updateInfoStatistic;
+        ILogger _logger;
 
         CancellationTokenSource? _cancellationTokenSource;
         CancellationToken _token;
 
-        public TracertService()
+        public TracertService(ILogger logger)
         {
+            _logger = logger;
             _innerCollectionTracerouteValue = new ObservableCollection<TracertModel>();
             _collectionTracerouteValue = new ReadOnlyObservableCollection<TracertModel>(_innerCollectionTracerouteValue);
             _hostRouteHelper = new HostRouteHelper();
@@ -62,19 +65,21 @@ namespace WinObserver.Service
                         }
                     }
                 }
-                catch (PingException)
+                catch (PingException ex)
                 {
                     _cancellationTokenSource!.Cancel();
                     _cancellationTokenSource.Dispose();
                     hostViewEvent.WorkingProggresbarInListBoxHostnameEvent(false);
                     hostViewEvent.ErrorNameHostnameEvent();
+                    _logger.LogError($"Error PingException in Hostname: {hostname} | ERROR: {ex.Message}" + $" \n | {ex.InnerException}");
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
                     _cancellationTokenSource!.Cancel();
                     _cancellationTokenSource.Dispose();
                     hostViewEvent.WorkingProggresbarInListBoxHostnameEvent(false);
                     hostViewEvent.ErrorNameHostnameEvent();
+                    _logger.LogError($"Error Exception in Hostname: {hostname} | ERROR: {ex.Message}");
                 }
 
             }), _token);

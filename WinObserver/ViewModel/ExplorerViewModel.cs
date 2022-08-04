@@ -82,7 +82,6 @@ namespace Apparat.ViewModel
             get { return _publicId; }
         }
 
-
         public ExplorerViewModel()
         {
             GeneradeUniqueIdInPublicIdPropetry();

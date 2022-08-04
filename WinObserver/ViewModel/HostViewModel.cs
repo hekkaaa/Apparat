@@ -5,12 +5,10 @@ using Apparat.Services.Interfaces;
 using Apparat.ViewModel.Interfaces;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Text;
-using System.Threading.Tasks;
 using WinObserver.Model;
 using WinObserver.Service;
 
@@ -35,7 +33,7 @@ namespace Apparat.ViewModel
         public HostViewModel(ILogger<IHostViewModel> log)
         {
             _logger = log;
-            _tracerService = new TracertService();
+            _tracerService = new TracertService(_logger);
             TracertObject = _tracerService.GetActualCollectionTracertValue();
 
             // Generate unique id
@@ -217,15 +215,6 @@ namespace Apparat.ViewModel
             }
 
         }
-        //private List<string> _test1111 = new List<string>() { "qwe", "jjss", "lss" };
-        //public List<string> ListTest23
-        //{
-        //    get
-        //    {
-        //        return _test1111;
-        //    }
-        //}
-
 
         public event PropertyChangedEventHandler? PropertyChanged;
         public void OnPropertyChanged([CallerMemberName] string prop = "")
@@ -269,7 +258,7 @@ namespace Apparat.ViewModel
         {
             TextinToolTipsFromControlBtn = "Stop traceroute";
             ControlBtnHost = IconeMap.Stop;
-            
+
         }
 
         private void VisaulChangeAtStopStream()
