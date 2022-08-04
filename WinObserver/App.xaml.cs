@@ -10,6 +10,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Serilog;
 using System.Windows;
+using WinObserver.Service;
 using WinObserver.ViewModel;
 
 namespace WinObserver
@@ -43,6 +44,7 @@ namespace WinObserver
                      services.AddSingleton<IAppSettingService, AppSettingService>();
                      services.AddSingleton<IAppSettingRepository, AppSettingRepository>();
                      services.AddScoped<IHostViewModel, HostViewModel>();
+                     services.AddScoped<ITracertService, TracertService>();
                      services.AddSingleton<MainWindow>();
                  })
                  .Build();
