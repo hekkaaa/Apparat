@@ -6,7 +6,9 @@ _The idea of the program was inspired by working with [WinMTR](https://github.co
 
 Designed for **Windows OS** with **.NET 6 SDK** installed
 
-<img src="https://user-images.githubusercontent.com/46771781/176942605-d202e11c-38ed-4716-8378-75b4d1cc436f.png" alt="drawing" width="750"/>
+## In action
+
+![gif01](./screenshots/0SrSoed8vk.gif)
 
 ### Warning!
 _At the moment, early versions - the program may unexpectedly freeze and give errors._
