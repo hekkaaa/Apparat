@@ -3,11 +3,13 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:WinObserver" xmlns:viewmodel="clr-namespace:WinObserver.ViewModel" xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:local="clr-namespace:WinObserver" 
+        xmlns:viewmodel="clr-namespace:WinObserver.ViewModel" 
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:dd="clr-namespace:GongSolutions.Wpf.DragDrop;assembly=GongSolutions.Wpf.DragDrop"
         mc:Ignorable="d"
         Title="Apparat" MinHeight="700" MinWidth="940" Height="568" Width="1024" Loaded="Window_Loaded"
         WindowStartupLocation="CenterScreen"
-        
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
         Background="{DynamicResource MaterialDesignPaper}"
         TextElement.FontWeight="DemiBold"
@@ -15,7 +17,7 @@
         FontSize="14"
         TextElement.FontSize="14"
         FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto" Closed="Window_Closed">
-    
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="50"></RowDefinition>
@@ -24,7 +26,7 @@
             <RowDefinition Height="auto"></RowDefinition>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="1.1*"/>
+            <ColumnDefinition Width="1.3*"/>
             <ColumnDefinition Width="auto"/>
             <ColumnDefinition Width="4*"/>
         </Grid.ColumnDefinitions>
@@ -32,17 +34,17 @@
         <!--Top-->
         <Grid Grid.Column="0" Grid.Row="0" Background="White" Grid.ColumnSpan="3">
         </Grid>
-        
+
         <!--Control panel-->
         <Grid Grid.Column="0" Grid.Row="1">
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-            
+
             <!--Btn and Combobox enter hostname-->
             <Grid Grid.Row="0" Background="WhiteSmoke">
-                <StackPanel>
+                <StackPanel >
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition />
@@ -73,8 +75,8 @@
                               materialDesign:HintAssist.HelperText ="{Binding TextBlockGeneralError}"
                               materialDesign:HintAssist.HelperTextFontSize="12"
                               IsEditable="True"
-                              ShouldPreserveUserEnteredPrefix ="False"
-                              ToolTipService.InitialShowDelay="200" ToolTip="Example: google.com">
+                              ToolTipService.InitialShowDelay="200" ToolTip="Example: google.com" 
+                              KeyDown="KeyEvents">
                         <ComboBox.InputBindings>
                             <KeyBinding Command="{Binding AddNewHost}" Key="Enter"/>
                         </ComboBox.InputBindings>
@@ -103,112 +105,170 @@
 
                     <Grid x:Name="StubElement" Margin="0,5,0,7"/>
 
+                    <Grid Margin="0,5,0,7">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid Grid.Column="0">
+                            <TextBlock Text="Explorer" Margin="13,1,0,0" FontSize="15" FontWeight="ExtraBold"/>
+                        </Grid>
+                        <Grid Grid.Column="1">
+                            <!--Stub Grid-->
+                        </Grid>
+
+                        <!--Add Folder Button-->
+                        <Grid Grid.Column="2">
+                            <Button Command="{Binding AddNewFolderBtn}"
+                                            Style="{StaticResource MaterialDesignIconForegroundButton}"
+                                            ToolTip="Add a folder"
+                                            Height="20" Width="20">
+                                <materialDesign:PackIcon Kind="FolderPlusOutline" Width="20" Height="20"/>
+                            </Button>
+                        </Grid>
+
+                        <!--Pull up Folder Button-->
+                        <Grid Grid.Column="3">
+                            <Button Command="{Binding DataContext.CloseTabCommand,RelativeSource={RelativeSource AncestorType={x:Type Window}}}" 
+                                            CommandParameter="{Binding}" VerticalAlignment="Center" 
+                                            Style="{StaticResource MaterialDesignIconForegroundButton}"
+                                            ToolTip="Collapse folders in Explorer"
+                                            Height="20" Width="20"
+                                            Margin="4,0,7,0" IsEnabled="False">
+                                <materialDesign:PackIcon Kind="ArrowCollapseVertical" Width="20" Height="20"/>
+                            </Button>
+                        </Grid>
+                    </Grid>
                 </StackPanel>
             </Grid>
-            
-            <!--Left List Hostname-->
+
+            <!--NEW CONCEPT Left Collection -->
             <Grid Grid.Row="1" Background="WhiteSmoke">
-                <ListBox ItemsSource="{Binding HostsCollection}" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
-                    <ListBox.ItemTemplate>
-                        <DataTemplate>
-                               <StackPanel Margin="5" Orientation="Horizontal" Width="auto" Height="auto" VerticalAlignment="Center">
-                                    
-                                   <Image Source="\Resources\icons8-error.png" Visibility="{Binding ErrorHostnameVisibleIcon}" 
+                <TreeView ItemsSource="{Binding CollectionFoldersInExplorer}" SelectedItemChanged="TreeView_OnSelectedItemChanged"
+                          dd:DragDrop.IsDragSource="True"
+                          dd:DragDrop.IsDropTarget="True"> 
+                    <TreeView.ItemTemplate>
+                        <HierarchicalDataTemplate ItemsSource="{Binding HostVMCollection}">
+                            <!--Folders-->
+                            <StackPanel Orientation="Horizontal" 
+                                        FocusManager.FocusedElement="{Binding ElementName=NewFolderTextBox}" 
+                                        Margin="0,-7,0,-7">
+                                
+                                <materialDesign:PackIcon Kind="FolderCogOutline" Width="18" Height="{Binding SizeElement}" Margin="0,1.4,0,0"/>
+                                <TextBox x:Name="NewFolderTextBox"
+                                         Background="WhiteSmoke" Width="auto" MinWidth="220" Height="23" Margin="15,0,0,0" 
+                                         BorderThickness="1" BorderBrush="{Binding BorderBrushColor}" FontSize="12"
+                                         Visibility="{Binding VisibleTextBoxNameFolder}" 
+                                         Text="{Binding FolderName, Mode=TwoWay, 
+                                         UpdateSourceTrigger=PropertyChanged}"
+                                         materialDesign:HintAssist.Hint="Enter name Folder"
+                                         materialDesign:HintAssist.HelperText ="{Binding TextErrorFolderValidation}"
+                                         materialDesign:HintAssist.HelperTextFontSize="12"
+                                         MaxLength="50" LostFocus="TextBox_CreateorDeleteFolderWithLostFocusEvent">
+
+                                    <TextBox.InputBindings>
+                                        <KeyBinding Command="{Binding CreatingNewFolderDownEnterEvent}" 
+                                                CommandParameter="{Binding}" Key="Enter"/>
+                                    </TextBox.InputBindings>
+                                </TextBox>
+
+                                <Label Content="{Binding FolderName}" Visibility="{Binding VisibleLabelNameFolder}"/>
+
+                                <materialDesign:PopupBox
+                                      DockPanel.Dock="Right"
+                                      ToolTip="View more action"
+                                      StaysOpen ="True"
+                                      PlacementMode="BottomAndAlignRightEdges"
+                                      Margin="7,0,0,0" Visibility="{Binding VisibleIconMoreAction}">
+
+                                    <materialDesign:PopupBox.ToggleContent>
+                                        <materialDesign:PackIcon Kind="DotsHorizontal"/>
+                                    </materialDesign:PopupBox.ToggleContent>
+                                    <ListBox >
+                                        <ListBoxItem
+                                            Content="Rename" MouseUp="ListBoxItem_MouseUpRenameFolder"/>
+                                        <ListBoxItem
+                                            Content="Delete" MouseUp="ListBoxItem_MouseUpDeleteFolder"/>
+                                    </ListBox>
+                                </materialDesign:PopupBox>
+                            </StackPanel>
+                            <!--Hostname-->
+                            <HierarchicalDataTemplate.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Margin="-5" Orientation="Horizontal" Width="auto" Height="auto" VerticalAlignment="Center">
+                                       
+                                        <Image Source="\Resources\icons8-error.png" Visibility="{Binding ErrorHostnameVisibleIcon}" 
                                                 Width="20" Height="20" VerticalAlignment="Center"
                                                 Margin="5,0,5,0"
                                                 ToolTipService.InitialShowDelay="200" ToolTip="{Binding TextErrorToolTip}">
-                                    </Image>
+                                        </Image>
 
-                                    <ProgressBar  
+                                        <ProgressBar  
                                         Style="{StaticResource MaterialDesignCircularProgressBar}"
                                         Value="0"
                                         IsIndeterminate="True" Margin="5,0,5,0"
                                         ToolTipService.InitialShowDelay="200"
                                         ToolTip="In work" Foreground="LightSeaGreen" 
                                         Visibility="{Binding ValueVisibleProgressBar}">
-                                    </ProgressBar>
+                                        </ProgressBar>
 
-                                    <StackPanel Margin="5,5,0,0">
-                                        <TextBlock Text="{Binding HostnameView}" FontWeight="Bold" />          
-                                        <TextBlock Text="{Binding StartDatatime}" Visibility="{Binding VisibleDatatimeTextBlock}" FontSize="10" Foreground="LightSlateGray"/>
-                                    </StackPanel>
-                                    
-                                    <!--Start\Stop\Restart btn-->
-                                    <Button x:Name="ControlBtn" Command="{Binding StartCommand}" 
+                                        <StackPanel Margin="5,5,0,0">
+                                            <TextBlock Text="{Binding HostnameView}" FontWeight="Bold" />
+                                            <TextBlock Text="{Binding StartDatatime}" Visibility="{Binding VisibleDatatimeTextBlock}" FontSize="10" Foreground="LightSlateGray"/>
+                                        </StackPanel>
+
+                                        <!--Start\Stop\Restart btn-->
+                                        <Button x:Name="ControlBtn" Command="{Binding StartCommand}" 
                                             VerticalAlignment="Center"
                                             Style="{StaticResource MaterialDesignIconForegroundButton}"
-                                            ToolTip="MaterialDesignIconForegroundButton"
+                                            ToolTip="{Binding TextinToolTipsFromControlBtn}"
                                             Height="24" Width="24"    
                                             IsEnabled="{Binding SettingIsEnableControlBtn}" Opacity="{ Binding SettingOpacityControlBtn}"
                                             Margin="15,0,7,0">
-                                    <materialDesign:PackIcon Kind="{Binding ControlBtnHost}" Width="25" Height="25"/>
-                                    </Button>
-                                   
-                                    <!--Delete button-->
-                                    <Button Command="{Binding DataContext.CloseTabCommand,RelativeSource={RelativeSource AncestorType={x:Type Window}}}" 
+                                            <materialDesign:PackIcon Kind="{Binding ControlBtnHost}" Width="25" Height="25"/>
+                                        </Button>
+
+                                        <!--Delete button-->
+                                        <Button Command="{Binding DataContext.CloseTabCommand,RelativeSource={RelativeSource AncestorType={x:Type Window}}}" 
                                             CommandParameter="{Binding}" VerticalAlignment="Center" 
                                             Style="{StaticResource MaterialDesignIconForegroundButton}"
                                             ToolTip="Delete Hostname"
-                                            Height="24" Width="24">  
-                                        <materialDesign:PackIcon Kind="Delete" Width="20" Height="20"/>
-                                    </Button>
-                            </StackPanel>
-                        </DataTemplate>
-                    </ListBox.ItemTemplate>
-                    <ListBox.ItemContainerStyle>
-                        <Style TargetType="{x:Type ListBoxItem}">
-                            <!--<Setter Property="Background" Value="White"/>-->
-                            <Setter Property="Foreground" Value="DarkSlateGray"/>
-                            <Style.Triggers>
-                                <Trigger Property="IsSelected" Value="True">
-                                    <Setter Property="Foreground" Value="Black"/>
-                                    <Setter Property="BorderThickness" Value="1"/>
-                                    <Setter Property="BorderBrush" Value="Black"/>
-                                </Trigger>
-                                <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter Property="BorderThickness" Value="1"/>
-                                </Trigger>
-                            </Style.Triggers>
-                        </Style>
-                    </ListBox.ItemContainerStyle>
-                </ListBox>
+                                            Height="24" Width="24">
+                                            <materialDesign:PackIcon Kind="Delete" Width="20" Height="20"/>
+                                        </Button>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </HierarchicalDataTemplate.ItemTemplate>
+                        </HierarchicalDataTemplate>
+                    </TreeView.ItemTemplate>
+                </TreeView>
             </Grid>
         </Grid>
-        
+
         <!--Splitte between Left panel host and DataGrid-->
         <GridSplitter Grid.Column="1" Grid.Row="1" ShowsPreview="False" Width="3"
         HorizontalAlignment="Center" BorderThickness="0"/>
 
-        <!-- Datagrid in TabControl -->
-        <Grid Grid.Row="1" Grid.Column="2">
+        <!-- NEW CONCEPT GeneralPaner TabControl -->
+        <Grid x:Name="GeneralWindow" Grid.Row="1" Grid.Column="2" Visibility="{Binding StartValueInVisibleWithGeneralWindowsApp}">
             <materialDesign:Card>
-                <TabControl DockPanel.Dock="Right" Grid.Row="1" Name="TabMain" ItemsSource="{Binding HostsCollection,UpdateSourceTrigger=PropertyChanged}" 
+                <TabControl x:Name="GeneralPanerTabControl" DockPanel.Dock="Right" Grid.Row="1"
                             materialDesign:ColorZoneAssist.Mode="Light" HorizontalContentAlignment="Left">
-                <TabControl.ItemTemplate>
-                    <DataTemplate>
-                        <StackPanel Orientation="Horizontal" Cursor="Hand">
-                                <!-- Text hostname tab -->
-                                <TextBlock Text="{Binding HostnameView}"/>
+                    <TabItem Header="Table">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="83*"/>
+                                <RowDefinition Height="3*"/>
+                                <RowDefinition Height="478*"/>
+                            </Grid.RowDefinitions>
 
-                                <!-- Close btn -->
-                                <Button Command="{Binding DataContext.CloseTabCommand,RelativeSource={RelativeSource AncestorType={x:Type Window}}}" 
-                                        CommandParameter="{Binding}"
-                                         DockPanel.Dock="Right" Focusable="False" Margin="10,0,0,7" 
-                                         BorderThickness="0" Width="auto" Height="auto"
-                                         Style="{StaticResource MaterialDesignIconForegroundButton}"
-                                         ToolTipService.InitialShowDelay="300"
-                                         ToolTip="Delete Ping">
-                                   <materialDesign:PackIcon Kind="Close" Width="auto" Height="auto"/>
-                                </Button>
-                            </StackPanel>
-                    </DataTemplate>
-                </TabControl.ItemTemplate>
-                <TabControl.ContentTemplate>
-                    <DataTemplate>
-                        <DataGrid ItemsSource="{Binding TracertObject, UpdateSourceTrigger=PropertyChanged}" 
-                                  AutoGenerateColumns="False" RowBackground="GhostWhite" 
-                                  AlternatingRowBackground ="LightGray" GridLinesVisibility="Vertical" 
-                                  IsReadOnly="True" FontSize="16" CanUserAddRows="False">
+                            <DataGrid ItemsSource="{Binding SelectedGroup.TracertObject, UpdateSourceTrigger=PropertyChanged}"
+                                   AutoGenerateColumns="False" RowBackground="GhostWhite" 
+                                   AlternatingRowBackground ="LightGray" GridLinesVisibility="Vertical" 
+                                   IsReadOnly="True" FontSize="16" CanUserAddRows="False" 
+                                   Visibility="{Binding SelectedGroup.VisibleDataGridTable}" Grid.RowSpan="3">
                                 <DataGrid.Columns>
                                     <DataGridTextColumn Header="№" Binding="{Binding NumberHostname}" Width="auto"/>
                                     <DataGridTextColumn Header="Hostname" Binding="{Binding Hostname}" Width="auto"/>
@@ -219,23 +279,80 @@
                                     <DataGridTextColumn Header="Maximum" Binding="{Binding MaxPing}" Width="*"/>
                                     <DataGridTextColumn Header="All Packet" Binding="{Binding CounterPacket}" Width="*"/>
                                     <DataGridTextColumn Header="Loss Packet" Binding="{Binding CounterLossPacket}" Width="auto"/>
-                            </DataGrid.Columns>
+                                </DataGrid.Columns>
+
                             </DataGrid>
-                    </DataTemplate>
-                </TabControl.ContentTemplate>
-            </TabControl>
+
+                            <!--Preloader-->
+                            <Grid VerticalAlignment="Top" 
+                                  Visibility="{Binding SelectedGroup.VisiblePrealoaderGrid}" Margin="0,114,0,0" Grid.Row="2">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
+                                <ProgressBar Grid.Row="0"
+                              Style="{StaticResource MaterialDesignCircularProgressBar}"
+                              Value="0"
+                              Height="128"
+                              Width="128"
+                              IsIndeterminate="True" />
+                                <TextBlock Grid.Row="1" FontFamily="consolas"
+                               Text="Please wait." 
+                               FontSize="18" 
+                               Margin="0,15,0,0"
+                               HorizontalAlignment="Center"/>
+                            </Grid>
+
+                            <!--Gtub grid-->
+                            <Grid VerticalAlignment="Top" HorizontalAlignment="Center" Visibility="{Binding SelectedGroup.VisibleStupGrid}" Margin="0,186,0,0" Grid.Row="2">
+                                <TextBlock FontSize="18" FontFamily="Consolas">
+                                    Your data will be here soon
+                                    <materialDesign:PackIcon Kind="AlienOutline" />
+                                </TextBlock>
+                            </Grid>
+
+                            <!--Error Stub grid-->
+                            <Grid VerticalAlignment="Top" HorizontalAlignment="Center" Visibility="{Binding SelectedGroup.VisibleErrorStupGrid}" Margin="0,126,0,0" Grid.Row="2">
+
+                                <materialDesign:PackIcon Kind="Alert" Width="100" Height="100"
+                                                     VerticalAlignment="Center" HorizontalAlignment="Center" 
+                                                     Margin="0,0,0,40"/>
+
+                                <TextBlock FontSize="18" FontFamily="Consolas"
+                                           VerticalAlignment="Bottom" HorizontalAlignment="Center" 
+                                           Text="{Binding SelectedGroup.TextErrorToolTip}">
+                                </TextBlock>
+                            </Grid>
+
+                        </Grid>
+                    </TabItem>
+
+                    <!--Text Statistic-->
+                    <TabItem
+                        Header="Statistic">
+                        <TextBlock Margin="8" Text="Statistics will be displayed here soon" 
+                                   VerticalAlignment="Center" HorizontalAlignment="Center"
+                                   FontSize="18" FontFamily="Consolas"/>
+                    </TabItem>
+
+                    <!--Graph Statistic-->
+                    <TabItem
+                        Header="Graph" IsEnabled="False">
+                        <TextBlock Margin="8" Text="The graph will be in the next version"/>
+                    </TabItem>
+                </TabControl>
             </materialDesign:Card>
         </Grid>
-        
+
         <!--Footer -->
         <Border BorderBrush="Black" BorderThickness="0.5" Grid.ColumnSpan="3" Grid.Row="3">
-        <Grid Background="PowderBlue">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="10"/>
-                <ColumnDefinition Width="auto" />
-                <ColumnDefinition/>
-                <ColumnDefinition Width="100" />
-            </Grid.ColumnDefinitions>
+            <Grid Background="PowderBlue">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="10"/>
+                    <ColumnDefinition Width="auto" />
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="100" />
+                </Grid.ColumnDefinitions>
                 <!-- Text Version app -->
                 <TextBlock x:Name ="AppVersion" Text="{Binding VersionProgramm}" Margin="0,4,0,0" TextAlignment="Left" Grid.Column="1" ToolTipService.InitialShowDelay="200" ToolTip="This program is in Beta stage."/>
 
@@ -244,7 +361,7 @@
                 <TextBlock TextAlignment="Center" Grid.Column="3" Margin="0,4,0,0">
                     <Hyperlink RequestNavigate="Hyperlink_RequestNavigate" NavigateUri="https://github.com/hekkaaa/Apparat" ToolTipService.InitialShowDelay="200" ToolTip="Link to the author's github.">GitHub</Hyperlink>
                 </TextBlock>
-        </Grid>
+            </Grid>
         </Border>
     </Grid>
 </Window>

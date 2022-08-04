@@ -3,7 +3,7 @@
     public class HostViewModelEvents : IHostViewModelEvents
     {
         public VoidMethodHandler ErrorNameHostnameEvent { get; set; }
-        public BoolMethodHandler ManagementEnableGeneralControlBtnEvent { get; set; }
+        public BoolMethodHandler ManagementEnableGeneralControlBtnEventAndPreloaderVisible { get; set; }
         public BoolMethodHandler WorkingProggresbarInListBoxHostnameEvent { get; set; }
 
         public delegate void VoidMethodHandler();

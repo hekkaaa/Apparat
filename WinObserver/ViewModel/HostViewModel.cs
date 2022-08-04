@@ -33,37 +33,34 @@ namespace Apparat.ViewModel
         public HostViewModel(ILogger<IHostViewModel> log)
         {
             _logger = log;
-            _tracerService = new TracertService();
+            _tracerService = new TracertService(_logger);
             TracertObject = _tracerService.GetActualCollectionTracertValue();
-            _publicId = Guid.NewGuid().ToString("N");
+
+            // Generate unique id
+            GeneradeUniqueIdInPublicIdPropetry();
 
             // Add Events
             _HostViewModelEvents.ErrorNameHostnameEvent += ErrorNameHostname;
-            _HostViewModelEvents.ManagementEnableGeneralControlBtnEvent += ManagementEnableGeneralControlBtn;
+            _HostViewModelEvents.ManagementEnableGeneralControlBtnEventAndPreloaderVisible += ManagementEnableGeneralControlBtn;
+            _HostViewModelEvents.ManagementEnableGeneralControlBtnEventAndPreloaderVisible += VisibleDatagridOrPreloaderOrStubGridInGeneralPanerTabControl;
             _HostViewModelEvents.WorkingProggresbarInListBoxHostnameEvent += WorkingProggresbarInListBoxHostname;
         }
 
         private DelegateCommand? _startCommand { get; }
         public DelegateCommand StartCommand
         {
+            // Start - Stop
             get
             {
                 return _startCommand ?? new DelegateCommand((obj) =>
                 {
                     if (_statusWorkDataGrid)
                     {
-                        _logger.LogWarning($"Stop traceroute {HostnameView}| ID:{PublicId}");
-                        ControlBtnHost = IconeMap.Restart;
-                        _tracerService!.StopStreamTracerouteHost();
-                        _statusWorkDataGrid = false;
+                        StopStream();
                     }
                     else
                     {
-                        _logger.LogWarning($"Start traceroute {HostnameView}| ID:{PublicId}");
-                        ControlBtnHost = IconeMap.Stop;
-                        ControlDatatime();
-                        _tracerService!.StartStreamTracerouteHost(HostnameView!, _HostViewModelEvents);
-                        _statusWorkDataGrid = true;
+                        StartStream();
                     }
                     OnPropertyChanged();
                 });
@@ -138,7 +135,86 @@ namespace Apparat.ViewModel
             set { _visibleDatatimeTextBlock = value; OnPropertyChanged(); }
         }
 
-        
+        private string _visibleDataGridTable = "Collapsed";
+        public string VisibleDataGridTable
+        {
+            get { return _visibleDataGridTable; }
+            set { _visibleDataGridTable = value; OnPropertyChanged(); }
+        }
+
+        private string _visiblePrealoaderGrid = "Collapsed";
+        public string VisiblePrealoaderGrid
+        {
+            get { return _visiblePrealoaderGrid; }
+            set { _visiblePrealoaderGrid = value; OnPropertyChanged(); }
+        }
+
+        private string _visibleStupGrid = "Visible";
+        public string VisibleStupGrid
+        {
+            get { return _visibleStupGrid; }
+            set { _visibleStupGrid = value; OnPropertyChanged(); }
+        }
+
+        private string _visibleErrorStupGrid = "Collapsed";
+        public string VisibleErrorStupGrid
+        {
+            get { return _visibleErrorStupGrid; }
+            set { _visibleErrorStupGrid = value; OnPropertyChanged(); }
+        }
+
+        private string _textinToolTipsFromControlBtn = "Start traceroute";
+        public string TextinToolTipsFromControlBtn
+        {
+            get { return _textinToolTipsFromControlBtn; }
+            set { _textinToolTipsFromControlBtn = value; OnPropertyChanged(); }
+        }
+
+        public bool StopStream()
+        {
+            try
+            {
+                if (ErrorHostnameVisibleIcon == "Visible")
+                {
+                    return true;
+                }
+
+                _logger.LogWarning($"Stop traceroute {HostnameView}| ID:{PublicId}");
+                VisaulChangeAtStopStream();
+                _tracerService!.StopStreamTracerouteHost();
+                _statusWorkDataGrid = false;
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error Stop Stream Traceroute {HostnameView} | ID: {PublicId}");
+                return false;
+            }
+        }
+
+        public bool StartStream()
+        {
+            try
+            {
+                if (ErrorHostnameVisibleIcon == "Visible")
+                {
+                    return true;
+                }
+
+                _logger.LogWarning($"Start traceroute {HostnameView}| ID:{PublicId}");
+                VisaulChangeAtStartupStream();
+                ControlDatatime();
+                _tracerService!.StartStreamTracerouteHost(HostnameView!, _HostViewModelEvents);
+                _statusWorkDataGrid = true;
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error Start Stream Traceroute {HostnameView} | ID: {PublicId}");
+                return false;
+            }
+
+        }
 
         public event PropertyChangedEventHandler? PropertyChanged;
         public void OnPropertyChanged([CallerMemberName] string prop = "")
@@ -164,6 +240,32 @@ namespace Apparat.ViewModel
             ErrorHostnameVisibleIcon = "Visible";
             SettingIsEnableControlBtn = "False";
             SettingOpacityControlBtn = "0.5";
+
+            VisibleStupGrid = "Collapsed";
+            VisiblePrealoaderGrid = "Collapsed";
+            VisibleDataGridTable = "Collapsed";
+            VisibleErrorStupGrid = "Visible";
+        }
+
+        private void GeneradeUniqueIdInPublicIdPropetry()
+        {
+            _publicId = Guid.NewGuid().ToString("N");
+        }
+
+        // Visual changes during events 
+
+        private void VisaulChangeAtStartupStream()
+        {
+            TextinToolTipsFromControlBtn = "Stop traceroute";
+            ControlBtnHost = IconeMap.Stop;
+
+        }
+
+        private void VisaulChangeAtStopStream()
+        {
+            ManagementEnableGeneralControlBtn(false);
+            TextinToolTipsFromControlBtn = "Restart traceroute";
+            ControlBtnHost = IconeMap.Restart;
         }
 
         // Events
@@ -176,6 +278,21 @@ namespace Apparat.ViewModel
             else
             {
                 ValueVisibleProgressBar = "Hidden";
+            }
+        }
+
+        private void VisibleDatagridOrPreloaderOrStubGridInGeneralPanerTabControl(bool boolValue)
+        {
+            if (boolValue)
+            {
+                VisiblePrealoaderGrid = "Collapsed";
+                VisibleDataGridTable = "Visible";
+            }
+            else
+            {
+                VisibleStupGrid = "Collapsed";
+                VisiblePrealoaderGrid = "Visible";
+                VisibleDataGridTable = "Collapsed";
             }
         }
 

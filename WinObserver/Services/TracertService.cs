@@ -2,6 +2,7 @@
 using Apparat.Helpers;
 using Apparat.Helpers.Interfaces;
 using Apparat.Services.Interfaces;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -18,12 +19,14 @@ namespace WinObserver.Service
         public readonly ReadOnlyObservableCollection<TracertModel> _collectionTracerouteValue;
         private readonly IHostRouteHelper _hostRouteHelper;
         private readonly IUpdateStatisticOfTracerouteElementsHelper _updateInfoStatistic;
+        ILogger _logger;
 
         CancellationTokenSource? _cancellationTokenSource;
         CancellationToken _token;
 
-        public TracertService()
+        public TracertService(ILogger logger)
         {
+            _logger = logger;
             _innerCollectionTracerouteValue = new ObservableCollection<TracertModel>();
             _collectionTracerouteValue = new ReadOnlyObservableCollection<TracertModel>(_innerCollectionTracerouteValue);
             _hostRouteHelper = new HostRouteHelper();
@@ -39,14 +42,13 @@ namespace WinObserver.Service
                 try
                 {
                     hostViewEvent.WorkingProggresbarInListBoxHostnameEvent(true);
-                    hostViewEvent.ManagementEnableGeneralControlBtnEvent(false);
-
+                    hostViewEvent.ManagementEnableGeneralControlBtnEventAndPreloaderVisible(false);
 
                     ClearOldTable();
                     IEnumerable<string> createNewRouteList = _hostRouteHelper.CreateNewRouteCollection(hostname);
                     _hostRouteHelper.FillingNewRoute(ref _innerCollectionTracerouteValue, createNewRouteList);
 
-                    hostViewEvent.ManagementEnableGeneralControlBtnEvent(true);
+                    hostViewEvent.ManagementEnableGeneralControlBtnEventAndPreloaderVisible(true);
 
                     while (true)
                     {
@@ -55,34 +57,36 @@ namespace WinObserver.Service
                         if (_token.IsCancellationRequested)
                         {
                             hostViewEvent.WorkingProggresbarInListBoxHostnameEvent(false);
-                            hostViewEvent.ManagementEnableGeneralControlBtnEvent(false);
+                            hostViewEvent.ManagementEnableGeneralControlBtnEventAndPreloaderVisible(false);
                             _cancellationTokenSource!.Dispose();
                             RestartToken();
-                            hostViewEvent.ManagementEnableGeneralControlBtnEvent(true);
+                            hostViewEvent.ManagementEnableGeneralControlBtnEventAndPreloaderVisible(true);
                             break;
                         }
                     }
                 }
-                catch (PingException)
+                catch (PingException ex)
                 {
                     _cancellationTokenSource!.Cancel();
                     _cancellationTokenSource.Dispose();
                     hostViewEvent.WorkingProggresbarInListBoxHostnameEvent(false);
                     hostViewEvent.ErrorNameHostnameEvent();
+                    _logger.LogError($"Error PingException in Hostname: {hostname} | ERROR: {ex.Message}" + $" \n | {ex.InnerException}");
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
                     _cancellationTokenSource!.Cancel();
                     _cancellationTokenSource.Dispose();
                     hostViewEvent.WorkingProggresbarInListBoxHostnameEvent(false);
                     hostViewEvent.ErrorNameHostnameEvent();
+                    _logger.LogError($"Error Exception in Hostname: {hostname} | ERROR: {ex.Message}" + $" \n | {ex.InnerException}");
                 }
 
             }), _token);
         }
 
         public void StopStreamTracerouteHost()
-        {
+        {   
             _cancellationTokenSource!.Cancel();
         }
 

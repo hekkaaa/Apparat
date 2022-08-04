@@ -5,8 +5,10 @@ using Apparat.ViewModel;
 using Apparat.ViewModel.Interfaces;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
@@ -14,16 +16,19 @@ namespace WinObserver.ViewModel
 {
     public class ApplicationViewModel : INotifyPropertyChanged, IApplicationViewModel
     {
-        const string VERSION_APP = "Version: 0.1.13 - Alpha";
+        const string VERSION_APP = "Version: 1.0.0 - pre-Alpha";
+        private const string defaultIdGeneralFolder = "ffffx001";
         private string _hostname = String.Empty;
         private string _textBlockGeneralError = String.Empty;
         private string _borderTextBox = "#FFABADB3";
 
+        private ObservableCollection<ExplorerViewModel> _collectionFoldersInExplorer;
         private ObservableCollection<HostViewModel> _hostsCollection;
         private readonly IAppSettingService _appSettingService;
 
         ILogger<IApplicationViewModel> _logger;
         ILogger<IHostViewModel> _hostVMlog;
+
 
         public ApplicationViewModel(IAppSettingService appService,
             ILogger<IApplicationViewModel> log,
@@ -32,6 +37,9 @@ namespace WinObserver.ViewModel
             _hostsCollection = new ObservableCollection<HostViewModel>();
             _logger = log;
             _hostVMlog = hostVMlog;
+
+            // Load Start Folder
+            _collectionFoldersInExplorer = CreateStartDefaultFolder();
 
             // init object class  
             _appSettingService = appService;
@@ -76,6 +84,25 @@ namespace WinObserver.ViewModel
             }
         }
 
+        HostViewModel _selectedGroup = null!;
+        public HostViewModel SelectedGroup
+        {
+            get { return _selectedGroup; }
+            set { _selectedGroup = value; OnPropertyChanged(); }
+        }
+
+        public ObservableCollection<ExplorerViewModel> CollectionFoldersInExplorer
+        {
+            get
+            {
+                return _collectionFoldersInExplorer;
+            }
+            set
+            {
+                _collectionFoldersInExplorer = value;
+                OnPropertyChanged();
+            }
+        }
 
         private ObservableCollection<string> _collectionRecentHost = null!;
         public ObservableCollection<string> CollectionRecentHost
@@ -97,6 +124,13 @@ namespace WinObserver.ViewModel
             set { _hostsCollection = value; OnPropertyChanged(); }
         }
 
+        private string _StartValueInVisibleWithGeneralWindowsApp = "Collapsed";
+        public string StartValueInVisibleWithGeneralWindowsApp
+        {
+            get { return _StartValueInVisibleWithGeneralWindowsApp; }
+            set { _StartValueInVisibleWithGeneralWindowsApp = value; OnPropertyChanged(); }
+        }
+
 
         private DelegateCommand _addNewHost = null!;
         public DelegateCommand AddNewHost
@@ -116,8 +150,10 @@ namespace WinObserver.ViewModel
                      }
 
                      HostViewModel newObject = new HostViewModel(_hostVMlog) { HostnameView = editedHostname };
-                     HostsCollection.Add(newObject);
-                    
+
+                     // Add new hostname in default folder View.
+                     CollectionFoldersInExplorer.Where(x=>x.PublicId == defaultIdGeneralFolder).First().HostVMCollection.Add(newObject);
+
                      _appSettingService.AddHostInHistory(editedHostname);
                      UpdateCollectionHistoryHostInCombobox();
                      RemoveInfoinTextBoxPanel();
@@ -140,8 +176,24 @@ namespace WinObserver.ViewModel
                 {
                     HostViewModel? deleteObject = obj as HostViewModel;
                     if (deleteObject != null)
-                    { 
-                        HostsCollection.Remove(deleteObject!);
+                    {
+                        foreach (var item in CollectionFoldersInExplorer)
+                        {
+                            HostViewModel res = item.HostVMCollection.FirstOrDefault(x => x.PublicId == deleteObject.PublicId)!;
+                            if (res != null)
+                            {
+                                if (res.StopStream())
+                                {
+                                    item.HostVMCollection.Remove(deleteObject);
+                                    StartValueInVisibleWithGeneralWindowsApp = "Collapsed";
+                                    break;
+                                }
+                                else
+                                {
+                                    break;
+                                }
+                            }
+                        }
                         _logger.LogWarning($"Delete object tracert {deleteObject.HostnameView} | ID:{deleteObject.PublicId}");
                     }
                 }));
@@ -185,6 +237,56 @@ namespace WinObserver.ViewModel
             }
         }
 
+        private DelegateCommand _addNewFolderBtn = null!;
+        public DelegateCommand AddNewFolderBtn
+        {
+            get
+            {
+                return _addNewFolderBtn
+                ?? (_addNewFolderBtn = new DelegateCommand(
+                (obj) =>
+                {
+                    var checkOpenNewFolderWindow = _collectionFoldersInExplorer.Where(x => x.IsNewCreateObj == true).ToList();
+                    if (checkOpenNewFolderWindow.Count == 0)
+                    {
+                        _collectionFoldersInExplorer.Add(new ExplorerViewModel()
+                        {
+                            FolderName = "",
+                            SizeElement = "43",
+                            VisibleLabelNameFolder = "Collapsed",
+                            VisibleTextBoxNameFolder = "Visible",
+                            HostVMCollection = new ObservableCollection<HostViewModel>()
+                        });
+                        return;
+                    }
+                    return;
+                }));
+            }
+        }
+
+        private List<string> _test1111 = new List<string>() { "qwe", "jjss", "lss" };
+        public List<string> ListTest23
+        {
+            get
+            {
+                return _test1111;
+            }
+        }
+
+        public void DeleteFolder(ExplorerViewModel obj)
+        {
+            _logger.LogWarning($"User is Delete folder: {obj.FolderName}");
+
+            foreach(HostViewModel item in obj.HostVMCollection)
+            {
+                 item.StopStream();
+            }
+            obj.HostVMCollection.Clear();
+            StartValueInVisibleWithGeneralWindowsApp = "Collapsed";
+            _collectionFoldersInExplorer.Remove(obj);
+
+        }
+
         public event PropertyChangedEventHandler? PropertyChanged;
         public void OnPropertyChanged([CallerMemberName] string prop = "")
         {
@@ -197,19 +299,17 @@ namespace WinObserver.ViewModel
             CollectionRecentHost = _appSettingService.GetLastFiveHistoryHost();
         }
 
-
         private void RemoveInfoinTextBoxPanel()
         {
             TextBoxHostname = null!;
         }
-
 
         private void ErrorValidationTextAndAnimation(string errorHostname)
         {
             _logger.LogError($"invalid hostname: '{errorHostname}'");
 
             Task.Factory.StartNew(() =>
-            {   
+            {
                 TextBlockGeneralError = "Hostname not valid";
                 BorderTextBox = "Red";
 
@@ -220,6 +320,19 @@ namespace WinObserver.ViewModel
                 TextBlockGeneralError = string.Empty;
                 BorderTextBox = "#FFABADB3";
             });
+        }
+
+        private ObservableCollection<ExplorerViewModel> CreateStartDefaultFolder()
+        {
+            return new ObservableCollection<ExplorerViewModel>() {
+                new ExplorerViewModel(true) {
+                    FolderName = "Default",
+                    IsNewCreateObj = false,
+                    HostVMCollection = new ObservableCollection<HostViewModel>() {
+                    new HostViewModel(_hostVMlog){ HostnameView = "github.com"}
+                    },
+                },
+            };
         }
     }
 }
