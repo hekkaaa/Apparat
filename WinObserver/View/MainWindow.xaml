@@ -17,7 +17,7 @@
         FontSize="14"
         TextElement.FontSize="14"
         FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto" Closed="Window_Closed">
-
+   
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="50"></RowDefinition>
@@ -280,7 +280,11 @@
                                     <DataGridTextColumn Header="All Packet" Binding="{Binding CounterPacket}" Width="*"/>
                                     <DataGridTextColumn Header="Loss Packet" Binding="{Binding CounterLossPacket}" Width="auto"/>
                                 </DataGrid.Columns>
-
+                                <DataGrid.RowStyle>
+                                    <Style TargetType="DataGridRow">
+                                        <Setter Property="Foreground" Value="{Binding ColorLossView}"/>
+                                    </Style>
+                                </DataGrid.RowStyle>
                             </DataGrid>
 
                             <!--Preloader-->

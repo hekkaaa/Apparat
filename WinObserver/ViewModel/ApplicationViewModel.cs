@@ -1,4 +1,5 @@
-﻿using Apparat.Commands;
+﻿using Apparat.Algorithms;
+using Apparat.Commands;
 using Apparat.Helpers;
 using Apparat.Services.Interfaces;
 using Apparat.ViewModel;
@@ -23,7 +24,6 @@ namespace WinObserver.ViewModel
         private string _borderTextBox = "#FFABADB3";
 
         private ObservableCollection<ExplorerViewModel> _collectionFoldersInExplorer;
-        private ObservableCollection<HostViewModel> _hostsCollection;
         private readonly IAppSettingService _appSettingService;
 
         ILogger<IApplicationViewModel> _logger;
@@ -34,7 +34,7 @@ namespace WinObserver.ViewModel
             ILogger<IApplicationViewModel> log,
             ILogger<IHostViewModel> hostVMlog)
         {
-            _hostsCollection = new ObservableCollection<HostViewModel>();
+            //_hostsCollection = new ObservableCollection<HostViewModel>();
             _logger = log;
             _hostVMlog = hostVMlog;
 
@@ -44,6 +44,9 @@ namespace WinObserver.ViewModel
             // init object class  
             _appSettingService = appService;
             UpdateCollectionHistoryHostInCombobox();
+
+            /// Analyst Daemon Color DataGrid Row.
+            StartLossColorDataGridAlalyst();
         }
 
         public string VersionProgramm { get { return VERSION_APP; } }
@@ -116,12 +119,6 @@ namespace WinObserver.ViewModel
                 _collectionRecentHost = value;
                 OnPropertyChanged();
             }
-        }
-
-        public ObservableCollection<HostViewModel> HostsCollection
-        {
-            get => _hostsCollection;
-            set { _hostsCollection = value; OnPropertyChanged(); }
         }
 
         private string _StartValueInVisibleWithGeneralWindowsApp = "Collapsed";
@@ -333,6 +330,12 @@ namespace WinObserver.ViewModel
                     },
                 },
             };
+        }
+
+        private void StartLossColorDataGridAlalyst()
+        {
+            LossColorAnl AnalystDeamon = new();
+            AnalystDeamon.AnalystLossIcmpGrid(this, _logger);
         }
     }
 }
