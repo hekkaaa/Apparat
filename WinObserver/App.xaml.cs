@@ -40,11 +40,15 @@ namespace WinObserver
                  .ConfigureServices(services =>
                  {  
                      services.AddDbContext<ApplicationSettingContext>();
+                     services.AddDbContext<ApplicationSettingFolderandHostContext>();
                      services.AddSingleton<IApplicationViewModel, ApplicationViewModel>();
                      services.AddSingleton<IAppSettingService, AppSettingService>();
                      services.AddSingleton<IAppSettingRepository, AppSettingRepository>();
+                     services.AddScoped<ISaveStateFolderService, SaveStateFolderService>();
+                     services.AddSingleton<IFolderAndHostLeftPanelRepository, FolderAndHostLeftPanelRepository>();
                      services.AddScoped<IHostViewModel, HostViewModel>();
                      services.AddScoped<ITracertService, TracertService>();
+                   
                      services.AddSingleton<MainWindow>();
                  })
                  .Build();

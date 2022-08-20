@@ -2,11 +2,11 @@
 
 namespace Data.Entities
 {
-    [Table("HistoryHost")]
-    public class HistoryHost
+    [Table("HostnameTracerouteObject")]
+    public class StateObjectTraceroute
     {
         public int Id { get; set; }
         public string Hostname { get; set; }
-
+        //public FolderHost FolderHostId { get; set; }
     }
 }

@@ -10,7 +10,7 @@ namespace Apparat.Algorithms
 {
     public class LossColorAnl
     {
-        public void AnalystLossIcmpGrid(IApplicationViewModel test, ILogger<IApplicationViewModel> logger)
+        public void AnalystLossIcmpGrid(IApplicationViewModel test, ILogger logger)
         {
             Task.Factory.StartNew(() =>
             {

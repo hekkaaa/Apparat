@@ -42,6 +42,11 @@ namespace WinObserver
 
         private void Window_Closed(object sender, System.EventArgs e)
         {
+            bool resSaveFolder = _applicationViewModel.SaveSettingFolder();
+            if(resSaveFolder != true)
+            {
+                _logger.LogError("Error Save Folder Stack");
+            }
             _logger.LogWarning("Application is closed! Goodbye!");
         }
 

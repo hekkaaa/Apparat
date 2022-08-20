@@ -15,6 +15,7 @@ namespace WinObserver.ViewModel
         ObservableCollection<ExplorerViewModel> CollectionFoldersInExplorer { get; set; }
         ObservableCollection<string> CollectionRecentHost { get; set; }
         DelegateCommand DeleteOneItemHistoryHostname { get; }
+        bool SaveSettingFolder();
         //ObservableCollection<HostViewModel> HostsCollection { get; set; }
         string TextBlockGeneralError { get; set; }
         string TextBoxHostname { get; set; }

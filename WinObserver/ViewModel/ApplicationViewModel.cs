@@ -1,6 +1,7 @@
 ﻿using Apparat.Algorithms;
 using Apparat.Commands;
 using Apparat.Helpers;
+using Apparat.Services;
 using Apparat.Services.Interfaces;
 using Apparat.ViewModel;
 using Apparat.ViewModel.Interfaces;
@@ -25,12 +26,14 @@ namespace WinObserver.ViewModel
 
         private ObservableCollection<ExplorerViewModel> _collectionFoldersInExplorer;
         private readonly IAppSettingService _appSettingService;
+        private readonly ISaveStateFolderService _saveStateFolderService;
 
         ILogger<IApplicationViewModel> _logger;
         ILogger<IHostViewModel> _hostVMlog;
 
 
-        public ApplicationViewModel(IAppSettingService appService,
+        public ApplicationViewModel(IAppSettingService appService, 
+            ISaveStateFolderService saveStateFolderService,
             ILogger<IApplicationViewModel> log,
             ILogger<IHostViewModel> hostVMlog)
         {
@@ -41,8 +44,9 @@ namespace WinObserver.ViewModel
             // Load Start Folder
             _collectionFoldersInExplorer = CreateStartDefaultFolder();
 
-            // init object class  
+            // Init object class  
             _appSettingService = appService;
+            _saveStateFolderService = saveStateFolderService;
             UpdateCollectionHistoryHostInCombobox();
 
             /// Analyst Daemon Color DataGrid Row.
@@ -289,6 +293,11 @@ namespace WinObserver.ViewModel
         {
             if (PropertyChanged != null)
                 PropertyChanged(this, new PropertyChangedEventArgs(prop));
+        }
+
+        public bool SaveSettingFolder()
+        {
+            return _saveStateFolderService.SaveStateFolder(_collectionFoldersInExplorer);
         }
 
         private void UpdateCollectionHistoryHostInCombobox()
