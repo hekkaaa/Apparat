@@ -15,6 +15,7 @@ namespace Apparat.ViewModel.Interfaces
         string? HostnameView { get; set; }
         string SettingIsEnableControlBtn { get; set; }
         string SettingOpacityControlBtn { get; set; }
+        bool StatusWorkDataGrid { get; }
         DelegateCommand StartCommand { get; }
         string TextErrorToolTip { get; }
         ReadOnlyObservableCollection<TracertModel>? TracertObject { get; set; }

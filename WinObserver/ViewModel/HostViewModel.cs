@@ -192,6 +192,11 @@ namespace Apparat.ViewModel
             }
         }
 
+        public bool StatusWorkDataGrid
+        {
+            get { return _statusWorkDataGrid; }
+        }
+
         public bool StartStream()
         {
             try
