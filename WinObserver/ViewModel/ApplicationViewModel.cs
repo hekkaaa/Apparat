@@ -1,6 +1,7 @@
 ﻿using Apparat.Algorithms;
 using Apparat.Commands;
 using Apparat.Helpers;
+using Apparat.Services;
 using Apparat.Services.Interfaces;
 using Apparat.ViewModel;
 using Apparat.ViewModel.Interfaces;
@@ -25,12 +26,14 @@ namespace WinObserver.ViewModel
 
         private ObservableCollection<ExplorerViewModel> _collectionFoldersInExplorer;
         private readonly IAppSettingService _appSettingService;
+        private readonly ISaveStateFolderService _saveStateFolderService;
 
         ILogger<IApplicationViewModel> _logger;
         ILogger<IHostViewModel> _hostVMlog;
 
 
-        public ApplicationViewModel(IAppSettingService appService,
+        public ApplicationViewModel(IAppSettingService appService, 
+            ISaveStateFolderService saveStateFolderService,
             ILogger<IApplicationViewModel> log,
             ILogger<IHostViewModel> hostVMlog)
         {
@@ -39,14 +42,16 @@ namespace WinObserver.ViewModel
             _hostVMlog = hostVMlog;
 
             // Load Start Folder
-            _collectionFoldersInExplorer = CreateStartDefaultFolder();
+            //_collectionFoldersInExplorer = CreateStartDefaultFolder();
 
-            // init object class  
+            // Init object class  
             _appSettingService = appService;
+            _saveStateFolderService = saveStateFolderService;
             UpdateCollectionHistoryHostInCombobox();
 
             /// Analyst Daemon Color DataGrid Row.
             StartLossColorDataGridAlalyst();
+            LoadFolderInDb();
         }
 
         public string VersionProgramm { get { return VERSION_APP; } }
@@ -291,6 +296,16 @@ namespace WinObserver.ViewModel
                 PropertyChanged(this, new PropertyChangedEventArgs(prop));
         }
 
+        public bool SaveSettingFolder()
+        {
+            return _saveStateFolderService.SaveStateFolder(_collectionFoldersInExplorer);
+        }
+
+        public bool DeleteSettingFolder()
+        {
+            return _saveStateFolderService.DeleteAllFolder();
+        }
+
         private void UpdateCollectionHistoryHostInCombobox()
         {
             CollectionRecentHost = _appSettingService.GetLastFiveHistoryHost();
@@ -319,6 +334,17 @@ namespace WinObserver.ViewModel
             });
         }
 
+        private void LoadFolderInDb()
+        {
+            var res = _saveStateFolderService.LoadStateFolder();
+            if(res.Count == 0)
+            {
+                _collectionFoldersInExplorer = CreateStartDefaultFolder();
+                return;
+            }
+            _collectionFoldersInExplorer = res;
+        }
+
         private ObservableCollection<ExplorerViewModel> CreateStartDefaultFolder()
         {
             return new ObservableCollection<ExplorerViewModel>() {
@@ -337,5 +363,6 @@ namespace WinObserver.ViewModel
             LossColorAnl AnalystDeamon = new();
             AnalystDeamon.AnalystLossIcmpGrid(this, _logger);
         }
+
     }
 }
