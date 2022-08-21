@@ -42,7 +42,7 @@ namespace WinObserver.ViewModel
             _hostVMlog = hostVMlog;
 
             // Load Start Folder
-            _collectionFoldersInExplorer = CreateStartDefaultFolder();
+            //_collectionFoldersInExplorer = CreateStartDefaultFolder();
 
             // Init object class  
             _appSettingService = appService;
@@ -51,6 +51,7 @@ namespace WinObserver.ViewModel
 
             /// Analyst Daemon Color DataGrid Row.
             StartLossColorDataGridAlalyst();
+            LoadFolderInDb();
         }
 
         public string VersionProgramm { get { return VERSION_APP; } }
@@ -300,6 +301,11 @@ namespace WinObserver.ViewModel
             return _saveStateFolderService.SaveStateFolder(_collectionFoldersInExplorer);
         }
 
+        public bool DeleteSettingFolder()
+        {
+            return _saveStateFolderService.DeleteAllFolder();
+        }
+
         private void UpdateCollectionHistoryHostInCombobox()
         {
             CollectionRecentHost = _appSettingService.GetLastFiveHistoryHost();
@@ -328,6 +334,17 @@ namespace WinObserver.ViewModel
             });
         }
 
+        private void LoadFolderInDb()
+        {
+            var res = _saveStateFolderService.LoadStateFolder();
+            if(res.Count == 0)
+            {
+                _collectionFoldersInExplorer = CreateStartDefaultFolder();
+                return;
+            }
+            _collectionFoldersInExplorer = res;
+        }
+
         private ObservableCollection<ExplorerViewModel> CreateStartDefaultFolder()
         {
             return new ObservableCollection<ExplorerViewModel>() {
@@ -346,5 +363,6 @@ namespace WinObserver.ViewModel
             LossColorAnl AnalystDeamon = new();
             AnalystDeamon.AnalystLossIcmpGrid(this, _logger);
         }
+
     }
 }

@@ -7,7 +7,6 @@ namespace Data.Entities
         [Key]
         public int FolderId { get; set; }
         public string Name { get; set; }
-        public virtual ICollection<StateObjectTraceroute> Obj_id { get; set; }
-        //public List<ObjectTraceroute> obj_id { get; set; }
+        public virtual ICollection<StateObjectTraceroute> Host_id { get; set; }
     }
 }

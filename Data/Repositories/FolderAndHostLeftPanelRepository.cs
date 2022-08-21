@@ -18,32 +18,34 @@ namespace Data.Repositories
             _context = context;
         }
 
-        public int AddNewHost(FolderState newFolder)
+        public int SaveStateFolder(FolderState newFolder)
         {
             _context.Folders.Add(newFolder);
             _context.SaveChanges();
             return newFolder.FolderId;
         }
 
-        //public List<HistoryHost> GetLastFiveHostname()
-        //{
-        //    return _context.History.OrderByDescending(x => x).Take(5).ToList();
-        //}
+        public List<FolderState> LoadStateFolders()
+        {
+            var result = _context.Folders.ToList();
+            return result;
+        }
 
-        //public bool ClearAllTable()
-        //{
-        //    _context.History.RemoveRange(_context.History);
-        //    _context.SaveChanges();
-        //    return true;
-        //}
+        public bool DeleteFolder(FolderState delefolder)
+        {
+            var resDelTracert = DeleteHostTracert(delefolder.Host_id);
 
-        //public bool DeleteHostname(HistoryHost removeHostname)
-        //{
-        //    _context.History.Remove(removeHostname);
-        //    int t = _context.SaveChanges();
-        //    if (t > 0) return true;
-        //    else return false;
-        //}
+            _context.Folders.Remove(delefolder);
+            _context.SaveChanges();
+            return true;
+        }
+
+        public bool DeleteHostTracert(ICollection<StateObjectTraceroute> items)
+        {
+            _context.TracerouteHost.RemoveRange(items);
+            _context.SaveChanges();
+            return true;
+        }
     }
 
 }

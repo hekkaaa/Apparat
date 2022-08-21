@@ -4,6 +4,9 @@ namespace Data.Repositories.Interfaces
 {
     public interface IFolderAndHostLeftPanelRepository
     {
-        int AddNewHost(FolderState newFolder);
+        int SaveStateFolder(FolderState newFolder);
+        List<FolderState> LoadStateFolders();
+        bool DeleteFolder(FolderState delefolder);
+        bool DeleteHostTracert(ICollection<StateObjectTraceroute> items);
     }
 }

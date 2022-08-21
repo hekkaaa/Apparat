@@ -21,7 +21,7 @@ namespace Apparat.ViewModel
         public ReadOnlyObservableCollection<TracertModel>? TracertObject { get; set; }
         private string? _hostnameView;
         private IHostViewModelEvents _HostViewModelEvents = new HostViewModelEvents();
-        private ILogger<IHostViewModel> _logger;
+        private ILogger _logger;
 
 
         public string? HostnameView
@@ -30,7 +30,7 @@ namespace Apparat.ViewModel
             set { _hostnameView = value; OnPropertyChanged(); }
         }
 
-        public HostViewModel(ILogger<IHostViewModel> log)
+        public HostViewModel(ILogger log)
         {
             _logger = log;
             _tracerService = new TracertService(_logger);

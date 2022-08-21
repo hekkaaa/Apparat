@@ -7,6 +7,5 @@ namespace Data.Entities
     {
         public int Id { get; set; }
         public string Hostname { get; set; }
-        //public FolderHost FolderHostId { get; set; }
     }
 }
