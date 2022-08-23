@@ -3,10 +3,14 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:WinObserver" 
+        xmlns:local="clr-namespace:Apparat.ViewModel" 
         xmlns:viewmodel="clr-namespace:WinObserver.ViewModel" 
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:dd="clr-namespace:GongSolutions.Wpf.DragDrop;assembly=GongSolutions.Wpf.DragDrop"
+        
+         xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.WPF;assembly=LiveChartsCore.SkiaSharpView.WPF"
+         
+        
         mc:Ignorable="d"
         Title="Apparat" MinHeight="700" MinWidth="940" Height="568" Width="1024" Loaded="Window_Loaded"
         WindowStartupLocation="CenterScreen"
@@ -17,7 +21,7 @@
         FontSize="14"
         TextElement.FontSize="14"
         FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto" Closed="Window_Closed">
-   
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="50"></RowDefinition>
@@ -341,8 +345,15 @@
 
                     <!--Graph Statistic-->
                     <TabItem
-                        Header="Graph" IsEnabled="False">
-                        <TextBlock Margin="8" Text="The graph will be in the next version"/>
+                        Header="Graph" IsEnabled="True">
+                        <!--<Grid>
+                            <TextBlock Margin="8" Text="The graph will be in the next version"/>
+                            <TextBlock Text="{Binding SelectedGroup.Demo1}"/>
+                        </Grid>-->
+
+                        <lvc:CartesianChart Series="{Binding SelectedGroup.Series}"/>
+                        
+
                     </TabItem>
                 </TabControl>
             </materialDesign:Card>

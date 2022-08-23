@@ -3,6 +3,8 @@ using Apparat.Configuration.Events;
 using Apparat.Helpers;
 using Apparat.Services.Interfaces;
 using Apparat.ViewModel.Interfaces;
+using LiveChartsCore.SkiaSharpView;
+using LiveChartsCore;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.ObjectModel;
@@ -11,6 +13,8 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using WinObserver.Model;
 using WinObserver.Service;
+using Data.Entities;
+using System.Collections.Generic;
 
 namespace Apparat.ViewModel
 {
@@ -22,6 +26,9 @@ namespace Apparat.ViewModel
         private string? _hostnameView;
         private IHostViewModelEvents _HostViewModelEvents = new HostViewModelEvents();
         private ILogger _logger;
+
+        private ObservableCollection<ISeries> _lineTest;
+        private int[] _ttt1;
 
 
         public string? HostnameView
@@ -44,6 +51,20 @@ namespace Apparat.ViewModel
             _HostViewModelEvents.ManagementEnableGeneralControlBtnEventAndPreloaderVisible += ManagementEnableGeneralControlBtn;
             _HostViewModelEvents.ManagementEnableGeneralControlBtnEventAndPreloaderVisible += VisibleDatagridOrPreloaderOrStubGridInGeneralPanerTabControl;
             _HostViewModelEvents.WorkingProggresbarInListBoxHostnameEvent += WorkingProggresbarInListBoxHostname;
+
+
+            _ttt1 = RandomTest();
+
+            _lineTest = new ObservableCollection<ISeries>()
+                {
+                    new LineSeries<int>
+                    {
+                        Name = _hostnameView,
+                        Values = _ttt1,
+                        Fill = null
+                    },
+                };
+
         }
 
         private DelegateCommand? _startCommand { get; }
@@ -314,5 +335,26 @@ namespace Apparat.ViewModel
                 SettingOpacityControlBtn = "0.5";
             }
         }
+
+        private new int[] RandomTest()
+        {
+            int iq = 100;
+            int count = 8;
+
+            Random rnd = new Random();
+
+            int[] tmpMass = new int[count];
+
+            for (int i = 0; i < count; i++)
+            {
+                int s = rnd.Next(iq);
+                tmpMass[i] = s;
+            }
+
+            return tmpMass;
+        }
+
+        public ObservableCollection<ISeries> Series { get { return _lineTest; } }
+
     }
 }
