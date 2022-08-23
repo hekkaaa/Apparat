@@ -340,20 +340,47 @@
                         Header="Statistic">
                         <TextBlock Margin="8" Text="Statistics will be displayed here soon" 
                                    VerticalAlignment="Center" HorizontalAlignment="Center"
-                                   FontSize="18" FontFamily="Consolas"/>
+                                   FontSize="18" FontFamily="Consolas" IsEnabled="False"/>
                     </TabItem>
 
                     <!--Graph Statistic-->
                     <TabItem
                         Header="Graph" IsEnabled="True">
                         <!--<Grid>
-                            <TextBlock Margin="8" Text="The graph will be in the next version"/>
-                            <TextBlock Text="{Binding SelectedGroup.Demo1}"/>
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+                            <Grid Grid.Row="0">
+                                <Button Content="Update" ></Button>
+                                <TextBlock Margin="8" Text="The graph will be in the next version"/>
+                            </Grid>
+                            <Grid Grid.Row="1">
+                                <lvc:CartesianChart Series="{Binding SelectedGroup.Series}"/>
+                            </Grid>
                         </Grid>-->
-
-                        <lvc:CartesianChart Series="{Binding SelectedGroup.Series}"/>
-                        
-
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+                            <Grid Grid.Row="0">
+                                <StackPanel>
+                                    <Button Content="Test1"></Button>
+                                    <Button Content="Test2"></Button>
+                                </StackPanel>
+                            </Grid>
+                            <Grid Grid.Row="1">
+                                <StackPanel>
+                                    <Button Content="Test3" Command="{Binding SelectedGroup.UpdateGraph1}"></Button>
+                                    <Button Content="Test4"></Button>
+                                </StackPanel>
+                            </Grid>
+                            <Grid Grid.Row="2">
+                                <lvc:CartesianChart Series="{Binding SelectedGroup.Series}"/>
+                            </Grid>
+                        </Grid>
                     </TabItem>
                 </TabControl>
             </materialDesign:Card>

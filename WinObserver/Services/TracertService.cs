@@ -33,7 +33,10 @@ namespace WinObserver.Service
             _updateInfoStatistic = new UpdateStatisticOfTracerouteElementsHelper();
             _cancellationTokenSource = new CancellationTokenSource();
             _token = _cancellationTokenSource!.Token;
+            
         }
+
+        public List<string> ArhiveTimeRequest { get; set; }
 
         public void StartStreamTracerouteHost(string hostname, IHostViewModelEvents hostViewEvent)
         {
@@ -41,6 +44,7 @@ namespace WinObserver.Service
             {
                 try
                 {
+                    ArhiveTimeRequest = new List<string>(); // Create Time list.
                     hostViewEvent.WorkingProggresbarInListBoxHostnameEvent(true);
                     hostViewEvent.ManagementEnableGeneralControlBtnEventAndPreloaderVisible(false);
 
@@ -53,6 +57,7 @@ namespace WinObserver.Service
                     while (true)
                     {
                         Task.Delay(1000).Wait();
+                        ArhiveTimeRequest.Add(DataTimeUpdateStatistic());
                         _innerCollectionTracerouteValue = _updateInfoStatistic.Update(_innerCollectionTracerouteValue);
                         if (_token.IsCancellationRequested)
                         {
@@ -107,6 +112,12 @@ namespace WinObserver.Service
             {
                 _innerCollectionTracerouteValue.Clear();
             });
+        }
+
+        private string DataTimeUpdateStatistic()
+        {
+            DateTime date1 = DateTime.Now;
+            return date1.ToString("T");
         }
     }
 }

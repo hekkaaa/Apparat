@@ -242,7 +242,34 @@ namespace Apparat.ViewModel
 
         }
 
-        public event PropertyChangedEventHandler? PropertyChanged;
+
+        private DelegateCommand? _updateGraph1 { get; } = null;
+        public DelegateCommand UpdateGraph1
+        {
+            get
+            {
+                return _updateGraph1 ?? new DelegateCommand((obj) =>
+                {
+
+                    _ttt1 = RandomTest();
+                    _lineTest = new ObservableCollection<ISeries>()
+                {
+                    new LineSeries<int>
+                    {
+                        Name = _hostnameView,
+                        Values = _ttt1,
+                        Fill = null
+                    },
+                };
+                    
+
+                    var qq = 123213;
+                    OnPropertyChanged();
+                });
+            }
+        }
+
+    public event PropertyChangedEventHandler? PropertyChanged;
         public void OnPropertyChanged([CallerMemberName] string prop = "")
         {
             if (PropertyChanged != null)
@@ -354,7 +381,7 @@ namespace Apparat.ViewModel
             return tmpMass;
         }
 
-        public ObservableCollection<ISeries> Series { get { return _lineTest; } }
+        public ObservableCollection<ISeries> Series { get { return _lineTest; } set { _lineTest = value; OnPropertyChanged(); } }
 
     }
 }
