@@ -24,6 +24,8 @@ namespace WinObserver.Service
         CancellationTokenSource? _cancellationTokenSource;
         CancellationToken _token;
 
+        public List<string> ArhiveTimeRequest { get; set; }
+
         public TracertService(ILogger logger)
         {
             _logger = logger;
@@ -35,8 +37,6 @@ namespace WinObserver.Service
             _token = _cancellationTokenSource!.Token;
             
         }
-
-        public List<string> ArhiveTimeRequest { get; set; }
 
         public void StartStreamTracerouteHost(string hostname, IHostViewModelEvents hostViewEvent)
         {
@@ -57,8 +57,8 @@ namespace WinObserver.Service
                     while (true)
                     {
                         Task.Delay(1000).Wait();
-                        ArhiveTimeRequest.Add(DataTimeUpdateStatistic());
                         _innerCollectionTracerouteValue = _updateInfoStatistic.Update(_innerCollectionTracerouteValue);
+                        ArhiveTimeRequest.Add(DataTimeUpdateStatistic());
                         if (_token.IsCancellationRequested)
                         {
                             hostViewEvent.WorkingProggresbarInListBoxHostnameEvent(false);
@@ -98,6 +98,11 @@ namespace WinObserver.Service
         public ReadOnlyObservableCollection<TracertModel> GetActualCollectionTracertValue()
         {
             return _collectionTracerouteValue;
+        }
+
+        public List<string> GetArhiveTimeRequestCollection()
+        {
+            return ArhiveTimeRequest;
         }
 
         private void RestartToken()

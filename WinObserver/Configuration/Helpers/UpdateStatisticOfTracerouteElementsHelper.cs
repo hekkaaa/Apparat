@@ -28,6 +28,7 @@ namespace Apparat.Helpers
                     DataGridStatisticAlgorithm.MiddlePing(ref tempItemCollection);
                     tempItemCollection.CounterPacket++;
                     tempItemCollection.ArhiveStatusRequestPacket.Add(0);
+                    tempItemCollection.ArhiveStateValuePercentLossPacket.Add(tempItemCollection.PercentLossPacket); // Add arhive % loss pacet in now time.
                 }
                 else
                 {
@@ -35,6 +36,7 @@ namespace Apparat.Helpers
                     tempItemCollection.CounterPacket++;
                     tempItemCollection.CounterLossPacket++;
                     tempItemCollection.ArhiveStatusRequestPacket.Add(1);
+                    tempItemCollection.ArhiveStateValuePercentLossPacket.Add(tempItemCollection.PercentLossPacket); // Add arhive % loss pacet in now time.
                 }
 
                 itemCollection.PercentLossPacket = DataGridStatisticAlgorithm.CalculationofLossesOnElementsHost(tempItemCollection);

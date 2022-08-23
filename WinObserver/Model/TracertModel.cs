@@ -22,6 +22,7 @@ namespace WinObserver.Model
 
         private List<int>? _arhivePingList = new List<int>();
         private List<int> _arhiveStatusRequestPacket = new List<int>(); // 0 or 1
+        private List<int> _arhiveStateValuePercentLossPacket = new List<int>();
 
         public int NumberHostname
         {
@@ -133,6 +134,12 @@ namespace WinObserver.Model
            
         }
 
+        public List<int>? ArhiveStateValuePercentLossPacket
+        {
+            get { return _arhiveStateValuePercentLossPacket; }
+
+        }
+        
         public event PropertyChangedEventHandler? PropertyChanged;
         public void OnPropertyChanged([CallerMemberName] string prop = "")
         {

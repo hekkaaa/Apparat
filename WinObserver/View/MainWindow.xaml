@@ -346,39 +346,32 @@
                     <!--Graph Statistic-->
                     <TabItem
                         Header="Graph" IsEnabled="True">
-                        <!--<Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition/>
-                                <RowDefinition/>
-                            </Grid.RowDefinitions>
-                            <Grid Grid.Row="0">
-                                <Button Content="Update" ></Button>
-                                <TextBlock Margin="8" Text="The graph will be in the next version"/>
-                            </Grid>
-                            <Grid Grid.Row="1">
-                                <lvc:CartesianChart Series="{Binding SelectedGroup.Series}"/>
-                            </Grid>
-                        </Grid>-->
                         <Grid>
                             <Grid.RowDefinitions>
-                                <RowDefinition/>
-                                <RowDefinition/>
-                                <RowDefinition/>
+                                <RowDefinition Height="100"/>
+                                <RowDefinition Height="1*"/>
+                                <RowDefinition Height="1*"/>
                             </Grid.RowDefinitions>
+                           
                             <Grid Grid.Row="0">
                                 <StackPanel>
-                                    <Button Content="Test1"></Button>
-                                    <Button Content="Test2"></Button>
+                                    <Button Content="Update" Command="{Binding SelectedGroup.UpdateGraph1}"></Button>
                                 </StackPanel>
                             </Grid>
                             <Grid Grid.Row="1">
-                                <StackPanel>
-                                    <Button Content="Test3" Command="{Binding SelectedGroup.UpdateGraph1}"></Button>
-                                    <Button Content="Test4"></Button>
-                                </StackPanel>
+                                <lvc:CartesianChart 
+                                    Series="{Binding SelectedGroup.SeriesGraph1}"
+                                    XAxes="{Binding SelectedGroup.XAxesGraph1}"
+                                    YAxes="{Binding SelectedGroup.YAxesGraph1}"
+                                    ZoomMode="X"/>
                             </Grid>
+                            <GridSplitter/>
                             <Grid Grid.Row="2">
-                                <lvc:CartesianChart Series="{Binding SelectedGroup.Series}"/>
+                                <lvc:CartesianChart 
+                                    Series="{Binding SelectedGroup.SeriesGraph2}"
+                                    XAxes="{Binding SelectedGroup.XAxesGraph2}"
+                                    YAxes="{Binding SelectedGroup.YAxesGraph2}"
+                                    ZoomMode="X"/>
                             </Grid>
                         </Grid>
                     </TabItem>
