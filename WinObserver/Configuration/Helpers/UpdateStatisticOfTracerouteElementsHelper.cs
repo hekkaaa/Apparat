@@ -27,12 +27,16 @@ namespace Apparat.Helpers
                     DataGridStatisticAlgorithm.UpdateMinMaxPing(ref tempItemCollection, (int)tmpResult.RoundtripTime);
                     DataGridStatisticAlgorithm.MiddlePing(ref tempItemCollection);
                     tempItemCollection.CounterPacket++;
+                    tempItemCollection.ArhiveStatusRequestPacket.Add(0);
+                    tempItemCollection.ArhiveStateValuePercentLossPacket.Add(tempItemCollection.PercentLossPacket); // Add arhive % loss pacet in now time.
                 }
                 else
                 {
                     tempItemCollection.LastDelay = 0;
                     tempItemCollection.CounterPacket++;
                     tempItemCollection.CounterLossPacket++;
+                    tempItemCollection.ArhiveStatusRequestPacket.Add(1);
+                    tempItemCollection.ArhiveStateValuePercentLossPacket.Add(tempItemCollection.PercentLossPacket); // Add arhive % loss pacet in now time.
                 }
 
                 itemCollection.PercentLossPacket = DataGridStatisticAlgorithm.CalculationofLossesOnElementsHost(tempItemCollection);

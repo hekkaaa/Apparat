@@ -21,6 +21,8 @@ namespace WinObserver.Model
         private string _colorLossView = "Black";
 
         private List<int>? _arhivePingList = new List<int>();
+        private List<int> _arhiveStatusRequestPacket = new List<int>(); // 0 or 1
+        private List<int> _arhiveStateValuePercentLossPacket = new List<int>();
 
         public int NumberHostname
         {
@@ -124,13 +126,20 @@ namespace WinObserver.Model
         public List<int>? ArhivePingList
         {
             get { return _arhivePingList; }
-            //set 
-            //{ 
-            //    _arhivePingList = value;
-            //    OnPropertyChanged("ArhivePingList");
-            //}
         }
 
+        public List<int>? ArhiveStatusRequestPacket
+        {
+            get { return _arhiveStatusRequestPacket; }
+           
+        }
+
+        public List<int>? ArhiveStateValuePercentLossPacket
+        {
+            get { return _arhiveStateValuePercentLossPacket; }
+
+        }
+        
         public event PropertyChangedEventHandler? PropertyChanged;
         public void OnPropertyChanged([CallerMemberName] string prop = "")
         {

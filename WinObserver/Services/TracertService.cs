@@ -24,6 +24,8 @@ namespace WinObserver.Service
         CancellationTokenSource? _cancellationTokenSource;
         CancellationToken _token;
 
+        public List<string> ArhiveTimeRequest { get; set; }
+
         public TracertService(ILogger logger)
         {
             _logger = logger;
@@ -33,6 +35,7 @@ namespace WinObserver.Service
             _updateInfoStatistic = new UpdateStatisticOfTracerouteElementsHelper();
             _cancellationTokenSource = new CancellationTokenSource();
             _token = _cancellationTokenSource!.Token;
+            
         }
 
         public void StartStreamTracerouteHost(string hostname, IHostViewModelEvents hostViewEvent)
@@ -41,6 +44,7 @@ namespace WinObserver.Service
             {
                 try
                 {
+                    ArhiveTimeRequest = new List<string>(); // Create Time list.
                     hostViewEvent.WorkingProggresbarInListBoxHostnameEvent(true);
                     hostViewEvent.ManagementEnableGeneralControlBtnEventAndPreloaderVisible(false);
 
@@ -54,6 +58,7 @@ namespace WinObserver.Service
                     {
                         Task.Delay(1000).Wait();
                         _innerCollectionTracerouteValue = _updateInfoStatistic.Update(_innerCollectionTracerouteValue);
+                        ArhiveTimeRequest.Add(DataTimeUpdateStatistic());
                         if (_token.IsCancellationRequested)
                         {
                             hostViewEvent.WorkingProggresbarInListBoxHostnameEvent(false);
@@ -95,6 +100,11 @@ namespace WinObserver.Service
             return _collectionTracerouteValue;
         }
 
+        public List<string> GetArhiveTimeRequestCollection()
+        {
+            return ArhiveTimeRequest;
+        }
+
         private void RestartToken()
         {
             _cancellationTokenSource = new CancellationTokenSource();
@@ -107,6 +117,12 @@ namespace WinObserver.Service
             {
                 _innerCollectionTracerouteValue.Clear();
             });
+        }
+
+        private string DataTimeUpdateStatistic()
+        {
+            DateTime date1 = DateTime.Now;
+            return date1.ToString("T");
         }
     }
 }

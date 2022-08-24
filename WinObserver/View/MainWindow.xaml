@@ -3,10 +3,14 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:WinObserver" 
+        xmlns:local="clr-namespace:Apparat.ViewModel" 
         xmlns:viewmodel="clr-namespace:WinObserver.ViewModel" 
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:dd="clr-namespace:GongSolutions.Wpf.DragDrop;assembly=GongSolutions.Wpf.DragDrop"
+        
+         xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.WPF;assembly=LiveChartsCore.SkiaSharpView.WPF"
+         
+        
         mc:Ignorable="d"
         Title="Apparat" MinHeight="700" MinWidth="940" Height="568" Width="1024" Loaded="Window_Loaded"
         WindowStartupLocation="CenterScreen"
@@ -17,7 +21,7 @@
         FontSize="14"
         TextElement.FontSize="14"
         FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto" Closed="Window_Closed">
-   
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="50"></RowDefinition>
@@ -336,13 +340,40 @@
                         Header="Statistic">
                         <TextBlock Margin="8" Text="Statistics will be displayed here soon" 
                                    VerticalAlignment="Center" HorizontalAlignment="Center"
-                                   FontSize="18" FontFamily="Consolas"/>
+                                   FontSize="18" FontFamily="Consolas" IsEnabled="False"/>
                     </TabItem>
 
                     <!--Graph Statistic-->
                     <TabItem
-                        Header="Graph" IsEnabled="False">
-                        <TextBlock Margin="8" Text="The graph will be in the next version"/>
+                        Header="Graph" IsEnabled="True">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="100"/>
+                                <RowDefinition Height="1*"/>
+                                <RowDefinition Height="1*"/>
+                            </Grid.RowDefinitions>
+                           
+                            <Grid Grid.Row="0">
+                                <StackPanel>
+                                    <Button Content="Update" Command="{Binding SelectedGroup.UpdateGraph1}"></Button>
+                                </StackPanel>
+                            </Grid>
+                            <Grid Grid.Row="1">
+                                <lvc:CartesianChart 
+                                    Series="{Binding SelectedGroup.SeriesGraph1}"
+                                    XAxes="{Binding SelectedGroup.XAxesGraph1}"
+                                    YAxes="{Binding SelectedGroup.YAxesGraph1}"
+                                    ZoomMode="X"/>
+                            </Grid>
+                            <GridSplitter/>
+                            <Grid Grid.Row="2">
+                                <lvc:CartesianChart 
+                                    Series="{Binding SelectedGroup.SeriesGraph2}"
+                                    XAxes="{Binding SelectedGroup.XAxesGraph2}"
+                                    YAxes="{Binding SelectedGroup.YAxesGraph2}"
+                                    ZoomMode="X"/>
+                            </Grid>
+                        </Grid>
                     </TabItem>
                 </TabControl>
             </materialDesign:Card>

@@ -3,12 +3,18 @@ using Apparat.Configuration.Events;
 using Apparat.Helpers;
 using Apparat.Services.Interfaces;
 using Apparat.ViewModel.Interfaces;
+using LiveChartsCore;
+using LiveChartsCore.SkiaSharpView;
+using LiveChartsCore.SkiaSharpView.Painting;
 using Microsoft.Extensions.Logging;
+using SkiaSharp;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Xml.Linq;
 using WinObserver.Model;
 using WinObserver.Service;
 
@@ -23,6 +29,7 @@ namespace Apparat.ViewModel
         private IHostViewModelEvents _HostViewModelEvents = new HostViewModelEvents();
         private ILogger _logger;
 
+ 
 
         public string? HostnameView
         {
@@ -44,6 +51,10 @@ namespace Apparat.ViewModel
             _HostViewModelEvents.ManagementEnableGeneralControlBtnEventAndPreloaderVisible += ManagementEnableGeneralControlBtn;
             _HostViewModelEvents.ManagementEnableGeneralControlBtnEventAndPreloaderVisible += VisibleDatagridOrPreloaderOrStubGridInGeneralPanerTabControl;
             _HostViewModelEvents.WorkingProggresbarInListBoxHostnameEvent += WorkingProggresbarInListBoxHostname;
+
+
+            _xAxisGraph1 = DefaultValueXaXies();
+            _xAxisGraph2 = DefaultValueXaXies();
         }
 
         private DelegateCommand? _startCommand { get; }
@@ -170,6 +181,67 @@ namespace Apparat.ViewModel
             set { _textinToolTipsFromControlBtn = value; OnPropertyChanged(); }
         }
 
+        /// Graph 1
+        private List<Axis> _xAxisGraph1 = null;
+        public List<Axis> XAxesGraph1
+        {
+            get { return _xAxisGraph1; }
+            set
+            {
+                _xAxisGraph1 = value;
+                OnPropertyChanged();
+            }
+        }
+        /// Graph 2
+        private List<Axis> _xAxisGraph2 = null;
+        public List<Axis> XAxesGraph2
+        {
+            get { return _xAxisGraph2; }
+            set
+            {
+                _xAxisGraph2 = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public Axis[] YAxesGraph1 { get; set; } =
+        {
+            new Axis
+            {
+                 MinLimit = 0,
+                 MaxLimit = 100,
+                 MinStep = 10,
+            }
+        };
+
+
+        public Axis[] YAxesGraph2 { get; set; } =
+       {
+            new Axis
+            {
+                 MinLimit = 0,
+                 MaxLimit = 1,
+            }
+        };
+
+        private ObservableCollection<ISeries> _valuesLossGraph1;
+        public ObservableCollection<ISeries> SeriesGraph1
+        {
+            get { return _valuesLossGraph1; }
+            set { _valuesLossGraph1 = value; OnPropertyChanged(); }
+        }
+
+        private ObservableCollection<ISeries> _valuesLossGraph2;
+        public ObservableCollection<ISeries> SeriesGraph2
+        {
+            get { return _valuesLossGraph2; }
+            set { _valuesLossGraph2 = value; OnPropertyChanged(); }
+        }
+
+        /// <summary>
+        /// Stop Stream Traceroute to hostname.
+        /// </summary>
+        /// <returns></returns>
         public bool StopStream()
         {
             try
@@ -219,6 +291,77 @@ namespace Apparat.ViewModel
                 return false;
             }
 
+        }
+
+        private DelegateCommand? _updateGraph1 { get; } = null;
+        public DelegateCommand UpdateGraph1
+        {
+            get
+            {
+                return _updateGraph1 ?? new DelegateCommand((obj) =>
+                {
+                    _valuesLossGraph1 = new ObservableCollection<ISeries>();
+
+                    foreach (var item in TracertObject)
+                    {
+                        _valuesLossGraph1.Add(new LineSeries<int>
+                        {   
+                            DataPadding = new LiveChartsCore.Drawing.LvcPoint(0,22f),
+                            Name = item.Hostname,
+                            Values = item.ArhiveStateValuePercentLossPacket,
+                            Fill = null,
+                            LineSmoothness = 0,
+                            GeometrySize = 0
+                        });
+                    };
+
+                    SeriesGraph1 = _valuesLossGraph1;
+
+                    _xAxisGraph1 = new List<Axis>
+                        {
+                             new Axis
+                            {
+                                Name = "General graph of packet loss",
+                                Labels = _tracerService.GetArhiveTimeRequestCollection(),
+                                LabelsRotation = 15,
+                            }
+                        };
+
+                    XAxesGraph1 = _xAxisGraph1;
+
+                    ////////////////
+                    _valuesLossGraph2 = new ObservableCollection<ISeries>();
+
+                    foreach (var item in TracertObject)
+                    {
+                        _valuesLossGraph2.Add(new StepLineSeries<int>
+                        {
+                            DataPadding = new LiveChartsCore.Drawing.LvcPoint(0, 12),
+                            Name = item.Hostname,
+                            Values = item.ArhiveStatusRequestPacket,
+                            Fill = null,
+                            GeometrySize = 0,
+                        });
+                    };
+
+                    SeriesGraph2 = _valuesLossGraph2;
+
+                    _xAxisGraph2 = new List<Axis>
+                        {
+                             new Axis
+                            {
+                                Name = "Graph of % losses for all time",
+                                Labels = _tracerService.GetArhiveTimeRequestCollection(),
+                                LabelsRotation = 15,
+                            }
+                        };
+
+                    XAxesGraph2 = _xAxisGraph2;
+
+
+                    OnPropertyChanged();
+                });
+            }
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;
@@ -314,5 +457,22 @@ namespace Apparat.ViewModel
                 SettingOpacityControlBtn = "0.5";
             }
         }
+
+      
+        private List<Axis> DefaultValueXaXies()
+        {
+            return  new List<Axis>
+            {
+                 new Axis
+                {
+                    Name = "Time",
+                    Labels = new string[] { "Time Now" },
+                    LabelsRotation = 15
+                }
+            };
+        }
+
+        
+
     }
 }
