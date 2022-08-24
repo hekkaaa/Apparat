@@ -9,7 +9,6 @@
         xmlns:dd="clr-namespace:GongSolutions.Wpf.DragDrop;assembly=GongSolutions.Wpf.DragDrop"
         
          xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.WPF;assembly=LiveChartsCore.SkiaSharpView.WPF"
-         
         
         mc:Ignorable="d"
         Title="Apparat" MinHeight="700" MinWidth="940" Height="568" Width="1024" Loaded="Window_Loaded"
@@ -336,28 +335,103 @@
                     </TabItem>
 
                     <!--Text Statistic-->
-                    <TabItem
-                        Header="Statistic">
-                        <TextBlock Margin="8" Text="Statistics will be displayed here soon" 
-                                   VerticalAlignment="Center" HorizontalAlignment="Center"
-                                   FontSize="18" FontFamily="Consolas" IsEnabled="False"/>
+                    <TabItem Header="Statistic">
+                        <materialDesign:DialogHost CloseOnClickAway="True">
+                            <materialDesign:DialogHost.DialogContent>
+                                <Grid Margin="20">
+                                    <TextBlock Text="My first Dialog" />
+                                </Grid>
+                            </materialDesign:DialogHost.DialogContent>
+                            <Grid Grid.Row="0">
+                                <Grid>
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
+                                
+                                    <Button Command="{x:Static materialDesign:DialogHost.OpenDialogCommand}" Content="Show Dialog"
+                                    HorizontalAlignment="Left" 
+                                    VerticalAlignment="Center" Margin="50,0,0,0"/>
+                            </Grid>
+
+                                <Button Content="Update!" Grid.Row="2"></Button>
+                                <Grid Height="100" Grid.Row="2">
+                                    <TextBlock Text="WHY is ANAL DESTROYER?"></TextBlock>
+                                </Grid>
+                            </Grid>
+                        </Grid>
+                        </materialDesign:DialogHost>
+
                     </TabItem>
 
                     <!--Graph Statistic-->
                     <TabItem
                         Header="Graph" IsEnabled="True">
+                        <!--// Dialog Window-->
+                        <materialDesign:DialogHost CloseOnClickAway="True">
+                            <materialDesign:DialogHost.DialogContent>
+                                <Grid Margin="20">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition/>
+                                        <RowDefinition/>
+                                        <RowDefinition/>
+                                    </Grid.RowDefinitions>
+                                    <TextBlock Grid.Row="0" Text="Graph 1: Vertical axis - shows the percentage of total losses for the entire monitoring time." />
+                                    <TextBlock Grid.Row="1" Text="Graph 2: Shows two values. 1 - if there was an ICMP packet loss. 0 - if the ICMP packet is successfully received." />
+                                    <TextBlock Grid.Row="2" Text="The horizontal axis - in both cases shows the time." />
+                                </Grid>
+                            </materialDesign:DialogHost.DialogContent>
+                            
                         <Grid>
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="100"/>
+                                <RowDefinition Height="70"/>
                                 <RowDefinition Height="1*"/>
+                                <RowDefinition Height="50"/>
                                 <RowDefinition Height="1*"/>
                             </Grid.RowDefinitions>
-                           
-                            <Grid Grid.Row="0">
-                                <StackPanel>
-                                    <Button Content="Update" Command="{Binding SelectedGroup.UpdateGraph1}"></Button>
-                                </StackPanel>
-                            </Grid>
+                           <!--// Button-->
+                                <Grid Grid.Row="0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="100"/>
+                                        <ColumnDefinition Width="auto" />
+                                        <ColumnDefinition/>
+                                        <ColumnDefinition Width="100"/>
+                                        <ColumnDefinition Width="100" />
+                                        <ColumnDefinition Width="50" />
+                                        <ColumnDefinition Width="10" />
+                                </Grid.ColumnDefinitions>
+                                
+                                    <Button Grid.Column="3"
+                                      Style="{StaticResource MaterialDesignPaperLightButton}"
+                                      ToolTip="Screen Gpraph"
+                                      Content="Screen"
+                                      IsEnabled="False"
+                                      Margin="0,0,10,0"/>
+                                      
+                                <Button Grid.Column="4"
+                                      Style="{StaticResource MaterialDesignPaperLightButton}"
+                                      ToolTip="Update info in Graph"
+                                      ToolTipService.InitialShowDelay="200"
+                                      Content="Update"
+                                      Command="{Binding SelectedGroup.UpdateAllGraph}"/>
+
+                                <Button Grid.Column="5"
+                                    Style="{StaticResource MaterialDesignFloatingActionMiniSecondaryDarkButton}"
+                                    HorizontalAlignment="Center"
+                                    ToolTip="Description of information in graphs."
+                                    ToolTipService.InitialShowDelay="200"
+                                    Height="22" Width="22" 
+                                    Command="{x:Static materialDesign:DialogHost.OpenDialogCommand}">
+                                        
+                                    <materialDesign:PackIcon
+                                        Kind="InformationVariant"
+                                        Height="18"
+                                        Width="18" />
+                                </Button>
+                              </Grid>
+                            <!--// Graph 1-->
                             <Grid Grid.Row="1">
                                 <lvc:CartesianChart 
                                     Series="{Binding SelectedGroup.SeriesGraph1}"
@@ -365,8 +439,10 @@
                                     YAxes="{Binding SelectedGroup.YAxesGraph1}"
                                     ZoomMode="X"/>
                             </Grid>
-                            <GridSplitter/>
-                            <Grid Grid.Row="2">
+                            <GridSplitter Grid.Row="2" Height="5" HorizontalAlignment="Stretch" />
+                            
+                            <!--// Graph 2-->
+                            <Grid Grid.Row="3" Margin="0,0,0,20">
                                 <lvc:CartesianChart 
                                     Series="{Binding SelectedGroup.SeriesGraph2}"
                                     XAxes="{Binding SelectedGroup.XAxesGraph2}"
@@ -374,6 +450,7 @@
                                     ZoomMode="X"/>
                             </Grid>
                         </Grid>
+                        </materialDesign:DialogHost>
                     </TabItem>
                 </TabControl>
             </materialDesign:Card>

@@ -5,16 +5,13 @@ using Apparat.Services.Interfaces;
 using Apparat.ViewModel.Interfaces;
 using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
-using LiveChartsCore.SkiaSharpView.Painting;
 using Microsoft.Extensions.Logging;
-using SkiaSharp;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Text;
-using System.Xml.Linq;
 using WinObserver.Model;
 using WinObserver.Service;
 
@@ -29,7 +26,7 @@ namespace Apparat.ViewModel
         private IHostViewModelEvents _HostViewModelEvents = new HostViewModelEvents();
         private ILogger _logger;
 
- 
+
 
         public string? HostnameView
         {
@@ -292,26 +289,28 @@ namespace Apparat.ViewModel
             }
 
         }
-
-        private DelegateCommand? _updateGraph1 { get; } = null;
-        public DelegateCommand UpdateGraph1
+        /// <summary>
+        /// Command Update Graphs 1 or 2 in select Tabitem.
+        /// </summary>
+        private DelegateCommand? _updateAllGraph { get; } = null;
+        public DelegateCommand UpdateAllGraph
         {
             get
             {
-                return _updateGraph1 ?? new DelegateCommand((obj) =>
+                return _updateAllGraph ?? new DelegateCommand((obj) =>
                 {
                     _valuesLossGraph1 = new ObservableCollection<ISeries>();
 
                     foreach (var item in TracertObject)
                     {
                         _valuesLossGraph1.Add(new LineSeries<int>
-                        {   
-                            DataPadding = new LiveChartsCore.Drawing.LvcPoint(0,22f),
+                        {
+                            DataPadding = new LiveChartsCore.Drawing.LvcPoint(0, 22f),
                             Name = item.Hostname,
                             Values = item.ArhiveStateValuePercentLossPacket,
                             Fill = null,
                             LineSmoothness = 0,
-                            GeometrySize = 0
+                            GeometrySize = 0,
                         });
                     };
 
@@ -458,10 +457,10 @@ namespace Apparat.ViewModel
             }
         }
 
-      
+
         private List<Axis> DefaultValueXaXies()
         {
-            return  new List<Axis>
+            return new List<Axis>
             {
                  new Axis
                 {
@@ -472,7 +471,7 @@ namespace Apparat.ViewModel
             };
         }
 
-        
+
 
     }
 }

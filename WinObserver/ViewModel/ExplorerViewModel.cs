@@ -102,8 +102,8 @@ namespace Apparat.ViewModel
                 return _creatingNewFolderDownEnterEvent
                 ?? (_creatingNewFolderDownEnterEvent = new DelegateCommand(
                 (obj) =>
-                {   
-                    if(obj is null)
+                {
+                    if (obj is null)
                     {
                         return;
                     }
@@ -111,7 +111,7 @@ namespace Apparat.ViewModel
                     {
                         ExplorerViewModel folderObj = (ExplorerViewModel)obj;
 
-                        if(String.IsNullOrWhiteSpace(folderObj.FolderName))
+                        if (String.IsNullOrWhiteSpace(folderObj.FolderName))
                         {
                             TextErrorFolderValidation = "You must specify the folder name.";
                             BorderBrushColor = defaultBorderBrushError;
@@ -142,8 +142,8 @@ namespace Apparat.ViewModel
         }
 
         private void GeneradeUniqueIdInPublicIdPropetry()
-        {   
-            if(systemFolder == true)
+        {
+            if (systemFolder == true)
             {
                 _publicId = defaultIdGeneralFolder;
                 return;
