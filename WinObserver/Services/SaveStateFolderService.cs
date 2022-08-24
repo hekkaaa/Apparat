@@ -1,15 +1,10 @@
 ﻿using Apparat.Services.Interfaces;
 using Apparat.ViewModel;
-using Castle.Core.Logging;
 using Data.Entities;
 using Data.Repositories.Interfaces;
 using Microsoft.Extensions.Logging;
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Apparat.Services
 {
@@ -33,7 +28,8 @@ namespace Apparat.Services
 
                 tmpFolderState.Name = itemFolder.FolderName;
 
-                if(itemFolder.HostVMCollection != null) { 
+                if (itemFolder.HostVMCollection != null)
+                {
 
                     foreach (var itemVM in itemFolder.HostVMCollection)
                     {
@@ -62,8 +58,8 @@ namespace Apparat.Services
             int count = 0;
 
             foreach (FolderState itemHostId in loadResult)
-            {   
-                if(itemHostId.Name == "Default")
+            {
+                if (itemHostId.Name == "Default")
                 {
                     tmpCollectionFolder.Add(new ExplorerViewModel(true)
                     {
@@ -82,8 +78,8 @@ namespace Apparat.Services
                 }
 
                 ObservableCollection<HostViewModel> tmpCollectionHostname = new ObservableCollection<HostViewModel>();
-                
-                if(itemHostId.Host_id != null) 
+
+                if (itemHostId.Host_id != null)
                 {
                     foreach (StateObjectTraceroute item in itemHostId.Host_id)
                     {

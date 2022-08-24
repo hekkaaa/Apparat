@@ -32,13 +32,13 @@ namespace WinObserver
                      LoggerConfiguration loggerConfigure = new LoggerConfiguration()
                     .WriteTo.File(logPath, rollingInterval: RollingInterval.Day)
                     .MinimumLevel.Warning();
-                    
+
                      builder.ClearProviders();
                      builder.AddSerilog(loggerConfigure.CreateLogger());
 
                  })
                  .ConfigureServices(services =>
-                 {  
+                 {
                      services.AddDbContext<ApplicationSettingContext>();
                      services.AddDbContext<ApplicationSettingFolderandHostContext>();
                      services.AddSingleton<IApplicationViewModel, ApplicationViewModel>();
@@ -48,7 +48,7 @@ namespace WinObserver
                      services.AddSingleton<IFolderAndHostLeftPanelRepository, FolderAndHostLeftPanelRepository>();
                      services.AddScoped<IHostViewModel, HostViewModel>();
                      services.AddScoped<ITracertService, TracertService>();
-                   
+
                      services.AddSingleton<MainWindow>();
                  })
                  .Build();

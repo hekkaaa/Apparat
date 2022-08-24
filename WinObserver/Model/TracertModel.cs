@@ -131,7 +131,7 @@ namespace WinObserver.Model
         public List<int>? ArhiveStatusRequestPacket
         {
             get { return _arhiveStatusRequestPacket; }
-           
+
         }
 
         public List<int>? ArhiveStateValuePercentLossPacket
@@ -139,7 +139,7 @@ namespace WinObserver.Model
             get { return _arhiveStateValuePercentLossPacket; }
 
         }
-        
+
         public event PropertyChangedEventHandler? PropertyChanged;
         public void OnPropertyChanged([CallerMemberName] string prop = "")
         {

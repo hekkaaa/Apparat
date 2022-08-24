@@ -35,7 +35,7 @@ namespace Apparat.Services
             {
                 List<HistoryHost> tmpCollection = _appSettingRepository.GetLastFiveHostname();
 
-                if(tmpCollection.Count >= 5)
+                if (tmpCollection.Count >= 5)
                 {
                     _appSettingRepository.DeleteHostname(tmpCollection.LastOrDefault()!);
                 }
@@ -84,7 +84,7 @@ namespace Apparat.Services
                     return false;
                 }
             }
-            catch(ArgumentNullException)
+            catch (ArgumentNullException)
             {   // There will be a log for an error when suddenly delete Host name will be null.
                 return false;
             }

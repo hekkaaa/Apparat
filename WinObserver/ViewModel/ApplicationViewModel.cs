@@ -1,7 +1,6 @@
 ﻿using Apparat.Algorithms;
 using Apparat.Commands;
 using Apparat.Helpers;
-using Apparat.Services;
 using Apparat.Services.Interfaces;
 using Apparat.ViewModel;
 using Apparat.ViewModel.Interfaces;
@@ -32,7 +31,7 @@ namespace WinObserver.ViewModel
         ILogger<IHostViewModel> _hostVMlog;
 
 
-        public ApplicationViewModel(IAppSettingService appService, 
+        public ApplicationViewModel(IAppSettingService appService,
             ISaveStateFolderService saveStateFolderService,
             ILogger<IApplicationViewModel> log,
             ILogger<IHostViewModel> hostVMlog)
@@ -154,7 +153,7 @@ namespace WinObserver.ViewModel
                      HostViewModel newObject = new HostViewModel(_hostVMlog) { HostnameView = editedHostname };
 
                      // Add new hostname in default folder View.
-                     CollectionFoldersInExplorer.Where(x=>x.PublicId == defaultIdGeneralFolder).First().HostVMCollection.Add(newObject);
+                     CollectionFoldersInExplorer.Where(x => x.PublicId == defaultIdGeneralFolder).First().HostVMCollection.Add(newObject);
 
                      _appSettingService.AddHostInHistory(editedHostname);
                      UpdateCollectionHistoryHostInCombobox();
@@ -279,9 +278,9 @@ namespace WinObserver.ViewModel
         {
             _logger.LogWarning($"User is Delete folder: {obj.FolderName}");
 
-            foreach(HostViewModel item in obj.HostVMCollection)
+            foreach (HostViewModel item in obj.HostVMCollection)
             {
-                 item.StopStream();
+                item.StopStream();
             }
             obj.HostVMCollection.Clear();
             StartValueInVisibleWithGeneralWindowsApp = "Collapsed";
@@ -337,7 +336,7 @@ namespace WinObserver.ViewModel
         private void LoadFolderInDb()
         {
             var res = _saveStateFolderService.LoadStateFolder();
-            if(res.Count == 0)
+            if (res.Count == 0)
             {
                 _collectionFoldersInExplorer = CreateStartDefaultFolder();
                 return;

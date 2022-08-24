@@ -35,7 +35,7 @@ namespace WinObserver.Service
             _updateInfoStatistic = new UpdateStatisticOfTracerouteElementsHelper();
             _cancellationTokenSource = new CancellationTokenSource();
             _token = _cancellationTokenSource!.Token;
-            
+
         }
 
         public void StartStreamTracerouteHost(string hostname, IHostViewModelEvents hostViewEvent)
@@ -91,7 +91,7 @@ namespace WinObserver.Service
         }
 
         public void StopStreamTracerouteHost()
-        {   
+        {
             _cancellationTokenSource!.Cancel();
         }
 
