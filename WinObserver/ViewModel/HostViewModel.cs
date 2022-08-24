@@ -53,7 +53,8 @@ namespace Apparat.ViewModel
             _HostViewModelEvents.WorkingProggresbarInListBoxHostnameEvent += WorkingProggresbarInListBoxHostname;
 
 
-            _xAxisGraph1 = DefaultValueXandYaXies();
+            _xAxisGraph1 = DefaultValueXaXies();
+            _xAxisGraph2 = DefaultValueXaXies();
         }
 
         private DelegateCommand? _startCommand { get; }
@@ -180,6 +181,67 @@ namespace Apparat.ViewModel
             set { _textinToolTipsFromControlBtn = value; OnPropertyChanged(); }
         }
 
+        /// Graph 1
+        private List<Axis> _xAxisGraph1 = null;
+        public List<Axis> XAxesGraph1
+        {
+            get { return _xAxisGraph1; }
+            set
+            {
+                _xAxisGraph1 = value;
+                OnPropertyChanged();
+            }
+        }
+        /// Graph 2
+        private List<Axis> _xAxisGraph2 = null;
+        public List<Axis> XAxesGraph2
+        {
+            get { return _xAxisGraph2; }
+            set
+            {
+                _xAxisGraph2 = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public Axis[] YAxesGraph1 { get; set; } =
+        {
+            new Axis
+            {
+                 MinLimit = 0,
+                 MaxLimit = 100,
+                 MinStep = 10,
+            }
+        };
+
+
+        public Axis[] YAxesGraph2 { get; set; } =
+       {
+            new Axis
+            {
+                 MinLimit = 0,
+                 MaxLimit = 1,
+            }
+        };
+
+        private ObservableCollection<ISeries> _valuesLossGraph1;
+        public ObservableCollection<ISeries> SeriesGraph1
+        {
+            get { return _valuesLossGraph1; }
+            set { _valuesLossGraph1 = value; OnPropertyChanged(); }
+        }
+
+        private ObservableCollection<ISeries> _valuesLossGraph2;
+        public ObservableCollection<ISeries> SeriesGraph2
+        {
+            get { return _valuesLossGraph2; }
+            set { _valuesLossGraph2 = value; OnPropertyChanged(); }
+        }
+
+        /// <summary>
+        /// Stop Stream Traceroute to hostname.
+        /// </summary>
+        /// <returns></returns>
         public bool StopStream()
         {
             try
@@ -243,10 +305,13 @@ namespace Apparat.ViewModel
                     foreach (var item in TracertObject)
                     {
                         _valuesLossGraph1.Add(new LineSeries<int>
-                        {
+                        {   
+                            DataPadding = new LiveChartsCore.Drawing.LvcPoint(0,22f),
                             Name = item.Hostname,
                             Values = item.ArhiveStateValuePercentLossPacket,
                             Fill = null,
+                            LineSmoothness = 0,
+                            GeometrySize = 0
                         });
                     };
 
@@ -258,7 +323,7 @@ namespace Apparat.ViewModel
                             {
                                 Name = "General graph of packet loss",
                                 Labels = _tracerService.GetArhiveTimeRequestCollection(),
-                                LabelsRotation = 15
+                                LabelsRotation = 15,
                             }
                         };
 
@@ -269,11 +334,13 @@ namespace Apparat.ViewModel
 
                     foreach (var item in TracertObject)
                     {
-                        _valuesLossGraph2.Add(new LineSeries<int>
+                        _valuesLossGraph2.Add(new StepLineSeries<int>
                         {
+                            DataPadding = new LiveChartsCore.Drawing.LvcPoint(0, 12),
                             Name = item.Hostname,
                             Values = item.ArhiveStatusRequestPacket,
                             Fill = null,
+                            GeometrySize = 0,
                         });
                     };
 
@@ -285,7 +352,7 @@ namespace Apparat.ViewModel
                             {
                                 Name = "Graph of % losses for all time",
                                 Labels = _tracerService.GetArhiveTimeRequestCollection(),
-                                LabelsRotation = 15
+                                LabelsRotation = 15,
                             }
                         };
 
@@ -296,13 +363,6 @@ namespace Apparat.ViewModel
                 });
             }
         }
-
-        //new LineSeries<int>
-        //            {
-        //                Name = _hostnameView,
-        //                Values = TracertObject,
-        //                Fill = null
-        //            },
 
         public event PropertyChangedEventHandler? PropertyChanged;
         public void OnPropertyChanged([CallerMemberName] string prop = "")
@@ -399,9 +459,9 @@ namespace Apparat.ViewModel
         }
 
       
-        private List<Axis> DefaultValueXandYaXies()
+        private List<Axis> DefaultValueXaXies()
         {
-            return _xAxisGraph1 = new List<Axis>
+            return  new List<Axis>
             {
                  new Axis
                 {
@@ -412,57 +472,7 @@ namespace Apparat.ViewModel
             };
         }
 
-        private List<Axis> _xAxisGraph1 = null;
-        public List<Axis> XAxesGraph1 
-        { 
-            get { return _xAxisGraph1; }
-            set 
-            { 
-                _xAxisGraph1 = value;
-                OnPropertyChanged();
-            }
-        }
-
-        private List<Axis> _xAxisGraph2 = null;
-        public List<Axis> XAxesGraph2
-        {
-            get { return _xAxisGraph2; }
-            set
-            {
-                _xAxisGraph2 = value;
-                OnPropertyChanged();
-            }
-        }
-
-        public Axis[] YAxesGraph1 { get; set; } =
-        {
-            new Axis
-            {
-                 MinLimit = 0,
-                 MaxLimit = 100,
-                 MinStep = 10,
-            }
-        };
-
-
-        public Axis[] YAxesGraph2 { get; set; } =
-       {
-            new Axis
-            {
-                 MinLimit = 0,
-                 MaxLimit = 1,
-            }
-        };
-
-        private ObservableCollection<ISeries> _valuesLossGraph1;
-        public ObservableCollection<ISeries> SeriesGraph1 { 
-            get { return _valuesLossGraph1; } 
-            set { _valuesLossGraph1 = value; OnPropertyChanged(); } }
-
-        private ObservableCollection<ISeries> _valuesLossGraph2;
-        public ObservableCollection<ISeries> SeriesGraph2 { 
-            get { return _valuesLossGraph2; } 
-            set { _valuesLossGraph2 = value; OnPropertyChanged(); } }
+        
 
     }
 }
