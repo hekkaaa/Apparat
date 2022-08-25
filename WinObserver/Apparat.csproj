@@ -14,7 +14,7 @@
     <PackageProjectUrl>https://github.com/hekkaaa/WinObserver</PackageProjectUrl>
     <RepositoryUrl>https://github.com/hekkaaa/Apparat</RepositoryUrl>
     <PackageTags>Traceroute; Tracert; Icmp; Network; Monitoring;</PackageTags>
-    <PackageReleaseNotes>pre-alpha</PackageReleaseNotes>
+    <PackageReleaseNotes>Beta</PackageReleaseNotes>
     <PackageIcon>testnew.png</PackageIcon>
     <AssemblyName>Apparat</AssemblyName>
     <ApplicationIcon>Resources\AppIcon.ico</ApplicationIcon>

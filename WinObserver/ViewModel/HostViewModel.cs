@@ -362,6 +362,8 @@ namespace Apparat.ViewModel
                             Fill = null,
                             LineSmoothness = 0,
                             GeometrySize = 0,
+                            LegendShapeSize = 2,
+                            
                         });
                     };
 
@@ -392,6 +394,7 @@ namespace Apparat.ViewModel
                             Values = item.ArhiveStatusRequestPacket,
                             Fill = null,
                             GeometrySize = 0,
+                            LegendShapeSize = 2,
                         });
                     };
 
