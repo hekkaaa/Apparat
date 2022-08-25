@@ -26,6 +26,6 @@ namespace Apparat.Helpers
             }
         }
 
-       
+
     }
 }

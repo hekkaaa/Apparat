@@ -19,10 +19,14 @@ namespace WinObserver.Service
         public readonly ReadOnlyObservableCollection<TracertModel> _collectionTracerouteValue;
         private readonly IHostRouteHelper _hostRouteHelper;
         private readonly IUpdateStatisticOfTracerouteElementsHelper _updateInfoStatistic;
+        private int _delayValue = 1000;
+        private int _sizePacket = 32;
         ILogger _logger;
 
         CancellationTokenSource? _cancellationTokenSource;
         CancellationToken _token;
+
+        public List<string> ArhiveTimeRequest { get; set; }
 
         public TracertService(ILogger logger)
         {
@@ -33,14 +37,17 @@ namespace WinObserver.Service
             _updateInfoStatistic = new UpdateStatisticOfTracerouteElementsHelper();
             _cancellationTokenSource = new CancellationTokenSource();
             _token = _cancellationTokenSource!.Token;
+
         }
 
-        public void StartStreamTracerouteHost(string hostname, IHostViewModelEvents hostViewEvent)
+        public void StartStreamTracerouteHost(string hostname, IHostViewModelEvents hostViewEvent, int delay)
         {
             ThreadPool.QueueUserWorkItem(new WaitCallback(obj =>
             {
                 try
                 {
+                    _delayValue = delay;
+                    ArhiveTimeRequest = new List<string>(); // Create Time list.
                     hostViewEvent.WorkingProggresbarInListBoxHostnameEvent(true);
                     hostViewEvent.ManagementEnableGeneralControlBtnEventAndPreloaderVisible(false);
 
@@ -52,8 +59,9 @@ namespace WinObserver.Service
 
                     while (true)
                     {
-                        Task.Delay(1000).Wait();
-                        _innerCollectionTracerouteValue = _updateInfoStatistic.Update(_innerCollectionTracerouteValue);
+                        Task.Delay(_delayValue).Wait();
+                        _innerCollectionTracerouteValue = _updateInfoStatistic.Update(_innerCollectionTracerouteValue, _sizePacket);
+                        ArhiveTimeRequest.Add(DataTimeUpdateStatistic());
                         if (_token.IsCancellationRequested)
                         {
                             hostViewEvent.WorkingProggresbarInListBoxHostnameEvent(false);
@@ -86,13 +94,42 @@ namespace WinObserver.Service
         }
 
         public void StopStreamTracerouteHost()
-        {   
+        {
             _cancellationTokenSource!.Cancel();
         }
 
         public ReadOnlyObservableCollection<TracertModel> GetActualCollectionTracertValue()
         {
             return _collectionTracerouteValue;
+        }
+
+        public List<string> GetArhiveTimeRequestCollection()
+        {
+            return ArhiveTimeRequest;
+        }
+
+        /// <summary>
+        /// Returns the time in milliseconds used between requests to update statistics.
+        /// </summary>
+        /// <returns></returns>
+        public int GetDelayValue()
+        {
+            return _delayValue;
+        }
+
+        public void UpdateDelayValue(int newDelay)
+        {
+            _delayValue = newDelay;
+        }
+
+        public int GetSizePacketValue()
+        {
+            return _sizePacket;
+        }
+
+        public void UpdateSizePacketValue(int newSize)
+        {
+            _sizePacket = newSize;
         }
 
         private void RestartToken()
@@ -107,6 +144,12 @@ namespace WinObserver.Service
             {
                 _innerCollectionTracerouteValue.Clear();
             });
+        }
+
+        private string DataTimeUpdateStatistic()
+        {
+            DateTime date1 = DateTime.Now;
+            return date1.ToString("T");
         }
     }
 }

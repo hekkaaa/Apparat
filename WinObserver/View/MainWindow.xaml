@@ -3,10 +3,11 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:WinObserver" 
+        xmlns:local="clr-namespace:Apparat.ViewModel" 
         xmlns:viewmodel="clr-namespace:WinObserver.ViewModel" 
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:dd="clr-namespace:GongSolutions.Wpf.DragDrop;assembly=GongSolutions.Wpf.DragDrop"
+        xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.WPF;assembly=LiveChartsCore.SkiaSharpView.WPF"
         mc:Ignorable="d"
         Title="Apparat" MinHeight="700" MinWidth="940" Height="568" Width="1024" Loaded="Window_Loaded"
         WindowStartupLocation="CenterScreen"
@@ -198,7 +199,7 @@
                             <HierarchicalDataTemplate.ItemTemplate>
                                 <DataTemplate>
                                     <StackPanel Margin="-5" Orientation="Horizontal" Width="auto" Height="auto" VerticalAlignment="Center">
-                                       
+                                        
                                         <Image Source="\Resources\icons8-error.png" Visibility="{Binding ErrorHostnameVisibleIcon}" 
                                                 Width="20" Height="20" VerticalAlignment="Center"
                                                 Margin="5,0,5,0"
@@ -256,6 +257,7 @@
             <materialDesign:Card>
                 <TabControl x:Name="GeneralPanerTabControl" DockPanel.Dock="Right" Grid.Row="1"
                             materialDesign:ColorZoneAssist.Mode="Light" HorizontalContentAlignment="Left">
+                    <!--// DataGrid-->
                     <TabItem Header="Table">
                         <Grid>
                             <Grid.RowDefinitions>
@@ -280,7 +282,11 @@
                                     <DataGridTextColumn Header="All Packet" Binding="{Binding CounterPacket}" Width="*"/>
                                     <DataGridTextColumn Header="Loss Packet" Binding="{Binding CounterLossPacket}" Width="auto"/>
                                 </DataGrid.Columns>
-
+                                <DataGrid.RowStyle>
+                                    <Style TargetType="DataGridRow">
+                                        <Setter Property="Foreground" Value="{Binding ColorLossView}"/>
+                                    </Style>
+                                </DataGrid.RowStyle>
                             </DataGrid>
 
                             <!--Preloader-->
@@ -326,19 +332,159 @@
 
                         </Grid>
                     </TabItem>
-
-                    <!--Text Statistic-->
-                    <TabItem
-                        Header="Statistic">
-                        <TextBlock Margin="8" Text="Statistics will be displayed here soon" 
-                                   VerticalAlignment="Center" HorizontalAlignment="Center"
-                                   FontSize="18" FontFamily="Consolas"/>
-                    </TabItem>
-
+                    
                     <!--Graph Statistic-->
                     <TabItem
-                        Header="Graph" IsEnabled="False">
-                        <TextBlock Margin="8" Text="The graph will be in the next version"/>
+                        Header="Graph" IsEnabled="True">
+                        <!--// Dialog Window-->
+                        <materialDesign:DialogHost CloseOnClickAway="True">
+                            <materialDesign:DialogHost.DialogContent>
+                                <Grid Margin="20">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition/>
+                                        <RowDefinition/>
+                                        <RowDefinition/>
+                                    </Grid.RowDefinitions>
+                                    <TextBlock Grid.Row="0" Text="Graph 1: Vertical axis - shows the percentage of total losses for the entire monitoring time." />
+                                    <TextBlock Grid.Row="1" Text="Graph 2: Shows two values. 1 - if there was an ICMP packet loss. 0 - if the ICMP packet is successfully received." />
+                                    <TextBlock Grid.Row="2" Text="The horizontal axis - in both cases shows the time." />
+                                </Grid>
+                            </materialDesign:DialogHost.DialogContent>
+                            
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="70"/>
+                                <RowDefinition Height="1*"/>
+                                <RowDefinition Height="50"/>
+                                <RowDefinition Height="1*"/>
+                            </Grid.RowDefinitions>
+                           <!--// Button-->
+                                <Grid Grid.Row="0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="100"/>
+                                        <ColumnDefinition Width="auto" />
+                                        <ColumnDefinition/>
+                                        <ColumnDefinition Width="100"/>
+                                        <ColumnDefinition Width="100" />
+                                        <ColumnDefinition Width="50" />
+                                        <ColumnDefinition Width="10" />
+                                </Grid.ColumnDefinitions>
+                                
+                                    <!--<Button Grid.Column="3"
+                                      Style="{StaticResource MaterialDesignPaperLightButton}"
+                                      ToolTip="Screen Gpraph"
+                                      Content="Screen"
+                                      IsEnabled="False"
+                                      Margin="0,0,10,0"/>-->
+                                      
+                                <Button Grid.Column="4"
+                                      Style="{StaticResource MaterialDesignPaperLightButton}"
+                                      ToolTip="Update info in Graph"
+                                      ToolTipService.InitialShowDelay="200"
+                                      Content="Update"
+                                      Command="{Binding SelectedGroup.UpdateAllGraph}"/>
+
+                                <Button Grid.Column="5"
+                                    Style="{StaticResource MaterialDesignFloatingActionMiniSecondaryDarkButton}"
+                                    HorizontalAlignment="Center"
+                                    ToolTip="Description of information in graphs."
+                                    ToolTipService.InitialShowDelay="200"
+                                    Height="22" Width="22" 
+                                    Command="{x:Static materialDesign:DialogHost.OpenDialogCommand}">
+                                        
+                                    <materialDesign:PackIcon
+                                        Kind="InformationVariant"
+                                        Height="18"
+                                        Width="18" />
+                                </Button>
+                              </Grid>
+                            <!--// Graph 1-->
+                            <Grid Grid.Row="1">
+                                <lvc:CartesianChart 
+                                    Series="{Binding SelectedGroup.SeriesGraph1}"
+                                    XAxes="{Binding SelectedGroup.XAxesGraph1}"
+                                    YAxes="{Binding SelectedGroup.YAxesGraph1}"
+                                    ZoomMode="X"/>
+                            </Grid>
+                            <GridSplitter Grid.Row="2" Height="5" HorizontalAlignment="Stretch" />
+                            
+                            <!--// Graph 2-->
+                            <Grid Grid.Row="3" Margin="0,0,0,20">
+                                <lvc:CartesianChart 
+                                    Series="{Binding SelectedGroup.SeriesGraph2}"
+                                    XAxes="{Binding SelectedGroup.XAxesGraph2}"
+                                    YAxes="{Binding SelectedGroup.YAxesGraph2}"
+                                    ZoomMode="X"/>
+                            </Grid>
+                        </Grid>
+                        </materialDesign:DialogHost>
+                    </TabItem>
+
+                    <!--// Setting host-->
+                    <TabItem Header="Setting">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="auto"/>
+                                    <RowDefinition Height="50"/>
+                                    <RowDefinition Height="auto"/>
+                                    <RowDefinition Height="50"/>
+                                    <RowDefinition Height="auto"/>
+                            </Grid.RowDefinitions>
+                            <Grid Grid.Row="0">
+                                <StackPanel>
+                                    <StackPanel Orientation="Horizontal" Margin="20,20,0,0">
+                                        <TextBlock Text="Delay between requests: " />
+                                        <TextBlock Text="{Binding SelectedGroup.DelayInRequestsToUpdateStatistics}" Foreground="Blue"/>
+                                        <TextBlock Text=" ms" />
+                                    </StackPanel>
+                                    
+                                    <Slider
+                                      Value="{Binding SelectedGroup.DelayInRequestsToUpdateStatistics}"
+                                      Minimum="200"
+                                      Maximum="10000"
+                                      Style="{StaticResource MaterialDesignDiscreteSlider}"
+                                      TickFrequency="100"
+                                      TickPlacement="Both" 
+                                      Margin="20,20,20,0"/>
+                                </StackPanel>
+                            </Grid>
+
+                            <Grid Grid.Row="1"></Grid>
+
+                            <Grid Grid.Row="2">
+                                <StackPanel>
+                                    <StackPanel Orientation="Horizontal" Margin="20,20,0,0">
+                                        <TextBlock Text="Size Packet: " />
+                                        <TextBlock Text="{Binding SelectedGroup.SizePacketInRequestsToUpdateStatistics}" Foreground="Blue"/>
+                                        <TextBlock Text=" byte" />
+                                    </StackPanel>
+                                    <Slider
+                                      Value="{Binding SelectedGroup.SizePacketInRequestsToUpdateStatistics}"
+                                      Minimum="1"
+                                      Maximum="128"
+                                      Style="{StaticResource MaterialDesignDiscreteSlider}"
+                                      TickFrequency="1"
+                                      TickPlacement="Both" 
+                                      Margin="20,20,20,0"/>
+                                </StackPanel>
+                            </Grid>
+                            
+                            <Grid Grid.Row="3"></Grid>
+
+                            <Grid Grid.Row="4">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="auto"/>
+                                    <ColumnDefinition Width="1*"/>
+                                </Grid.ColumnDefinitions>
+                                
+                                <Grid Grid.Column="0"/>
+                                <Button Grid.Column="1" Content="{Binding SelectedGroup.TextinSettingBtn}"
+                                        Style="{StaticResource MaterialDesignPaperLightButton}"
+                                        Command="{Binding SelectedGroup.ApplySetting}"/>
+                                <Grid Grid.Column="2"/>
+                            </Grid>
+                        </Grid>
                     </TabItem>
                 </TabControl>
             </materialDesign:Card>

@@ -8,13 +8,14 @@ namespace Apparat.ViewModel.Interfaces
 {
     public interface IHostViewModel
     {
-        string PublicId { get;}
+        string PublicId { get; }
         string ControlBtnHost { get; set; }
         string ControlBtnName { get; set; }
         string ErrorHostnameVisibleIcon { get; set; }
         string? HostnameView { get; set; }
         string SettingIsEnableControlBtn { get; set; }
         string SettingOpacityControlBtn { get; set; }
+        bool StatusWorkDataGrid { get; }
         DelegateCommand StartCommand { get; }
         string TextErrorToolTip { get; }
         ReadOnlyObservableCollection<TracertModel>? TracertObject { get; set; }

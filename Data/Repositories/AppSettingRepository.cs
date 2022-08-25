@@ -31,12 +31,12 @@ namespace Data.Repositories
             _context.SaveChanges();
             return true;
         }
-        
+
         public bool DeleteHostname(HistoryHost removeHostname)
         {
             _context.History.Remove(removeHostname);
             int t = _context.SaveChanges();
-            if(t > 0) return true;
+            if (t > 0) return true;
             else return false;
         }
     }

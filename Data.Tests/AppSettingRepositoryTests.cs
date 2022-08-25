@@ -104,7 +104,7 @@ namespace Data.Tests
         {
             //given
             string deleteTestHost = "github.com";
-            
+
             string[] testMassHostname = new string[] { "google.ru", "ya.ru", "github.com", "overcoder.net", "youtube.com" };
             int expectedCount = testMassHostname.Length - 1;
 
