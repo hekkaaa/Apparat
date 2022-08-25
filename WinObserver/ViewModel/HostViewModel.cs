@@ -400,7 +400,7 @@ namespace Apparat.ViewModel
                     _xAxisGraph2 = new List<Axis>
                         {
                              new Axis
-                            {   
+                            {
                                 NameTextSize = 14,
                                 Name = "Graph of % losses for all time",
                                 Labels = _tracerService.GetArhiveTimeRequestCollection(),
@@ -516,7 +516,7 @@ namespace Apparat.ViewModel
             return new List<Axis>
             {
                  new Axis
-                {   
+                {
                     NameTextSize = 14,
                     Name = "Time",
                     Labels = new string[] { "Time Now" },
@@ -524,8 +524,5 @@ namespace Apparat.ViewModel
                 }
             };
         }
-
-
-
     }
 }

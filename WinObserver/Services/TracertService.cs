@@ -45,7 +45,7 @@ namespace WinObserver.Service
             ThreadPool.QueueUserWorkItem(new WaitCallback(obj =>
             {
                 try
-                {   
+                {
                     _delayValue = delay;
                     ArhiveTimeRequest = new List<string>(); // Create Time list.
                     hostViewEvent.WorkingProggresbarInListBoxHostnameEvent(true);
