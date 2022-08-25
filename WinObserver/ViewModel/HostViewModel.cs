@@ -26,8 +26,6 @@ namespace Apparat.ViewModel
         private IHostViewModelEvents _HostViewModelEvents = new HostViewModelEvents();
         private ILogger _logger;
 
-
-
         public string? HostnameView
         {
             get { return _hostnameView; }
@@ -52,6 +50,8 @@ namespace Apparat.ViewModel
 
             _xAxisGraph1 = DefaultValueXaXies();
             _xAxisGraph2 = DefaultValueXaXies();
+
+            _logger.LogWarning($"Successful creation {HostnameView}. ID: {PublicId}");
         }
 
         private DelegateCommand? _startCommand { get; }
@@ -69,6 +69,24 @@ namespace Apparat.ViewModel
                     else
                     {
                         StartStream();
+                    }
+                    OnPropertyChanged();
+                });
+            }
+        }
+
+        private DelegateCommand? _ApplySetting { get; }
+        public DelegateCommand ApplySetting
+        {
+            // Update setting in Work Stream.
+            get
+            {
+                return _ApplySetting ?? new DelegateCommand((obj) =>
+                {
+                    if (_statusWorkDataGrid)
+                    {
+                        _tracerService.UpdateDelayValue(_delayInRequestsToUpdateStatistics);
+                        _logger.LogWarning($"Update Delay in host {HostnameView}. ID: {PublicId}");
                     }
                     OnPropertyChanged();
                 });
@@ -169,6 +187,13 @@ namespace Apparat.ViewModel
         {
             get { return _visibleErrorStupGrid; }
             set { _visibleErrorStupGrid = value; OnPropertyChanged(); }
+        }
+
+        private int _delayInRequestsToUpdateStatistics = 1000;
+        public int DelayInRequestsToUpdateStatistics
+        {
+            get { return _delayInRequestsToUpdateStatistics; }
+            set { _delayInRequestsToUpdateStatistics = value; OnPropertyChanged(); }
         }
 
         private string _textinToolTipsFromControlBtn = "Start traceroute";
@@ -278,7 +303,7 @@ namespace Apparat.ViewModel
                 _logger.LogWarning($"Start traceroute {HostnameView}| ID:{PublicId}");
                 VisaulChangeAtStartupStream();
                 ControlDatatime();
-                _tracerService!.StartStreamTracerouteHost(HostnameView!, _HostViewModelEvents);
+                _tracerService!.StartStreamTracerouteHost(HostnameView!, _HostViewModelEvents, DelayInRequestsToUpdateStatistics);
                 _statusWorkDataGrid = true;
                 return true;
             }
@@ -357,7 +382,7 @@ namespace Apparat.ViewModel
 
                     XAxesGraph2 = _xAxisGraph2;
 
-
+                    _logger.LogWarning($"Update Graph in hostname {HostnameView}. ID: {PublicId}");
                     OnPropertyChanged();
                 });
             }

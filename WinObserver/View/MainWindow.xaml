@@ -334,10 +334,38 @@
                         </Grid>
                     </TabItem>
 
-                    <!--Text Statistic-->
-                    <!--<TabItem Header="Statistic">
+                    <TabItem Header="Setting">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
 
-                    </TabItem>-->
+                            <Grid Grid.Row="0">
+                                <StackPanel>
+                                    <TextBlock Text="Delay between requests" Margin="20,20,0,0"/>
+                                    
+                                    <Slider
+                                      Value="{Binding SelectedGroup.DelayInRequestsToUpdateStatistics}"
+                                      Minimum="0"
+                                      Maximum="10000"
+                                      Style="{StaticResource MaterialDesignDiscreteSlider}"
+                                      TickFrequency="100"
+                                      TickPlacement="Both" 
+                                      Margin="20,20,20,0"/>
+                                </StackPanel>
+                            </Grid>
+                            
+                            <Grid Grid.Row="1"></Grid>
+
+                            <Grid Grid.Row="2">
+                                <Button Content="Apply" Command="{Binding SelectedGroup.ApplySetting}"/>
+                            </Grid>
+                                
+                        </Grid>
+                            
+                    </TabItem>
 
                     <!--Graph Statistic-->
                     <TabItem

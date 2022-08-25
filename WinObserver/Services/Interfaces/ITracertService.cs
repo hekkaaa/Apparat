@@ -7,10 +7,11 @@ namespace Apparat.Services.Interfaces
 {
     public interface ITracertService
     {
-        void StartStreamTracerouteHost(string hostname, IHostViewModelEvents error);
+        void StartStreamTracerouteHost(string hostname, IHostViewModelEvents error, int delay);
         ReadOnlyObservableCollection<TracertModel> GetActualCollectionTracertValue();
         void StopStreamTracerouteHost();
         List<string> GetArhiveTimeRequestCollection();
-        //void StartStreamTracerouteHost(string v, IHostViewModelEvents hostViewModelEvents);
+        int GetDelayValue();
+        void UpdateDelayValue(int newDelay);
     }
 }

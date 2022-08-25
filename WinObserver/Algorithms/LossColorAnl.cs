@@ -10,14 +10,16 @@ namespace Apparat.Algorithms
 {
     public class LossColorAnl
     {
+        private const int _delayTimeoutDeamon = 5000;
+
         public void AnalystLossIcmpGrid(IApplicationViewModel test, ILogger logger)
         {
             Task.Factory.StartNew(() =>
             {
                 while (true)
                 {
-                    Task.Delay(5000).Wait();
-                    logger.LogWarning("Update View Datagrid");
+                    Task.Delay(_delayTimeoutDeamon).Wait();
+                    logger.LogWarning("Start update View Datagrid");
                     try
                     {
                         ObservableCollection<ExplorerViewModel> FolderCollection = test.CollectionFoldersInExplorer;
@@ -63,10 +65,11 @@ namespace Apparat.Algorithms
                                 }
                             }
                         }
+                        logger.LogWarning("Successful end update View Datagrid");
                     }
                     catch (Exception ex)
                     {
-                        logger.LogCritical($"Error {ex.Message}");
+                        logger.LogCritical($"Error updating daemon data {ex.Message}");
                         continue;
                     }
                 }

@@ -25,6 +25,7 @@ namespace WinObserver.Service
         CancellationToken _token;
 
         public List<string> ArhiveTimeRequest { get; set; }
+        private int DelayValue { get; set; } = 1000; 
 
         public TracertService(ILogger logger)
         {
@@ -38,12 +39,13 @@ namespace WinObserver.Service
 
         }
 
-        public void StartStreamTracerouteHost(string hostname, IHostViewModelEvents hostViewEvent)
+        public void StartStreamTracerouteHost(string hostname, IHostViewModelEvents hostViewEvent, int delay)
         {
             ThreadPool.QueueUserWorkItem(new WaitCallback(obj =>
             {
                 try
-                {
+                {   
+                    DelayValue = delay;
                     ArhiveTimeRequest = new List<string>(); // Create Time list.
                     hostViewEvent.WorkingProggresbarInListBoxHostnameEvent(true);
                     hostViewEvent.ManagementEnableGeneralControlBtnEventAndPreloaderVisible(false);
@@ -56,7 +58,7 @@ namespace WinObserver.Service
 
                     while (true)
                     {
-                        Task.Delay(1000).Wait();
+                        Task.Delay(DelayValue).Wait();
                         _innerCollectionTracerouteValue = _updateInfoStatistic.Update(_innerCollectionTracerouteValue);
                         ArhiveTimeRequest.Add(DataTimeUpdateStatistic());
                         if (_token.IsCancellationRequested)
@@ -103,6 +105,20 @@ namespace WinObserver.Service
         public List<string> GetArhiveTimeRequestCollection()
         {
             return ArhiveTimeRequest;
+        }
+
+        /// <summary>
+        /// Returns the time in milliseconds used between requests to update statistics.
+        /// </summary>
+        /// <returns></returns>
+        public int GetDelayValue()
+        {
+            return DelayValue;
+        }
+
+        public void UpdateDelayValue(int newDelay)
+        {
+            DelayValue = newDelay;
         }
 
         private void RestartToken()
