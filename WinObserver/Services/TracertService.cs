@@ -19,13 +19,14 @@ namespace WinObserver.Service
         public readonly ReadOnlyObservableCollection<TracertModel> _collectionTracerouteValue;
         private readonly IHostRouteHelper _hostRouteHelper;
         private readonly IUpdateStatisticOfTracerouteElementsHelper _updateInfoStatistic;
+        private int _delayValue = 1000;
+        private int _sizePacket = 32;
         ILogger _logger;
 
         CancellationTokenSource? _cancellationTokenSource;
         CancellationToken _token;
 
         public List<string> ArhiveTimeRequest { get; set; }
-        private int DelayValue { get; set; } = 1000; 
 
         public TracertService(ILogger logger)
         {
@@ -45,7 +46,7 @@ namespace WinObserver.Service
             {
                 try
                 {   
-                    DelayValue = delay;
+                    _delayValue = delay;
                     ArhiveTimeRequest = new List<string>(); // Create Time list.
                     hostViewEvent.WorkingProggresbarInListBoxHostnameEvent(true);
                     hostViewEvent.ManagementEnableGeneralControlBtnEventAndPreloaderVisible(false);
@@ -58,8 +59,8 @@ namespace WinObserver.Service
 
                     while (true)
                     {
-                        Task.Delay(DelayValue).Wait();
-                        _innerCollectionTracerouteValue = _updateInfoStatistic.Update(_innerCollectionTracerouteValue);
+                        Task.Delay(_delayValue).Wait();
+                        _innerCollectionTracerouteValue = _updateInfoStatistic.Update(_innerCollectionTracerouteValue, _sizePacket);
                         ArhiveTimeRequest.Add(DataTimeUpdateStatistic());
                         if (_token.IsCancellationRequested)
                         {
@@ -113,12 +114,22 @@ namespace WinObserver.Service
         /// <returns></returns>
         public int GetDelayValue()
         {
-            return DelayValue;
+            return _delayValue;
         }
 
         public void UpdateDelayValue(int newDelay)
         {
-            DelayValue = newDelay;
+            _delayValue = newDelay;
+        }
+
+        public int GetSizePacketValue()
+        {
+            return _sizePacket;
+        }
+
+        public void UpdateSizePacketValue(int newSize)
+        {
+            _sizePacket = newSize;
         }
 
         private void RestartToken()

@@ -86,6 +86,7 @@ namespace Apparat.ViewModel
                     if (_statusWorkDataGrid)
                     {
                         _tracerService.UpdateDelayValue(_delayInRequestsToUpdateStatistics);
+                        _tracerService.UpdateSizePacketValue(_sizePacketInRequestsToUpdateStatistics);
                         _logger.LogWarning($"Update Delay in host {HostnameView}. ID: {PublicId}");
                     }
                     OnPropertyChanged();
@@ -194,6 +195,13 @@ namespace Apparat.ViewModel
         {
             get { return _delayInRequestsToUpdateStatistics; }
             set { _delayInRequestsToUpdateStatistics = value; OnPropertyChanged(); }
+        }
+
+        private int _sizePacketInRequestsToUpdateStatistics = 32;
+        public int SizePacketInRequestsToUpdateStatistics
+        {
+            get { return _sizePacketInRequestsToUpdateStatistics; }
+            set { _sizePacketInRequestsToUpdateStatistics = value; OnPropertyChanged(); }
         }
 
         private string _textinToolTipsFromControlBtn = "Start traceroute";

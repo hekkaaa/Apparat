@@ -5,6 +5,6 @@ namespace Apparat.Helpers.Interfaces
 {
     public interface IUpdateStatisticOfTracerouteElementsHelper
     {
-        ObservableCollection<TracertModel> Update(ObservableCollection<TracertModel> externalCollection);
+        ObservableCollection<TracertModel> Update(ObservableCollection<TracertModel> externalCollection, int buffer);
     }
 }

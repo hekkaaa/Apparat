@@ -13,5 +13,7 @@ namespace Apparat.Services.Interfaces
         List<string> GetArhiveTimeRequestCollection();
         int GetDelayValue();
         void UpdateDelayValue(int newDelay);
+        int GetSizePacketValue();
+        void UpdateSizePacketValue(int newSize);
     }
 }
