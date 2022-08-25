@@ -12,6 +12,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Threading.Tasks;
 using WinObserver.Model;
 using WinObserver.Service;
 
@@ -89,6 +90,16 @@ namespace Apparat.ViewModel
                         _tracerService.UpdateSizePacketValue(_sizePacketInRequestsToUpdateStatistics);
                         _logger.LogWarning($"Update Delay in host {HostnameView}. ID: {PublicId}");
                     }
+                    Task.Factory.StartNew(() =>
+                    {
+                        TextinSettingBtn = "Save wait";
+                        Task.Delay(500).Wait();
+                        TextinSettingBtn = "Save wait..";
+                        Task.Delay(500).Wait();
+                        TextinSettingBtn = "Save wait...";
+                        Task.Delay(500).Wait();
+                        TextinSettingBtn = "Apply";
+                    });
                     OnPropertyChanged();
                 });
             }
@@ -209,6 +220,13 @@ namespace Apparat.ViewModel
         {
             get { return _textinToolTipsFromControlBtn; }
             set { _textinToolTipsFromControlBtn = value; OnPropertyChanged(); }
+        }
+
+        private string _textinSettingBtn = "Apply";
+        public string TextinSettingBtn
+        {
+            get { return _textinSettingBtn; }
+            set { _textinSettingBtn = value; OnPropertyChanged(); }
         }
 
         /// Graph 1
@@ -353,6 +371,7 @@ namespace Apparat.ViewModel
                         {
                              new Axis
                             {
+                                NameTextSize = 14,
                                 Name = "General graph of packet loss",
                                 Labels = _tracerService.GetArhiveTimeRequestCollection(),
                                 LabelsRotation = 15,
@@ -381,7 +400,8 @@ namespace Apparat.ViewModel
                     _xAxisGraph2 = new List<Axis>
                         {
                              new Axis
-                            {
+                            {   
+                                NameTextSize = 14,
                                 Name = "Graph of % losses for all time",
                                 Labels = _tracerService.GetArhiveTimeRequestCollection(),
                                 LabelsRotation = 15,
@@ -496,7 +516,8 @@ namespace Apparat.ViewModel
             return new List<Axis>
             {
                  new Axis
-                {
+                {   
+                    NameTextSize = 14,
                     Name = "Time",
                     Labels = new string[] { "Time Now" },
                     LabelsRotation = 15
