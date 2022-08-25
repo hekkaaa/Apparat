@@ -55,8 +55,8 @@ namespace Apparat.Helpers
         /// </summary>
         /// <returns></returns>
         private byte[] ConvertIntToBufferFormat(int oldFormatBuffer)
-        {   
-            if(oldFormatBuffer <= 0)
+        {
+            if (oldFormatBuffer <= 0)
             {
                 return new byte[1];
             }
