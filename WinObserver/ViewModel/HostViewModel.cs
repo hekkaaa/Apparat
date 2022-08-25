@@ -12,6 +12,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Threading.Tasks;
 using WinObserver.Model;
 using WinObserver.Service;
 
@@ -25,8 +26,6 @@ namespace Apparat.ViewModel
         private string? _hostnameView;
         private IHostViewModelEvents _HostViewModelEvents = new HostViewModelEvents();
         private ILogger _logger;
-
-
 
         public string? HostnameView
         {
@@ -52,6 +51,8 @@ namespace Apparat.ViewModel
 
             _xAxisGraph1 = DefaultValueXaXies();
             _xAxisGraph2 = DefaultValueXaXies();
+
+            _logger.LogWarning($"Successful creation {HostnameView}. ID: {PublicId}");
         }
 
         private DelegateCommand? _startCommand { get; }
@@ -70,6 +71,35 @@ namespace Apparat.ViewModel
                     {
                         StartStream();
                     }
+                    OnPropertyChanged();
+                });
+            }
+        }
+
+        private DelegateCommand? _ApplySetting { get; }
+        public DelegateCommand ApplySetting
+        {
+            // Update setting in Work Stream.
+            get
+            {
+                return _ApplySetting ?? new DelegateCommand((obj) =>
+                {
+                    if (_statusWorkDataGrid)
+                    {
+                        _tracerService.UpdateDelayValue(_delayInRequestsToUpdateStatistics);
+                        _tracerService.UpdateSizePacketValue(_sizePacketInRequestsToUpdateStatistics);
+                        _logger.LogWarning($"Update Delay in host {HostnameView}. ID: {PublicId}");
+                    }
+                    Task.Factory.StartNew(() =>
+                    {
+                        TextinSettingBtn = "Save wait";
+                        Task.Delay(500).Wait();
+                        TextinSettingBtn = "Save wait..";
+                        Task.Delay(500).Wait();
+                        TextinSettingBtn = "Save wait...";
+                        Task.Delay(500).Wait();
+                        TextinSettingBtn = "Apply";
+                    });
                     OnPropertyChanged();
                 });
             }
@@ -171,11 +201,32 @@ namespace Apparat.ViewModel
             set { _visibleErrorStupGrid = value; OnPropertyChanged(); }
         }
 
+        private int _delayInRequestsToUpdateStatistics = 1000;
+        public int DelayInRequestsToUpdateStatistics
+        {
+            get { return _delayInRequestsToUpdateStatistics; }
+            set { _delayInRequestsToUpdateStatistics = value; OnPropertyChanged(); }
+        }
+
+        private int _sizePacketInRequestsToUpdateStatistics = 32;
+        public int SizePacketInRequestsToUpdateStatistics
+        {
+            get { return _sizePacketInRequestsToUpdateStatistics; }
+            set { _sizePacketInRequestsToUpdateStatistics = value; OnPropertyChanged(); }
+        }
+
         private string _textinToolTipsFromControlBtn = "Start traceroute";
         public string TextinToolTipsFromControlBtn
         {
             get { return _textinToolTipsFromControlBtn; }
             set { _textinToolTipsFromControlBtn = value; OnPropertyChanged(); }
+        }
+
+        private string _textinSettingBtn = "Apply";
+        public string TextinSettingBtn
+        {
+            get { return _textinSettingBtn; }
+            set { _textinSettingBtn = value; OnPropertyChanged(); }
         }
 
         /// Graph 1
@@ -278,7 +329,7 @@ namespace Apparat.ViewModel
                 _logger.LogWarning($"Start traceroute {HostnameView}| ID:{PublicId}");
                 VisaulChangeAtStartupStream();
                 ControlDatatime();
-                _tracerService!.StartStreamTracerouteHost(HostnameView!, _HostViewModelEvents);
+                _tracerService!.StartStreamTracerouteHost(HostnameView!, _HostViewModelEvents, DelayInRequestsToUpdateStatistics);
                 _statusWorkDataGrid = true;
                 return true;
             }
@@ -320,6 +371,7 @@ namespace Apparat.ViewModel
                         {
                              new Axis
                             {
+                                NameTextSize = 14,
                                 Name = "General graph of packet loss",
                                 Labels = _tracerService.GetArhiveTimeRequestCollection(),
                                 LabelsRotation = 15,
@@ -348,7 +400,8 @@ namespace Apparat.ViewModel
                     _xAxisGraph2 = new List<Axis>
                         {
                              new Axis
-                            {
+                            {   
+                                NameTextSize = 14,
                                 Name = "Graph of % losses for all time",
                                 Labels = _tracerService.GetArhiveTimeRequestCollection(),
                                 LabelsRotation = 15,
@@ -357,7 +410,7 @@ namespace Apparat.ViewModel
 
                     XAxesGraph2 = _xAxisGraph2;
 
-
+                    _logger.LogWarning($"Update Graph in hostname {HostnameView}. ID: {PublicId}");
                     OnPropertyChanged();
                 });
             }
@@ -463,7 +516,8 @@ namespace Apparat.ViewModel
             return new List<Axis>
             {
                  new Axis
-                {
+                {   
+                    NameTextSize = 14,
                     Name = "Time",
                     Labels = new string[] { "Time Now" },
                     LabelsRotation = 15

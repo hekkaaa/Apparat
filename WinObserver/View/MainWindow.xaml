@@ -259,6 +259,7 @@
             <materialDesign:Card>
                 <TabControl x:Name="GeneralPanerTabControl" DockPanel.Dock="Right" Grid.Row="1"
                             materialDesign:ColorZoneAssist.Mode="Light" HorizontalContentAlignment="Left">
+                    <!--// DataGrid-->
                     <TabItem Header="Table">
                         <Grid>
                             <Grid.RowDefinitions>
@@ -333,12 +334,7 @@
 
                         </Grid>
                     </TabItem>
-
-                    <!--Text Statistic-->
-                    <!--<TabItem Header="Statistic">
-
-                    </TabItem>-->
-
+                    
                     <!--Graph Statistic-->
                     <TabItem
                         Header="Graph" IsEnabled="True">
@@ -424,6 +420,73 @@
                             </Grid>
                         </Grid>
                         </materialDesign:DialogHost>
+                    </TabItem>
+
+                    <!--// Setting host-->
+                    <TabItem Header="Setting">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="auto"/>
+                                    <RowDefinition Height="50"/>
+                                    <RowDefinition Height="auto"/>
+                                    <RowDefinition Height="50"/>
+                                    <RowDefinition Height="auto"/>
+                            </Grid.RowDefinitions>
+                            <Grid Grid.Row="0">
+                                <StackPanel>
+                                    <StackPanel Orientation="Horizontal" Margin="20,20,0,0">
+                                        <TextBlock Text="Delay between requests: " />
+                                        <TextBlock Text="{Binding SelectedGroup.DelayInRequestsToUpdateStatistics}" Foreground="Blue"/>
+                                        <TextBlock Text=" ms" />
+                                    </StackPanel>
+                                    
+                                    <Slider
+                                      Value="{Binding SelectedGroup.DelayInRequestsToUpdateStatistics}"
+                                      Minimum="200"
+                                      Maximum="10000"
+                                      Style="{StaticResource MaterialDesignDiscreteSlider}"
+                                      TickFrequency="100"
+                                      TickPlacement="Both" 
+                                      Margin="20,20,20,0"/>
+                                </StackPanel>
+                            </Grid>
+
+                            <Grid Grid.Row="1"></Grid>
+
+                            <Grid Grid.Row="2">
+                                <StackPanel>
+                                    <StackPanel Orientation="Horizontal" Margin="20,20,0,0">
+                                        <TextBlock Text="Size Packet: " />
+                                        <TextBlock Text="{Binding SelectedGroup.SizePacketInRequestsToUpdateStatistics}" Foreground="Blue"/>
+                                        <TextBlock Text=" byte" />
+                                    </StackPanel>
+                                    <Slider
+                                      Value="{Binding SelectedGroup.SizePacketInRequestsToUpdateStatistics}"
+                                      Minimum="1"
+                                      Maximum="128"
+                                      Style="{StaticResource MaterialDesignDiscreteSlider}"
+                                      TickFrequency="1"
+                                      TickPlacement="Both" 
+                                      Margin="20,20,20,0"/>
+                                </StackPanel>
+                            </Grid>
+                            
+                            <Grid Grid.Row="3"></Grid>
+
+                            <Grid Grid.Row="4">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="auto"/>
+                                    <ColumnDefinition Width="1*"/>
+                                </Grid.ColumnDefinitions>
+                                
+                                <Grid Grid.Column="0"/>
+                                <Button Grid.Column="1" Content="{Binding SelectedGroup.TextinSettingBtn}"
+                                        Style="{StaticResource MaterialDesignPaperLightButton}"
+                                        Command="{Binding SelectedGroup.ApplySetting}"/>
+                                <Grid Grid.Column="2"/>
+                            </Grid>
+                        </Grid>
                     </TabItem>
                 </TabControl>
             </materialDesign:Card>
