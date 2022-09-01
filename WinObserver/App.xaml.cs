@@ -56,9 +56,16 @@ namespace WinObserver
 
         // Global errors.
         private void Application_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
-        {
-            MessageBox.Show("An unhandled exception just occurred: " + e.Exception.Message + " " + e.Exception.Source, "Exception Sample", MessageBoxButton.OK, MessageBoxImage.Warning);
-            e.Handled = true;
+        {   
+            if(e.Exception.Source.ToString() == "System.Private.CoreLib")
+            {
+                e.Handled = true;
+            }
+            else
+            {
+                MessageBox.Show("An unhandled exception just occurred: " + e.Exception.Message + " " + e.Exception.Source, "Exception Sample", MessageBoxButton.OK, MessageBoxImage.Warning);
+                e.Handled = true;
+            }
         }
 
         protected override async void OnStartup(StartupEventArgs e)
