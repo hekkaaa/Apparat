@@ -70,7 +70,8 @@
                               Style="{StaticResource MaterialDesignOutlinedComboBox}"
                               Text="{Binding TextBoxHostname}" BorderBrush="{Binding BorderTextBox}"
                               ItemsSource="{Binding CollectionRecentHost}"
-                              BorderThickness="1" Margin="7,3,7,3"
+                              BorderThickness="1" 
+                              Margin="7,3,7,3"
                               materialDesign:HintAssist.Hint="Enter the hostname"
                               materialDesign:TextFieldAssist.PrefixText="  "
                               materialDesign:HintAssist.HelperText ="{Binding TextBlockGeneralError}"
@@ -198,7 +199,7 @@
                             <!--Hostname-->
                             <HierarchicalDataTemplate.ItemTemplate>
                                 <DataTemplate>
-                                    <StackPanel Margin="-5" Orientation="Horizontal" Width="auto" Height="auto" VerticalAlignment="Center">
+                                    <StackPanel Margin="-5,-5,-5,-5" Orientation="Horizontal" Width="auto" Height="auto" VerticalAlignment="Center">
                                         
                                         <Image Source="\Resources\icons8-error.png" Visibility="{Binding ErrorHostnameVisibleIcon}" 
                                                 Width="20" Height="20" VerticalAlignment="Center"
@@ -216,7 +217,7 @@
                                         </ProgressBar>
 
                                         <StackPanel Margin="5,5,0,0">
-                                            <TextBlock Text="{Binding HostnameView}" FontWeight="Bold" />
+                                            <TextBlock Text="{Binding HostnameView}" FontWeight="Regular" />
                                             <TextBlock Text="{Binding StartDatatime}" Visibility="{Binding VisibleDatatimeTextBlock}" FontSize="10" Foreground="LightSlateGray"/>
                                         </StackPanel>
 
@@ -237,7 +238,7 @@
                                             Style="{StaticResource MaterialDesignIconForegroundButton}"
                                             ToolTip="Delete Hostname"
                                             Height="24" Width="24">
-                                            <materialDesign:PackIcon Kind="Delete" Width="20" Height="20"/>
+                                            <materialDesign:PackIcon Kind="DeleteOutline" Width="20" Height="20"/>
                                         </Button>
                                     </StackPanel>
                                 </DataTemplate>
@@ -337,7 +338,7 @@
                     <TabItem
                         Header="Graph" IsEnabled="True">
                         <!--// Dialog Window-->
-                        <materialDesign:DialogHost CloseOnClickAway="True">
+                        <materialDesign:DialogHost CloseOnClickAway="True" materialDesign:ShadowAssist.ShadowDepth="Depth0">
                             <materialDesign:DialogHost.DialogContent>
                                 <Grid Margin="20">
                                     <Grid.RowDefinitions>
@@ -378,24 +379,25 @@
                                       Margin="0,0,10,0"/>-->
                                       
                                 <Button Grid.Column="4"
-                                      Style="{StaticResource MaterialDesignPaperLightButton}"
+                                      Style="{StaticResource MaterialDesignFlatMidBgButton}"
                                       ToolTip="Update info in Graph"
+                                      Background="MediumPurple"
                                       ToolTipService.InitialShowDelay="200"
                                       Content="Update"
                                       Command="{Binding SelectedGroup.UpdateAllGraph}"/>
 
                                 <Button Grid.Column="5"
-                                    Style="{StaticResource MaterialDesignFloatingActionMiniSecondaryDarkButton}"
+                                    Style="{StaticResource MaterialDesignIconForegroundButton}"
                                     HorizontalAlignment="Center"
                                     ToolTip="Description of information in graphs."
                                     ToolTipService.InitialShowDelay="200"
-                                    Height="22" Width="22" 
+                                    Height="25" Width="25" 
                                     Command="{x:Static materialDesign:DialogHost.OpenDialogCommand}">
                                         
                                     <materialDesign:PackIcon
-                                        Kind="InformationVariant"
-                                        Height="18"
-                                        Width="18" />
+                                        Kind="InformationOutline"
+                                        Height="25"
+                                        Width="25" />
                                 </Button>
                               </Grid>
                             <!--// Graph 1-->
