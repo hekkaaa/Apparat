@@ -17,7 +17,7 @@ namespace WinObserver.ViewModel
 {
     public class ApplicationViewModel : INotifyPropertyChanged, IApplicationViewModel
     {
-        const string VERSION_APP = "Version: 1.0.0";
+        const string VERSION_APP = "Version: 1.0.1";
         private const string defaultIdGeneralFolder = "ffffx001";
         private string _hostname = String.Empty;
         private string _textBlockGeneralError = String.Empty;
