@@ -229,7 +229,7 @@
                                             Height="24" Width="24"    
                                             IsEnabled="{Binding SettingIsEnableControlBtn}" Opacity="{ Binding SettingOpacityControlBtn}"
                                             Margin="15,0,7,0">
-                                            <materialDesign:PackIcon Kind="{Binding ControlBtnHost}" Width="25" Height="25"/>
+                                            <materialDesign:PackIcon Kind="{Binding ControlBtnHost}" Width="21" Height="21"/>
                                         </Button>
 
                                         <!--Delete button-->
